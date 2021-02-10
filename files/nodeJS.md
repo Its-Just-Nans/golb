@@ -17,6 +17,7 @@ http-server
 ```
 > Légende :
 > - une option utile est `-p` pour choisir le port du serveur
+> - exemple : `http-server -p 80` pour un serveur web
 > - il y a également d'autres options (voir la documentation)
 
 Reference : [http-server](https://www.npmjs.com/package/http-server)
