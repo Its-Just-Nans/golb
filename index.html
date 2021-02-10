@@ -62,12 +62,11 @@ function displayNewPage(link){
     let basePage;
     //check if it's in local
     if(window.location.origin === 'https://its-just-nans.github.io'){
-        basePage = window.location.origin + '/rt/files/';
+        basePage = window.location.origin + '/golb/files/';
     }else{
         basePage = window.location.origin + '/files/';
     }
     if(window.location.hash == "" && !link){
-        //if there is nothing, we load to the search page
         basePage += 'base.md';
     }else{
         if(link != window.location.hash){
