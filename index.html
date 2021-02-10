@@ -68,6 +68,7 @@ function displayNewPage(link){
     }
     if(window.location.hash == "" && !link){
         basePage += 'base.md';
+        window.location.hash = "#readme-base"
     }else{
         if(link != window.location.hash){
             let linkToFile;
