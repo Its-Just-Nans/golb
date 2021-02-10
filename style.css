@@ -1,0 +1,83 @@
+
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans&display=swap');
+
+body{
+    margin: 0px;
+    font-family: 'PT Sans', sans-serif;
+}
+
+nav{
+    position: fixed;
+    width: 20vw;
+    height: 100vh;
+    background-color: snow;
+    border-right: 2px solid black;
+    box-sizing: border-box;
+    overflow: auto;
+}
+
+#titleNav{
+    text-align: center;
+}
+
+#contenuMain{
+    position: fixed;
+    right: 0px;
+    width: 80vw;
+    height: 100vh;
+    padding: 50px;
+    box-sizing: border-box;
+    overflow: auto;
+    padding-bottom: 20px;
+}
+
+nav a{
+    text-decoration: none;
+    color: black;
+}
+
+nav li{
+    margin-bottom: 10px;
+}
+
+#globalReadMe{
+    font-size: 1.15em;
+}
+
+@media screen and (min-width: 0px) and (max-width: 1050px){
+    nav{
+        position: fixed;
+        width: 100vw;
+        min-height: 7vh;
+        max-height: 100vh;
+        height: auto;
+        background-color: snow;
+        border-bottom: 2px solid black;
+        border-right: 0px;
+        z-index: 10;
+        cursor: pointer;
+    }
+    nav ul{
+        display: none;
+    }
+    #contenuMain {
+        top: 7vh;
+        width: 100vw;
+        height: 93vh;
+        padding: 10px;
+        padding-bottom: 70px;
+    }
+    #titleNav{
+        margin-top: 15px;
+        margin-bottom: 0px;
+    }
+    #globalReadMe{
+        font-size: 0.75em;
+    }
+    #globalReadMe > ul {
+        padding-inline-start: 20px;
+    }
+    #globalReadMe > blockquote > ul {
+        padding-inline-start: 20px;
+    }
+}
