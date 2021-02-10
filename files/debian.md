@@ -3,8 +3,9 @@ Created by Its-Just-Nans - https://github.com/Its-Just-Nans
 Copyright Its-Just-Nans
 --->
 
+# Debian Commands
 
-### Utilisation de `su` sur Linux (Debian)
+## Utilisation de `su` sur Linux (Debian)
 
 La commande `su` permet de changer s'utilisateur pour le temps d'une session (après avoir saisi le mot de passe, s'il y en a un), pour l'utiliser, on écrit :
 ```sh

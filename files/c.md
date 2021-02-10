@@ -3,8 +3,9 @@ Created by Its-Just-Nans - https://github.com/Its-Just-Nans
 Copyright Its-Just-Nans
 --->
 
+# C Language
 
-### Understand C pointer with examples
+## Understand C pointer with examples
 
 The program used :
 ```c
@@ -49,7 +50,7 @@ Le résultat :
 
 ---
 
-### Paramètre de main en C
+## Paramètre de main en C
 
 `argv[0]` contiendra tout le temps le nom du programme
 

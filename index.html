@@ -15,7 +15,7 @@
         <h1 id="titleNav">Navigation</h1>
         <ul>
             <li><a href="#readme-github">Git and GitHub</a></li>
-            <li><a href="#readme-su">Su on Debian</a></li>
+            <li><a href="#readme-debian">Debian</a></li>
             <li><a href="#readme-nodeJS">NodeJS</a></li>
             <li><a href="#readme-c">Langage C</a></li>
         </ul>
@@ -68,7 +68,7 @@ function displayNewPage(link){
     }
     if(window.location.hash == "" && !link){
         //if there is nothing, we load to the search page
-        basePage += 'search.html';
+        basePage += 'base.md';
     }else{
         if(link != window.location.hash){
             let linkToFile;

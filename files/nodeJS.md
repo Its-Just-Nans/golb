@@ -3,7 +3,8 @@ Created by Its-Just-Nans - https://github.com/Its-Just-Nans
 Copyright Its-Just-Nans
 --->
 
-### Node.js
+# NodeJS
+## Commande
 Commande pour créer un serveur web rapidement
 ```sh
 npm install --global http-server
