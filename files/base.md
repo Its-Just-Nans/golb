@@ -6,7 +6,7 @@ Copyright Its-Just-Nans
 
 # Hi
 
-Welcome to gold
+Welcome to golb
 
 or simply : `"golb".split("").reverse().join("")`
 
