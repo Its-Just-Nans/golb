@@ -13,24 +13,27 @@ Copyright Its-Just-Nans
 
 ● Compress a file
 
-```
+```sh
 & 'C:\Program Files\ffmpeg\bin\ffmpeg.exe' -i input.mp4 -preset veryslow OUTPUT_NAME.mp4
 ```
+
 > Legend :
+>
 > - `-preset veryslow` is the level of compress, see [here](https://trac.ffmpeg.org/wiki/Encode/H.264#:~:text=ultrafast) for others presets
 
 ● Zoom in a video
 
-```
+```sh
 & 'C:\Program Files\ffmpeg\bin\ffmpeg.exe' -i .\input.mp4 -vf "scale=2*iw:-1, crop=iw/2:ih/2:0:400" OUTPUT_NAME.mp4
 ```
+
 > Legend :
+>
 > - `scale` enlarge the video, and `crop` cut a part
 > - `crop` parameters are width:height:x:y
 > - here, it is a zoom of `2`
 
 ● Cut a video
-
 
 ```sh
 ffmpeg -ss 00:01:00 -i input.mp4 -t 00:02:00 -c copy OUTPUT_NAME.mp4

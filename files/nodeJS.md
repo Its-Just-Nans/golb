@@ -4,8 +4,11 @@ Copyright Its-Just-Nans
 --->
 
 # NodeJS
+
 ## Commande
+
 Commande pour créer un serveur web rapidement
+
 ```sh
 npm install --global http-server
 #or 
@@ -15,7 +18,9 @@ cd YOUR-DIRECTORY
 
 http-server
 ```
+
 > Légende :
+>
 > - une option utile est `-p` pour choisir le port du serveur
 > - exemple : `http-server -p 80` pour un serveur web
 > - il y a également d'autres options (voir la documentation)

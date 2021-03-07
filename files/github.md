@@ -13,7 +13,6 @@ Git est un logiciel de gestion de versions décentralisé.([Wikipedia](https://f
 
 [Site de Git](https://git-scm.com/)
 
-
 ### `GitHub` c'est quoi ?
 
 GitHub est un **service web d'hébergement** et de gestion de développement de logiciels, utilisant le logiciel de gestion de versions `Git`. ([Wikipedia](https://fr.wikipedia.org/wiki/GitHub))
@@ -30,7 +29,7 @@ GitHub est un **service web d'hébergement** et de gestion de développement de 
 
 `git branch BRANCH_NAME` : permet de créer une branche
 
-### Faire une commit :
+### Faire une commit
 
 - Aller dans l'onglet `Source Control`
 
@@ -57,12 +56,14 @@ GitHub est un **service web d'hébergement** et de gestion de développement de 
 >```txt
 >[fix] correct something
 >```
+>
 >> Légende:
 >> Pour une correction de bug par exemple
 >
 >```txt
 >[feature] add something
 >```
+>
 >> Légende:
 >> Pour une nouveauté
 >

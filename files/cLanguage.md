@@ -8,6 +8,7 @@ Copyright Its-Just-Nans
 ## Understand C pointer with examples
 
 The program used :
+
 ```c
 #include <stdio.h>
 
@@ -43,10 +44,10 @@ Le résultat :
 %d *pointerTOnumber = 7                  //valeur pointée par le pointeur (donc celle de number) sous forme décimale
 %p *pointerTOnumber = 0x7                //valeur pointée par le pointeur (donc celle de number) sous forme hexa car %p
 ```
-> On peut donc lire "**`l'adresse de `**" pour le symbole `&`
-> 
-> On peut donc lire "**`la valeur pointée par`**" pour le symbole `*`
 
+> On peut donc lire "**`l'adresse de`**" pour le symbole `&`
+>
+> On peut donc lire "**`la valeur pointée par`**" pour le symbole `*`
 
 ---
 
@@ -54,7 +55,7 @@ Le résultat :
 
 `argv[0]` contiendra tout le temps le nom du programme
 
-```
+```c
 int main(int argc, char *argv[]){
     for(int o=0; o < argc; o++){
         printf("Argument %d : %s\n", o, argv[o]);
