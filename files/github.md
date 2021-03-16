@@ -13,6 +13,8 @@ Git est un logiciel de gestion de versions décentralisé.([Wikipedia](https://f
 
 [Site de Git](https://git-scm.com/)
 
+> [Vidéo d'explication](https://youtu.be/hwP7WQkmECE)
+
 ### `GitHub` c'est quoi ?
 
 GitHub est un **service web d'hébergement** et de gestion de développement de logiciels, utilisant le logiciel de gestion de versions `Git`. ([Wikipedia](https://fr.wikipedia.org/wiki/GitHub))
