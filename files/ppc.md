@@ -5,6 +5,10 @@ Copyright Its-Just-Nans
 
 # Portable Pi Computer
 
+## Context
+
+[RasPion](https://hackaday.com/2016/07/08/beautiful-raspberry-pi-laptop-inspired-by-psion/)
+
 ## Sources
 
 - [https://imgur.com/a/ww3QyEm](https://imgur.com/a/ww3QyEm)
@@ -20,3 +24,4 @@ Copyright Its-Just-Nans
 | Raspberry Pi 4B 4Go RAM + accessories                                                           | EUR € 65,06    |    EUR € 0,00   | EUR € 65,06   |
 |                                                                                                 |                |                 |               |
 | Total                                                                                           |                |                 | a lot of time |
+
