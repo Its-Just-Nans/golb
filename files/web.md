@@ -7,4 +7,4 @@ Copyright Its-Just-Nans
 
 ## Sitemap
 
-Check that : [sitemapIndexor](https://github.com/Its-Just-Nans/tests/tree/main/python/sitemap-indexor/sitemapIndexer.py)
+Check that : [sitemapIndexor](https://github.com/Its-Just-Nans/tests/tree/main/python/sitemap-indexor/)
