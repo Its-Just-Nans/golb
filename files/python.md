@@ -16,6 +16,8 @@ except Exception as exception:
     print(exception.__class__.__qualname__)
 ```
 
+Reference : [stackOverflow](https://stackoverflow.com/questions/18176602/how-to-get-the-name-of-an-exception-that-was-caught-in-python)
+
 ## How to get the KeyboardInterrupt
 
 ```python
