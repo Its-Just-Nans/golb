@@ -11,7 +11,7 @@ Copyright Its-Just-Nans
 
 # Arduino LED Matrix
 
-![Project at start](../data/arduino/arduino-raw-matrix.jpg)
+![Project at start](./data/arduino/arduino-raw-matrix.jpg)
 
 Soon...
 
