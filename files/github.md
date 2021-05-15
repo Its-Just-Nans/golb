@@ -5,6 +5,11 @@ Copyright Its-Just-Nans
 
 # GitHub
 
+## Guides
+
+- [GIT on GitHub](https://githubtraining.github.io/training-manual/#/?id=welcome-to-github)
+- [GIT Cheat Sheet/](https://training.github.com/downloads/github-git-cheat-sheet/)
+
 ## Vocabulaire
 
 ### `Git` c'est quoi ?
