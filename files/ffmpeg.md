@@ -14,7 +14,7 @@ Copyright Its-Just-Nans
 ● Compress a file
 
 ```sh
-& 'C:\Program Files\ffmpeg\bin\ffmpeg.exe' -i input.mp4 -preset veryslow OUTPUT_NAME.mp4
+ffmpeg -i input.mp4 -preset veryslow OUTPUT_NAME.mp4
 ```
 
 > Legend :
@@ -24,7 +24,7 @@ Copyright Its-Just-Nans
 ● Zoom in a video
 
 ```sh
-& 'C:\Program Files\ffmpeg\bin\ffmpeg.exe' -i .\input.mp4 -vf "scale=2*iw:-1, crop=iw/2:ih/2:0:400" OUTPUT_NAME.mp4
+ffmpeg -i input.mp4 -vf "scale=2*iw:-1, crop=iw/2:ih/2:0:400" OUTPUT_NAME.mp4
 ```
 
 > Legend :
@@ -45,8 +45,16 @@ ffmpeg -ss 00:01:00 -i input.mp4 -t 00:02:00 -c copy OUTPUT_NAME.mp4
 > - `t` : This specifies duration from start (00:01:40) to end (00:02:12).
 > - `00:02:00` : This is the time your trimmed video will end with.
 > - `c copy` : This is an option to trim via stream copy. (NB: Very fast)
+> - `OUTPUT_NAME`: need to have the same extension as the input file (or ffmpeg will need to re-encode the video)
 
 [StackOverflow](https://stackoverflow.com/questions/18444194/cutting-the-videos-based-on-start-and-end-time-using-ffmpeg#:~:text=Try%20using%20this.%20It%20is%20the%20fastest%20and%20best%20ffmpeg-way%20I%20have%20figure%20it%20out:)
 
-> - ⚠️ `-t` specifies the duration !
-> - The OUTPUT_NAME need to have the same extension as the input file (or ffmpeg will need to re-encode the video)
+
+- Create GIF
+
+```sh
+ffmpeg -ss 1 -t 11 -i input.mp4 -vf "fps=10,scale=1080:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop 0 output.gif
+```
+
+[Référence](https://superuser.com/a/556031)
+
