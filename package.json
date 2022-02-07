@@ -1,0 +1,31 @@
+{
+  "name": "golb",
+  "version": "1.0.0",
+  "description": "\"golb\".split(\"\").reverse().join(\"\")",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Its-Just-Nans/golb.git"
+  },
+  "author": "n4n5",
+  "license": "MIT",
+  "dependencies": {
+    "clean-css": "^5.2.2",
+    "showdown": "^1.9.1",
+    "showdown-highlight": "^2.1.8",
+    "showdown-katex": "^0.8.0"
+  },
+  "scripts": {
+    "start": "http-server -p 8088",
+    "build": "node index.js build",
+    "build2": "while true; do npm run build; sleep 10; done",
+    "dev": "node index.js build --dev"
+  },
+  "devDependencies": {
+    "http-server": "^13.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/Its-Just-Nans/golb/issues"
+  },
+  "homepage": "https://github.com/Its-Just-Nans/golb#readme"
+}

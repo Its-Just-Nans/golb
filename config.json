@@ -1,0 +1,5 @@
+{
+    "srcDir": "articles",
+    "buildDir": "docs",
+    "templateDir": "template"
+}
