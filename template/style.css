@@ -10,131 +10,7 @@ body {
     --color-first-child: grey;
 }
 
-@media screen and (min-width: 512px) {
-    nav::-webkit-scrollbar {
-        width: 10px;
-    }
 
-    /* Track */
-    nav::-webkit-scrollbar-track {
-        background: #f1f1f1;
-    }
-
-    /* Handle */
-    nav::-webkit-scrollbar-thumb {
-        background: #888;
-    }
-
-    /* Handle on hover */
-    nav::-webkit-scrollbar-thumb:hover {
-        background: #555;
-    }
-
-    #contenuMain::-webkit-scrollbar {
-        width: 10px;
-    }
-
-    /* Track */
-    #contenuMain::-webkit-scrollbar-track {
-        background: #f1f1f1;
-    }
-
-    /* Handle */
-    #contenuMain::-webkit-scrollbar-thumb {
-        background: #888;
-    }
-
-    /* Handle on hover */
-    #contenuMain::-webkit-scrollbar-thumb:hover {
-        background: #555;
-    }
-}
-
-nav ul>li {
-    padding: 0px;
-}
-
-nav ul>li>span {
-    padding: 10px;
-}
-
-nav ul>li>a {
-    padding: 10px;
-    padding-left: 20px;
-}
-
-.coloredMenu>span::after {
-    content: "⬅️";
-}
-
-nav ul>div>div {
-    border-top: 1px solid black;
-    display: flex;
-}
-
-nav ul>div>div>span {
-    padding: 10px;
-}
-
-nav ul>div>div>label {
-    padding: 10px;
-}
-
-nav>ul>div:last-child {
-    border-bottom: 1px solid black;
-}
-
-nav {
-    z-index: 10000;
-    position: fixed;
-    top: var(--header-height);
-    width: 20vw;
-    height: calc(100vh - var(--header-height));
-    background-color: snow;
-    border-right: 2px solid black;
-    box-sizing: border-box;
-    overflow: auto;
-}
-
-nav {
-    overflow-x: hidden;
-    overflow-y: auto;
-    transition: .2s ease-in-out;
-    transition-property: transform, margin, opacity, visibility;
-    will-change: transform, margin, opacity;
-}
-
-#label-control-menu {
-    flex: 0;
-    display: none;
-}
-
-nav div input:checked~div span::after {
-    content: "-";
-}
-
-nav div input:checked~ul li {
-    display: flex;
-}
-
-nav div div span::after {
-    content: "+";
-}
-
-nav div div label {
-    flex: 0.98;
-    cursor: pointer;
-    padding-left: 10px;
-    margin: 0;
-}
-
-nav>ul>div>ul>li:first-child {
-    border-top: 1px solid var(--color-first-child);
-}
-
-nav>ul>div>ul>li {
-    border-top: 1px dashed var(--color-first-child);
-}
 
 p img {
     max-width: 40vw;
@@ -144,27 +20,10 @@ header>label>img {
     cursor: pointer;
 }
 
-nav>ul>li {
-    background-color: var(--color-li);
-    display: flex;
-}
-
-nav ul ul>li {
-    display: none;
-    margin: 0px;
-    background-color: var(--color-li);
-}
 
 @media screen and (min-width: 0px) and (max-width: 1050px) {
     p img {
         max-width: 100%;
-    }
-
-    nav {
-        width: 16rem;
-        visibility: hidden;
-        transform: translateX(-16rem);
-
     }
 
     #title-div h1 {
@@ -200,7 +59,7 @@ nav ul ul>li {
     }
 }
 
-#label-control-menu>img {
+#label-control-menu>svg {
     margin: 0px;
 }
 
@@ -214,11 +73,6 @@ input.toggle {
 
 .hidden {
     display: none;
-}
-
-[type=checkbox], [type=radio] {
-    box-sizing: border-box;
-    padding: 0;
 }
 
 header {
@@ -264,10 +118,6 @@ pre::-webkit-scrollbar-track {
     margin: 14px auto;
 }
 
-nav li {
-    margin: 0px;
-    list-style-type: none;
-}
 
 #titleNav {
     text-align: center;
@@ -287,37 +137,13 @@ nav li {
     font-family: 'Segoe UI', Ubuntu, sans-serif;
 }
 
-nav a {
-    text-decoration: none;
-    color: black;
-    display: block;
-    flex: 0.96;
-    padding-left: 10px;
-}
-
 #globalReadMe {
     font-size: 1.15em;
 }
 
-nav ul {
-    overflow: hidden;
-    background-color: var(--color-nav-ul);
-}
 
 ul {
     padding-inline-start: 0px;
-}
-
-nav p {
-    margin: 0px;
-}
-
-nav ul p {
-    padding-left: 10px;
-}
-
-nav ul {
-    margin: 0px;
 }
 
 @media screen and (min-width: 0px) and (max-width: 1050px) {
@@ -367,4 +193,25 @@ pre code.hljs {
 
 code.hljs {
     padding: 3px 5px
+}
+
+@media screen and (min-width: 512px) {
+    #contenuMain::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    /* Track */
+    #contenuMain::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    /* Handle */
+    #contenuMain::-webkit-scrollbar-thumb {
+        background: #888;
+    }
+
+    /* Handle on hover */
+    #contenuMain::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
 }

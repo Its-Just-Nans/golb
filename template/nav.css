@@ -1,0 +1,165 @@
+@media screen and (min-width: 512px) {
+    nav::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    /* Track */
+    nav::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    /* Handle */
+    nav::-webkit-scrollbar-thumb {
+        background: #888;
+    }
+
+    /* Handle on hover */
+    nav::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+}
+
+nav ul>li {
+    padding: 0px;
+}
+
+nav ul>li>span {
+    padding: 10px;
+}
+
+nav ul>li>a {
+    padding: 10px;
+    padding-left: 20px;
+}
+
+nav .coloredMenu>span::after {
+    content: "⬅️";
+}
+
+nav ul>div>div {
+    border-top: 1px solid black;
+    display: flex;
+}
+
+nav ul>div>div>span {
+    padding: 10px;
+}
+
+nav ul>div>div>label {
+    padding: 10px;
+}
+
+nav>ul>div:last-child {
+    border-bottom: 1px solid black;
+}
+
+nav {
+    z-index: 10000;
+    position: fixed;
+    top: var(--header-height);
+    width: 20vw;
+    height: calc(100vh - var(--header-height));
+    background-color: snow;
+    border-right: 2px solid black;
+    box-sizing: border-box;
+    overflow: auto;
+}
+
+nav {
+    overflow-x: hidden;
+    overflow-y: auto;
+    transition: .2s ease-in-out;
+    transition-property: transform, margin, opacity, visibility;
+    will-change: transform, margin, opacity;
+}
+
+#label-control-menu {
+    flex: 0;
+    display: none;
+}
+
+nav div input:checked~div span::after {
+    content: "-";
+}
+
+nav div input:checked~ul li {
+    display: flex;
+}
+
+nav div div span::after {
+    content: "+";
+}
+
+nav div div label {
+    flex: 0.98;
+    cursor: pointer;
+    padding-left: 10px;
+    margin: 0;
+}
+
+nav>ul>div>ul>li:first-child {
+    border-top: 1px solid var(--color-first-child);
+}
+
+nav>ul>div>ul>li {
+    border-top: 1px dashed var(--color-first-child);
+}
+
+
+
+nav>ul>li {
+    background-color: var(--color-li);
+    display: flex;
+}
+
+nav ul ul>li {
+    display: none;
+    margin: 0px;
+    background-color: var(--color-li);
+}
+
+
+[type=checkbox], [type=radio] {
+    box-sizing: border-box;
+    padding: 0;
+}
+
+nav li {
+    margin: 0px;
+    list-style-type: none;
+}
+
+nav a {
+    text-decoration: none;
+    color: black;
+    display: block;
+    flex: 0.96;
+    padding-left: 10px;
+}
+
+nav ul {
+    overflow: hidden;
+    background-color: var(--color-nav-ul);
+}
+
+nav p {
+    margin: 0px;
+}
+
+nav ul p {
+    padding-left: 10px;
+}
+
+nav ul {
+    margin: 0px;
+}
+
+@media screen and (min-width: 0px) and (max-width: 1050px) {
+
+    nav {
+        width: 16rem;
+        visibility: hidden;
+        transform: translateX(-16rem);
+
+    }
+}

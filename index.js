@@ -17,6 +17,7 @@ const run = async () => {
     const completeMenu = await commands.makeMenu();
     await fs.writeFile("menu.json", JSON.stringify(completeMenu, null, 4))
     await commands.build(completeMenu, completeMenu, { dev, files });
+    await commands.compileCSS();
     await commands.copyDataFolder();
 }
 

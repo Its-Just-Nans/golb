@@ -5,20 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="description" content="Just a simple website" />
 <link rel="icon" href="https://its-just-nans.github.io/favicon.ico" />
-<link rel="stylesheet" href="https://its-just-nans.github.io/cdn/custom.showdown.css" />
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
-<link rel="stylesheet" href="https://unpkg.com/katex@0.10.0/dist/katex.min.css" />
+<link rel="stylesheet" href="./style.css" />
     <title>golb | HighlightSearch</title>
-    <style>@import url(https://fonts.googleapis.com/css2?family=PT+Sans&display=swap);body{margin:0;font-family:"PT Sans",sans-serif;--header-height:60px;--flexing:0.5;--color-li:ghostwhite;--color-nav-ul:lavender;--color-first-child:grey}@media screen and (min-width:512px){nav::-webkit-scrollbar{width:10px}nav::-webkit-scrollbar-track{background:#f1f1f1}nav::-webkit-scrollbar-thumb{background:#888}nav::-webkit-scrollbar-thumb:hover{background:#555}#contenuMain::-webkit-scrollbar{width:10px}#contenuMain::-webkit-scrollbar-track{background:#f1f1f1}#contenuMain::-webkit-scrollbar-thumb{background:#888}#contenuMain::-webkit-scrollbar-thumb:hover{background:#555}}nav ul>li{padding:0}nav ul>li>span{padding:10px}nav ul>li>a{padding:10px;padding-left:20px}.coloredMenu>span::after{content:"⬅️"}nav ul>div>div{border-top:1px solid #000;display:flex}nav ul>div>div>span{padding:10px}nav ul>div>div>label{padding:10px}nav>ul>div:last-child{border-bottom:1px solid #000}nav{z-index:10000;position:fixed;top:var(--header-height);width:20vw;height:calc(100vh - var(--header-height));background-color:snow;border-right:2px solid #000;box-sizing:border-box;overflow:auto}nav{overflow-x:hidden;overflow-y:auto;transition:.2s ease-in-out;transition-property:transform,margin,opacity,visibility;will-change:transform,margin,opacity}#label-control-menu{flex:0;display:none}nav div input:checked~div span::after{content:"-"}nav div input:checked~ul li{display:flex}nav div div span::after{content:"+"}nav div div label{flex:0.98;cursor:pointer;padding-left:10px;margin:0}nav>ul>div>ul>li:first-child{border-top:1px solid var(--color-first-child)}nav>ul>div>ul>li{border-top:1px dashed var(--color-first-child)}p img{max-width:40vw}header>label>img{cursor:pointer}nav>ul>li{background-color:var(--color-li);display:flex}nav ul ul>li{display:none;margin:0;background-color:var(--color-li)}@media screen and (min-width:0px) and (max-width:1050px){p img{max-width:100%}nav{width:16rem;visibility:hidden;transform:translateX(-16rem)}#title-div h1{text-align:right;margin-right:10px!important}#menu-control:checked~#label-control{display:block;position:absolute;top:0;bottom:0;width:100vw;height:100vh;background-color:transparent;z-index:500}#menu-control:checked~nav{transform:translateX(0);box-shadow:0 0 .5rem rgb(0 0 0 / 10%);visibility:visible}#label-control-menu{display:inline;margin:auto 10px;flex:var(--flexing)}#title-div{flex:calc(1 - var(--flexing))}}#label-control-menu>img{margin:0}input.toggle{height:0;width:0;overflow:hidden;opacity:0;position:absolute}.hidden{display:none}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}header{position:fixed;width:100vw;background-color:#f5f5f5;height:var(--header-height);display:flex;border-bottom:1px solid #000;box-sizing:border-box}.open-button{flex:0;display:none}#title-div{flex:1;text-align:center;font-family:"Segoe UI",Ubuntu,Sans-Serif;font-weight:700}code{word-break:break-all}pre::-webkit-scrollbar{width:10px;height:10px}pre::-webkit-scrollbar-thumb{background:#888}pre::-webkit-scrollbar-track{background:#f1f1f1}#title-div h1{margin:14px auto}nav li{margin:0;list-style-type:none}#titleNav{text-align:center}#contenuMain{position:fixed;right:0;top:var(--header-height);width:80vw;height:calc(100vh - var(--header-height));padding:50px;box-sizing:border-box;overflow:auto;padding-bottom:70px;font-family:'Segoe UI',Ubuntu,sans-serif}nav a{text-decoration:none;color:#000;display:block;flex:0.96;padding-left:10px}#globalReadMe{font-size:1.15em}nav ul{overflow:hidden;background-color:var(--color-nav-ul)}ul{padding-inline-start:0px}nav p{margin:0}nav ul p{padding-left:10px}nav ul{margin:0}@media screen and (min-width:0px) and (max-width:1050px){.open-button{display:block;height:5vh;flex:0.1}#contenuMain{width:100vw}#titleNav{margin-top:15px;margin-bottom:0}#globalReadMe{font-size:.9em}#globalReadMe>ul{padding-inline-start:20px}#globalReadMe>blockquote>ul{padding-inline-start:20px}}.katex-html .base{margin-bottom:5px}pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px} pre{background-color:#f8f8ff}code{background-color:#e6e6fa!important}/*!
-  Theme: GitHub
-  Description: Light theme as seen on github.com
-  Author: github.com
-  Maintainer: @Hirse
-  Updated: 2021-05-15
-
-  Outdated base version: https://github.com/primer/github-syntax-light
-  Current colors taken from GitHub's CSS
-*/.hljs{color:#24292e;background:#fff}.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-template-tag,.hljs-template-variable,.hljs-type,.hljs-variable.language_{color:#d73a49}.hljs-title,.hljs-title.class_,.hljs-title.class_.inherited__,.hljs-title.function_{color:#6f42c1}.hljs-attr,.hljs-attribute,.hljs-literal,.hljs-meta,.hljs-number,.hljs-operator,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-id,.hljs-variable{color:#005cc5}.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#032f62}.hljs-built_in,.hljs-symbol{color:#e36209}.hljs-code,.hljs-comment,.hljs-formula{color:#6a737d}.hljs-name,.hljs-quote,.hljs-selector-pseudo,.hljs-selector-tag{color:#22863a}.hljs-subst{color:#24292e}.hljs-section{color:#005cc5;font-weight:700}.hljs-bullet{color:#735c0f}.hljs-emphasis{color:#24292e;font-style:italic}.hljs-strong{color:#24292e;font-weight:700}.hljs-addition{color:#22863a;background-color:#f0fff4}.hljs-deletion{color:#b31d28;background-color:#ffeef0}</style>
 </head>
 
 <body>
@@ -26,7 +14,11 @@
     <label for="menu-control" id="label-control"></label>
     <header>
         <label for="menu-control" id="label-control-menu">
-            <img src="https://hugo-book-demo.netlify.app/svg/menu.svg" class="book-icon" alt="Menu">
+            <svg class="book-icon" alt="Menu" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                viewBox="0 0 24 24">
+                <path fill="none" d="M0 0h24v24H0V0z" />
+                <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+            </svg>
         </label>
         <div id="title-div">
             <a href="./">

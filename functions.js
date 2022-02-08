@@ -1,4 +1,4 @@
-const { promises: fs, existsSync: eS, createReadStream, createWriteStream } = require("fs");
+const { promises: fs, existsSync: eS, createReadStream, createWriteStream, mkdirSync } = require("fs");
 const config = require("./config.json")
 const path = require("path");
 const numberOfSpace = 4;
@@ -12,6 +12,7 @@ const CleanCSS = require("clean-css");
 const showdown = require('showdown');
 const showdownKatex = require("showdown-katex");
 const showdownHighlight = require("showdown-highlight");
+const { default: axios } = require("axios");
 const converter = new showdown.Converter({
     openLinksInNewWindow: true,
     extensions: [
@@ -126,12 +127,6 @@ const build = async (menu, completeMenu = menu, variable = {}) => {
     const prod = !dev;
     const cssLinks = (await fs.readFile(path.join(pathToTemplate, "head.html"))).toString();
     const template = (await fs.readFile(path.join(pathToTemplate, "template.html"))).toString();
-    const cssFile = (await fs.readFile(path.join(pathToTemplate, "style.css"))).toString();
-    const cssFile2 = (await fs.readFile(path.join(pathToTemplate, "dark_theme.css"))).toString();
-    const cssFile3 = (await fs.readFile(path.join(pathToTemplate, "github_theme.css"))).toString();
-    const { styles } = new CleanCSS().minify(cssFile);
-    const { styles: styles2 } = new CleanCSS().minify(cssFile2);
-    const { styles: styles3 } = new CleanCSS().minify(cssFile3);
     // let indexJS = (await fs.readFile(path.join(pathToTemplate, "index.js"))).toString();
     // if (prod) {
     //     indexJS = UglifyJS.minify(indexJS).code;
@@ -151,18 +146,47 @@ const build = async (menu, completeMenu = menu, variable = {}) => {
             finalFile = finalFile.replace("<!--TITLE-->", `<title>golb | ${oneEntry.name}</title>`);
             finalFile = finalFile.replace("<head>", `<head>\n${cssLinks}`);
             finalFile = finalFile.replace("<!--MENU-->", htmlMenu)
-            finalFile = finalFile.replace("<!--STYLE-->", `<style>${styles} ${styles3}</style>`)
+            //finalFile = finalFile.replace("<!--STYLE-->", `<style> ${styles4} ${styles} ${styles3}</style>`)
             //finalFile = finalFile.replace("<!--SPECIAL_SCRIPT-->", `<script>${indexJS}</script>`)
             await fs.writeFile(path.join(pathToBuild, oneEntry.htmlName), finalFile);
         } else {
-            build(oneEntry.files, completeMenu, { dev });
+            await build(oneEntry.files, completeMenu, { dev });
         }
     }
-    //await moveFile();
+}
+
+const compileCSS = async () => {
+    let css = "";
+    const CSScompiler = new CleanCSS();
+    for (const oneFile of config.cssFile) {
+        var filename = oneFile.split('/').pop();
+        if (!eS("raws")) {
+            mkdirSync("raws");
+        }
+        const listOfRaws = await fs.readdir("raws");
+        let dataCSS = "";
+        if (listOfRaws.includes(filename)) {
+            dataCSS = await fs.readFile(path.join("raws", filename))
+        } else {
+            const req = await axios.get(oneFile);
+            await fs.writeFile(path.join("raws", filename), req.data);
+            dataCSS = req.data;
+        }
+        css += CSScompiler.minify(dataCSS).styles;
+    }
+    const pathToCompiled = path.join(config.buildDir, "style.css")
+    const cssFile = (await fs.readFile(path.join(pathToTemplate, "style.css"))).toString();
+    const cssFile2 = (await fs.readFile(path.join(pathToTemplate, "dark_theme.css"))).toString();
+    const cssFile3 = (await fs.readFile(path.join(pathToTemplate, "github_theme.css"))).toString();
+    const cssFile4 = (await fs.readFile(path.join(pathToTemplate, "nav.css"))).toString();
+    css += CSScompiler.minify(cssFile4).styles;
+    css += CSScompiler.minify(cssFile).styles;
+    css += CSScompiler.minify(cssFile3).styles;
+    await fs.writeFile(pathToCompiled, css);
 }
 
 const moveFile = async () => {
-    const array = ["index.js", "style.css"]
+    const array = ["style.css"]
     for (const oneElement of array) {
         const oldPath = path.join(__dirname, config.templateDir, oneElement);
         const goodPath = path.join(__dirname, config.buildDir, oneElement);
@@ -208,5 +232,6 @@ module.exports = {
     makeMenu,
     makeHTMLMenu,
     build,
-    copyDataFolder
+    copyDataFolder,
+    compileCSS
 }
