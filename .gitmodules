@@ -1,3 +1,3 @@
 [submodule "articles"]
-	path = articles
-	url = https://github.com/its-Just-Nans/articles
+path = articles
+url = git@github.com:Its-Just-Nans/articles.git
