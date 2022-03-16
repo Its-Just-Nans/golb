@@ -142,10 +142,6 @@ pre::-webkit-scrollbar-track {
 }
 
 
-ul {
-    padding-inline-start: 0px;
-}
-
 @media screen and (min-width: 0px) and (max-width: 1050px) {
     .open-button {
         display: block;
