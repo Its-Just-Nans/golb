@@ -6,7 +6,7 @@
 <meta name="description" content="Just a simple website" />
 <link rel="icon" href="https://its-just-nans.github.io/favicon.ico" />
 <link rel="stylesheet" href="./style.css" />
-    <title>golb | PHP</title>
+    <title>golb | Java</title>
 </head>
 
 <body>
@@ -45,9 +45,9 @@
         <div><input type="checkbox" class="hidden toggle"  checked id="menu-control-3"><div><label for="menu-control-3">Languages</label><span></span></div>        <ul>
             <li><a href="./clanguage.html">C Langage</a><span></span></li>
             <li><a href="./java-apk.html">Java-apk</a><span></span></li>
-            <li><a href="./java.html">Java</a><span></span></li>
+            <li class="coloredMenu"><a href="./java.html">Java</a><span></span></li>
             <li><a href="./linux.html">Linux</a><span></span></li>
-            <li class="coloredMenu"><a href="./php.html">PHP</a><span></span></li>
+            <li><a href="./php.html">PHP</a><span></span></li>
             <li><a href="./python.html">Python</a><span></span></li>
         </ul></div>
         <div><input type="checkbox" class="hidden toggle"  id="menu-control-4"><div><label for="menu-control-4">Linux</label><span></span></div>        <ul>
@@ -71,20 +71,71 @@
     </ul>
 </nav>
     <section id="contenuMain">
-        <h1 id="php">PHP</h1>
-<h2 id="how-to-print-and-get-errors">How to print and get errors</h2>
-<pre><code class="hljs php language-php">ini_set(<span class="hljs-string">&#x27;display_errors&#x27;</span>, <span class="hljs-string">&#x27;1&#x27;</span>);
-ini_set(<span class="hljs-string">&#x27;display_startup_errors&#x27;</span>, <span class="hljs-string">&#x27;1&#x27;</span>);
-error_reporting(E_ALL);
+        <h1 id="java">Java</h1>
+<h2 id="try-catch-with-autocloseable">try catch with <code>AutoCloseable</code></h2>
+<pre><code class="hljs java language-java"><span class="hljs-keyword">try</span>(
+<span class="hljs-comment">// AutoCloseable here</span>
+) {
 
-<span class="hljs-comment">//code here</span></code></pre>
-<p>Reference : <a href="https://stackoverflow.com/questions/1053424/how-do-i-get-php-errors-to-display" rel="noopener noreferrer" target="_blank">stackOverflow</a></p>
-<h2 id="start-a-simple-php-local-server">Start a simple PHP local server</h2>
-<pre><code class="hljs sh language-sh">php -S localhost:8080</code></pre>
-<blockquote>
-  <p>Caption :</p>
-  <p><code>-S &lt;addr&gt;:&lt;port&gt;</code> :  Run with built-in web server</p>
-</blockquote>
+} <span class="hljs-keyword">catch</span>(Expression e) {
+
+}</code></pre>
+<h2 id="examples-of-stream">Examples of stream</h2>
+<table>
+<thead>
+<tr>
+<th id="input" style="text-align:center;">Input</th>
+<th id="output" style="text-align:center;">Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;"><code>FileInputStream</code></td>
+<td style="text-align:center;"><code>FileOutputStream</code></td>
+</tr>
+<tr>
+<td style="text-align:center;"><code>BiteArrayInputStream</code></td>
+<td style="text-align:center;"><code>BiteArrayOutputStream</code></td>
+</tr>
+<tr>
+<td style="text-align:center;"><code>BufferedInputStream</code></td>
+<td style="text-align:center;"><code>BufferedOutputStream</code></td>
+</tr>
+<tr>
+<td style="text-align:center;"><code>DataInputStream</code></td>
+<td style="text-align:center;"><code>DataOutputStream</code></td>
+</tr>
+<tr>
+<td style="text-align:center;"><code>ObjectInputStream</code></td>
+<td style="text-align:center;"><code>ObjectOutputStream</code></td>
+</tr>
+<tr>
+<td style="text-align:center;"><code>PipedInputStream</code></td>
+<td style="text-align:center;"><code>PipedOutputStream</code></td>
+</tr>
+<tr>
+<td style="text-align:center;"><code>GzipInputStream</code></td>
+<td style="text-align:center;"><code>GzipOutputStream</code></td>
+</tr>
+<tr>
+<td style="text-align:center;"><code>SequenceInputStream</code></td>
+<td style="text-align:center;"><code>SequenceOutputStream</code></td>
+</tr>
+<tr>
+<td style="text-align:center;"><code>AudioInputStream</code></td>
+<td style="text-align:center;"><code>AudioOutputStream</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="useful-class">Useful class</h2>
+<ul>
+<li><code>FileReader</code></li>
+<li><code>Scanner</code></li>
+<li><code>PrintWriter</code></li>
+<li><code>BufferedReader</code></li>
+</ul>
+<p>Use buffer with a file : <code>FileReader</code>-&gt;<code>BufferedReader</code>-&gt;<code>Scanner</code></p>
+<h2 id="protected-public-private">Protected, public private</h2>
     </section>
     <!--SPECIAL_SCRIPT-->
 </body>

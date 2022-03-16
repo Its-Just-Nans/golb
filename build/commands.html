@@ -6,7 +6,7 @@
 <meta name="description" content="Just a simple website" />
 <link rel="icon" href="https://its-just-nans.github.io/favicon.ico" />
 <link rel="stylesheet" href="./style.css" />
-    <title>golb | PHP</title>
+    <title>golb | Commands</title>
 </head>
 
 <body>
@@ -42,16 +42,16 @@
             <li><a href="./javascript.html">Javascript</a><span></span></li>
             <li><a href="./node-js.html">Node-js</a><span></span></li>
         </ul></div>
-        <div><input type="checkbox" class="hidden toggle"  checked id="menu-control-3"><div><label for="menu-control-3">Languages</label><span></span></div>        <ul>
+        <div><input type="checkbox" class="hidden toggle"  id="menu-control-3"><div><label for="menu-control-3">Languages</label><span></span></div>        <ul>
             <li><a href="./clanguage.html">C Langage</a><span></span></li>
             <li><a href="./java-apk.html">Java-apk</a><span></span></li>
             <li><a href="./java.html">Java</a><span></span></li>
             <li><a href="./linux.html">Linux</a><span></span></li>
-            <li class="coloredMenu"><a href="./php.html">PHP</a><span></span></li>
+            <li><a href="./php.html">PHP</a><span></span></li>
             <li><a href="./python.html">Python</a><span></span></li>
         </ul></div>
-        <div><input type="checkbox" class="hidden toggle"  id="menu-control-4"><div><label for="menu-control-4">Linux</label><span></span></div>        <ul>
-            <li><a href="./commands.html">Commands</a><span></span></li>
+        <div><input type="checkbox" class="hidden toggle"  checked id="menu-control-4"><div><label for="menu-control-4">Linux</label><span></span></div>        <ul>
+            <li class="coloredMenu"><a href="./commands.html">Commands</a><span></span></li>
             <li><a href="./debian.html">Debian</a><span></span></li>
             <li><a href="./ffmpeg.html">ffmpeg</a><span></span></li>
             <li><a href="./formatage.html">Formatage</a><span></span></li>
@@ -71,20 +71,68 @@
     </ul>
 </nav>
     <section id="contenuMain">
-        <h1 id="php">PHP</h1>
-<h2 id="how-to-print-and-get-errors">How to print and get errors</h2>
-<pre><code class="hljs php language-php">ini_set(<span class="hljs-string">&#x27;display_errors&#x27;</span>, <span class="hljs-string">&#x27;1&#x27;</span>);
-ini_set(<span class="hljs-string">&#x27;display_startup_errors&#x27;</span>, <span class="hljs-string">&#x27;1&#x27;</span>);
-error_reporting(E_ALL);
-
-<span class="hljs-comment">//code here</span></code></pre>
-<p>Reference : <a href="https://stackoverflow.com/questions/1053424/how-do-i-get-php-errors-to-display" rel="noopener noreferrer" target="_blank">stackOverflow</a></p>
-<h2 id="start-a-simple-php-local-server">Start a simple PHP local server</h2>
-<pre><code class="hljs sh language-sh">php -S localhost:8080</code></pre>
+        <h1 id="useful-commands-on-linux">Useful commands on Linux</h1>
+<pre><code class="hljs sh language-sh">touch
+<span class="hljs-comment"># touch FILE</span></code></pre>
+<pre><code class="hljs sh language-sh">mkdir
+<span class="hljs-comment"># mkdir DIR</span></code></pre>
+<pre><code class="hljs sh language-sh">rmdir
+<span class="hljs-comment"># rmdir DIR</span>
+rm -r
+<span class="hljs-comment"># rm -r DIR</span></code></pre>
+<h2 id="compare-file">Compare file</h2>
+<pre><code class="hljs sh language-sh">diff
+<span class="hljs-comment"># diff FILE_1 FILE_2</span>
+cmp
+<span class="hljs-comment"># cmp FILE_1 FILE_2</span>
+comm
+<span class="hljs-comment"># comm FILE_1 FILE_2</span></code></pre>
+<h2 id="compression">Compression</h2>
+<pre><code class="hljs sh language-sh">zip
+<span class="hljs-comment"># zip ARCHIVE.zip FILE</span>
+gzip
+gunzip
+<span class="hljs-comment"># gzip FILE</span>
+bzip2
+<span class="hljs-comment"># bzip2 FILE</span></code></pre>
+<pre><code class="hljs sh language-sh">file
+file</code></pre>
+<pre><code class="hljs sh language-sh">uniq</code></pre>
 <blockquote>
-  <p>Caption :</p>
-  <p><code>-S &lt;addr&gt;:&lt;port&gt;</code> :  Run with built-in web server</p>
+  <p>Delete a two when it's the same</p>
 </blockquote>
+<h2 id="fusion-files">Fusion files</h2>
+<pre><code class="hljs sh language-sh">cat
+<span class="hljs-comment"># cat FILE_1 FILE_2</span>
+paste
+<span class="hljs-comment">#&amp;nbsp;paste FILE_1 FILE_2</span></code></pre>
+<pre><code class="hljs"><span class="hljs-built_in">umask</span></code></pre>
+<blockquote>
+  <p>set file mode creation mask</p>
+</blockquote>
+<h2 id="redirection">Redirection</h2>
+<pre><code class="hljs sh language-sh">cmd &gt; file
+cmd &gt;&gt; FILE</code></pre>
+<pre><code class="hljs sh language-sh">cmd &gt;&amp; FILE</code></pre>
+<p>Standard input</p>
+<pre><code class="hljs">cmd &lt; <span class="hljs-keyword">FILE</span></code></pre>
+<p>Pipes</p>
+<pre><code class="hljs"><span class="hljs-built_in">CMD_1</span> | <span class="hljs-built_in">CMD_2</span></code></pre>
+<pre><code class="hljs"><span class="hljs-built_in">CMD_1</span> ; <span class="hljs-built_in">CMD_2</span> ; <span class="hljs-built_in">CMD_3</span></code></pre>
+<p>Background task</p>
+<pre><code class="hljs">CMD <span class="hljs-meta">&amp;</span></code></pre>
+<p>Conditional commands</p>
+<pre><code class="hljs sh language-sh">CMD_1 &amp;&amp; CMD_2
+CMD_1 || CMD_2</code></pre>
+<pre><code class="hljs">pstree
+<span class="hljs-built_in">kill</span>
+crontab
+nice
+<span class="hljs-built_in">write</span>
+mesg
+telnet
+ssh
+<span class="hljs-keyword">ftp</span></code></pre>
     </section>
     <!--SPECIAL_SCRIPT-->
 </body>

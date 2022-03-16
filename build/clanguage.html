@@ -30,6 +30,8 @@
 <ul class="open-nav">
         <li><a href="./index.html">Index</a><span></span></li>
         <div><input type="checkbox" class="hidden toggle"  id="menu-control-0"><div><label for="menu-control-0">Courses</label><span></span></div>        <ul>
+            <li><a href="./optical.html">Optical</a><span></span></li>
+            <li><a href="./reseaux.html">Reseaux</a><span></span></li>
             <li><a href="./telecom.html">Telecom</a><span></span></li>
         </ul></div>
         <div><input type="checkbox" class="hidden toggle"  id="menu-control-1"><div><label for="menu-control-1">Git</label><span></span></div>        <ul>
@@ -42,11 +44,14 @@
         </ul></div>
         <div><input type="checkbox" class="hidden toggle"  checked id="menu-control-3"><div><label for="menu-control-3">Languages</label><span></span></div>        <ul>
             <li class="coloredMenu"><a href="./clanguage.html">C Langage</a><span></span></li>
+            <li><a href="./java-apk.html">Java-apk</a><span></span></li>
+            <li><a href="./java.html">Java</a><span></span></li>
             <li><a href="./linux.html">Linux</a><span></span></li>
             <li><a href="./php.html">PHP</a><span></span></li>
             <li><a href="./python.html">Python</a><span></span></li>
         </ul></div>
         <div><input type="checkbox" class="hidden toggle"  id="menu-control-4"><div><label for="menu-control-4">Linux</label><span></span></div>        <ul>
+            <li><a href="./commands.html">Commands</a><span></span></li>
             <li><a href="./debian.html">Debian</a><span></span></li>
             <li><a href="./ffmpeg.html">ffmpeg</a><span></span></li>
             <li><a href="./formatage.html">Formatage</a><span></span></li>
@@ -100,9 +105,52 @@
 %d *pointerTOnumber = <span class="hljs-number">7</span>                  <span class="hljs-comment">//valeur pointée par le pointeur (donc celle de number) sous forme décimale</span>
 %p *pointerTOnumber = <span class="hljs-number">0x7</span>                <span class="hljs-comment">//valeur pointée par le pointeur (donc celle de number) sous forme hexa car %p</span></code></pre>
 <blockquote>
-  <p>On peut donc lire "<strong><code>l'adresse de</code></strong>" pour le symbole <code>&amp;</code></p>
-  <p>On peut donc lire "<strong><code>la valeur pointée par</code></strong>" pour le symbole <code>*</code></p>
+  <p>Caption :</p>
+  <ul>
+  <li><code>&amp;</code> : On peut donc lire "<strong><code>l'adresse de</code></strong>"</li>
+  <li><code>*</code> : "<strong><code>la valeur pointée par</code></strong>"</li>
+  <li>Accéder à une valeur avec <code>*</code> s'appelle un déréférencement</li>
+  </ul>
 </blockquote>
+<hr>
+<h2 id="compilation">Compilation</h2>
+<table>
+<thead>
+<tr>
+<th id="entrée" style="text-align:center;">Entrée</th>
+<th id="nom" style="text-align:center;">Nom</th>
+<th id="sortie" style="text-align:center;">Sortie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;"><code>.c</code></td>
+<td style="text-align:center;">Préprocesseur</td>
+<td style="text-align:center;"><code>.i</code></td>
+</tr>
+<tr>
+<td style="text-align:center;"><code>.i</code></td>
+<td style="text-align:center;">Compilateur</td>
+<td style="text-align:center;"><code>.s</code></td>
+</tr>
+<tr>
+<td style="text-align:center;"><code>.s</code></td>
+<td style="text-align:center;">Assembleur</td>
+<td style="text-align:center;"><code>.o</code></td>
+</tr>
+<tr>
+<td style="text-align:center;"><code>.o</code></td>
+<td style="text-align:center;">Éditeur de lien</td>
+<td style="text-align:center;"><code>.out</code></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="vocabulaire">Vocabulaire</h2>
+<ul>
+<li>Une <code>fonction</code> renvoie une valeur</li>
+<li>Une <code>procédure</code> prend en argument un pointeur et remplit le pointeur</li>
+</ul>
 <hr>
 <h2 id="paramètre-de-main-en-c">Paramètre de main en C</h2>
 <p><code>argv[0]</code> contiendra tout le temps le nom du programme</p>
@@ -113,10 +161,17 @@
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }</code></pre>
 <hr>
-<h2 id="useful-options">Useful options</h2>
+<h2 id="gcc-useful-options">GCC useful options</h2>
 <ul>
 <li><p><code>-Wall</code> : This enables all the warnings about constructions that some users consider questionable, and that are easy to avoid (or modify to prevent the warning), even in conjunction with macros.</p></li>
 <li><p><code>-E</code> : Stop after the preprocessing stage; do not run the compiler proper. The output is in the form of preprocessed source code, which is sent to the standard output</p></li>
+<li><p><code>-DDEBUG</code> :</p></li>
+<li><p><code>-E</code> : Affiche la sortie du préprocesseur</p></li>
+<li><p><code>-g</code> : Met des points de debug</p></li>
+<li><p><code>-l</code> : Mettre une librairie</p></li>
+<li><p><code>-v</code> : </p></li>
+<li><p><code>-save-temps</code> :</p></li>
+<li><p><code>-c</code> : Créer des fichiers objets </p></li>
 </ul>
     </section>
     <!--SPECIAL_SCRIPT-->

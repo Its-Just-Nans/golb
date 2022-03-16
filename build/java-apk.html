@@ -6,7 +6,7 @@
 <meta name="description" content="Just a simple website" />
 <link rel="icon" href="https://its-just-nans.github.io/favicon.ico" />
 <link rel="stylesheet" href="./style.css" />
-    <title>golb | PHP</title>
+    <title>golb | Java-apk</title>
 </head>
 
 <body>
@@ -44,10 +44,10 @@
         </ul></div>
         <div><input type="checkbox" class="hidden toggle"  checked id="menu-control-3"><div><label for="menu-control-3">Languages</label><span></span></div>        <ul>
             <li><a href="./clanguage.html">C Langage</a><span></span></li>
-            <li><a href="./java-apk.html">Java-apk</a><span></span></li>
+            <li class="coloredMenu"><a href="./java-apk.html">Java-apk</a><span></span></li>
             <li><a href="./java.html">Java</a><span></span></li>
             <li><a href="./linux.html">Linux</a><span></span></li>
-            <li class="coloredMenu"><a href="./php.html">PHP</a><span></span></li>
+            <li><a href="./php.html">PHP</a><span></span></li>
             <li><a href="./python.html">Python</a><span></span></li>
         </ul></div>
         <div><input type="checkbox" class="hidden toggle"  id="menu-control-4"><div><label for="menu-control-4">Linux</label><span></span></div>        <ul>
@@ -71,20 +71,35 @@
     </ul>
 </nav>
     <section id="contenuMain">
-        <h1 id="php">PHP</h1>
-<h2 id="how-to-print-and-get-errors">How to print and get errors</h2>
-<pre><code class="hljs php language-php">ini_set(<span class="hljs-string">&#x27;display_errors&#x27;</span>, <span class="hljs-string">&#x27;1&#x27;</span>);
-ini_set(<span class="hljs-string">&#x27;display_startup_errors&#x27;</span>, <span class="hljs-string">&#x27;1&#x27;</span>);
-error_reporting(E_ALL);
-
-<span class="hljs-comment">//code here</span></code></pre>
-<p>Reference : <a href="https://stackoverflow.com/questions/1053424/how-do-i-get-php-errors-to-display" rel="noopener noreferrer" target="_blank">stackOverflow</a></p>
-<h2 id="start-a-simple-php-local-server">Start a simple PHP local server</h2>
-<pre><code class="hljs sh language-sh">php -S localhost:8080</code></pre>
+        <h1 id="decompile-an-app">Decompile an app</h1>
+<h2 id="install-apk-extractor">Install APK Extractor</h2>
+<p>Download link : <a href="https://play.google.com/store/apps/details?id=com.ext.ui" rel="noopener noreferrer" target="_blank">APK Extractor</a></p>
+<h2 id="run-apk-extractor">Run APK Extractor</h2>
+<p>Use it to extract the .apk of your file<br>
+Download the <code>APP_NAME.apk</code> on your computer</p>
+<h2 id="download-dex2jar">Download <code>dex2jar</code></h2>
+<p><a href="https://github.com/pxb1988/dex2jar" rel="noopener noreferrer" target="_blank">dex2jar</a></p>
+<p><a href="https://github.com/pxb1988/dex2jar/releases" rel="noopener noreferrer" target="_blank">Download link</a></p>
+<h2 id="use-dex2jar">Use <code>dex2jar</code></h2>
+<ul>
+<li>decompress it</li>
+<li>use the command</li>
+</ul>
+<pre><code class="hljs sh language-sh">path/to/dex-tools-2.1/d2j-dex2jar.sh APP_NAME.apk</code></pre>
+<ul>
+<li>use <code>d2j-dex2jar.bat</code> for Windows</li>
+</ul>
 <blockquote>
-  <p>Caption :</p>
-  <p><code>-S &lt;addr&gt;:&lt;port&gt;</code> :  Run with built-in web server</p>
+  <p><code>APP_NAME-dex2jar.jar</code> will be created</p>
 </blockquote>
+<h2 id="download-jd-gui">Download <code>jd-gui</code></h2>
+<p><a href="https://github.com/java-decompiler/jd-gui" rel="noopener noreferrer" target="_blank">jd-gui</a> </p>
+<p><a href="https://github.com/java-decompiler/jd-gui/releases" rel="noopener noreferrer" target="_blank">Download link</a></p>
+<h2 id="use-jd-gui">Use <code>jd-gui</code></h2>
+<pre><code class="hljs sh language-sh">java -jar jd-gui-1.6.6.jar APP_NAME-dex2jar.jar</code></pre>
+<ul>
+<li>Now you can see classes and save them</li>
+</ul>
     </section>
     <!--SPECIAL_SCRIPT-->
 </body>
