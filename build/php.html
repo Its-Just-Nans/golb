@@ -80,7 +80,12 @@ error_reporting(E_ALL);
 <span class="hljs-comment">//code here</span></code></pre>
 <p>Reference : <a href="https://stackoverflow.com/questions/1053424/how-do-i-get-php-errors-to-display" rel="noopener noreferrer" target="_blank">stackOverflow</a></p>
 <h2 id="start-a-simple-php-local-server">Start a simple PHP local server</h2>
-<pre><code class="hljs sh language-sh">php -S localhost:8080</code></pre>
+<pre><code class="hljs sh language-sh"><span class="hljs-comment"># only localhost !</span>
+php -S localhost:8080
+<span class="hljs-comment"># for external access</span>
+php -S 0.0.0.0:8080
+<span class="hljs-comment"># or</span>
+php -S 0:8080</code></pre>
 <blockquote>
   <p>Caption :</p>
   <p><code>-S &lt;addr&gt;:&lt;port&gt;</code> :  Run with built-in web server</p>
