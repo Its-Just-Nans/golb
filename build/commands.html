@@ -46,7 +46,6 @@
             <li><a href="./clanguage.html">C Langage</a><span></span></li>
             <li><a href="./java-apk.html">Java-apk</a><span></span></li>
             <li><a href="./java.html">Java</a><span></span></li>
-            <li><a href="./linux.html">Linux</a><span></span></li>
             <li><a href="./php.html">PHP</a><span></span></li>
             <li><a href="./python.html">Python</a><span></span></li>
         </ul></div>
@@ -72,10 +71,19 @@
 </nav>
     <section id="contenuMain">
         <h1 id="useful-commands-on-linux">Useful commands on Linux</h1>
+<ul>
+<li>create a file</li>
+</ul>
 <pre><code class="hljs sh language-sh">touch
 <span class="hljs-comment"># touch FILE</span></code></pre>
+<ul>
+<li>create a folder</li>
+</ul>
 <pre><code class="hljs sh language-sh">mkdir
 <span class="hljs-comment"># mkdir DIR</span></code></pre>
+<ul>
+<li>delete a folder</li>
+</ul>
 <pre><code class="hljs sh language-sh">rmdir
 <span class="hljs-comment"># rmdir DIR</span>
 rm -r
@@ -133,6 +141,14 @@ mesg
 telnet
 ssh
 <span class="hljs-keyword">ftp</span></code></pre>
+<h2 id="switch-between-background-and-foreground">Switch between background and foreground</h2>
+<pre><code class="hljs sh language-sh"><span class="hljs-built_in">command</span> &amp;
+<span class="hljs-built_in">fg</span> <span class="hljs-comment"># change to foreground</span>
+<span class="hljs-comment"># pause with CTRL+Z</span>
+<span class="hljs-built_in">bg</span> <span class="hljs-comment"># sent it to background</span></code></pre>
+<h2 id="change-the-pager">Change the pager</h2>
+<p>Change the pager of <code>man</code> :</p>
+<pre><code class="hljs sh language-sh"><span class="hljs-built_in">export</span> PAGER=less</code></pre>
     </section>
     <!--SPECIAL_SCRIPT-->
 </body>
