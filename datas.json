@@ -3,5 +3,6 @@
     "web.md": "web",
     "ppc.md": "PPC",
     "php.md": "PHP",
-    "cLanguage.md": "C Langage"
+    "cLanguage.md": "C Langage",
+    "discord_webhook.md": "Discord Webhooks"
 }
