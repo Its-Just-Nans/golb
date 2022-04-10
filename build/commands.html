@@ -64,7 +64,7 @@
             <li><a href="./sitemap.html">Sitemap</a><span></span></li>
         </ul></div>
         <div><input type="checkbox" class="hidden toggle"  id="menu-control-7"><div><label for="menu-control-7">Web</label><span></span></div>        <ul>
-            <li><a href="./highlightsearch.html">HighlightSearch</a><span></span></li>
+            <li><a href="./knowledge.html">Knowledge</a><span></span></li>
             <li><a href="./threejs.html">Threejs</a><span></span></li>
         </ul></div>
     </ul>
@@ -132,15 +132,21 @@ cmd &gt;&gt; FILE</code></pre>
 <p>Conditional commands</p>
 <pre><code class="hljs sh language-sh">CMD_1 &amp;&amp; CMD_2
 CMD_1 || CMD_2</code></pre>
-<pre><code class="hljs">pstree
+<h2 id="see-kill-signals">See kill signals</h2>
+<pre><code class="hljs sh language-sh"><span class="hljs-comment"># show all signals</span>
+<span class="hljs-built_in">kill</span> -L
+<span class="hljs-built_in">kill</span> -SIGKILL &lt;PID&gt;
+<span class="hljs-built_in">kill</span> -9 &lt;PID&gt;</code></pre>
+<h2 id="others">Others</h2>
+<pre><code class="hljs sh language-sh">pstree
 <span class="hljs-built_in">kill</span>
 crontab
 nice
-<span class="hljs-built_in">write</span>
+write
 mesg
 telnet
 ssh
-<span class="hljs-keyword">ftp</span></code></pre>
+ftp</code></pre>
 <h2 id="switch-between-background-and-foreground">Switch between background and foreground</h2>
 <pre><code class="hljs sh language-sh"><span class="hljs-built_in">command</span> &amp;
 <span class="hljs-built_in">fg</span> <span class="hljs-comment"># change to foreground</span>
