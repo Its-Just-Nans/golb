@@ -91,11 +91,16 @@
 <p><code>git pull</code> : permet de récuperer en local les dernières modifications</p>
 <p><code>git checkout BRANCH_NAME</code> : permet de changer de branche</p>
 <p><code>git branch BRANCH_NAME</code> : permet de créer une branche</p>
+<p><code>git shortlog -sn</code> : Liste les commiters et le nombre de commit</p>
 <h3 id="faire-une-commit">Faire une commit</h3>
 <ul>
 <li>Aller dans l'onglet <code>Source Control</code></li>
 </ul>
 <p><img src="./data/vscode_git.gif" alt="How to commit and push"></p>
+<p>Traduit en commande :</p>
+<pre><code class="hljs sh language-sh">git add template/style.css <span class="hljs-comment"># il est dans le dossier template</span>
+git commit -m <span class="hljs-string">&quot;[feature] add css&quot;</span>
+git push</code></pre>
     </section>
     <!--SPECIAL_SCRIPT-->
 </body>
