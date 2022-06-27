@@ -6,7 +6,7 @@
 <meta name="description" content="Just a simple website" />
 <link rel="icon" href="https://its-just-nans.github.io/favicon.ico" />
 <link rel="stylesheet" href="./style.css" />
-    <title>golb | Java</title>
+    <title>golb | SMTP</title>
 </head>
 
 <body>
@@ -29,11 +29,11 @@
     <nav>
 <ul class="open-nav">
         <li><a href="./index.html">Index</a><span></span></li>
-        <div><input type="checkbox" class="hidden toggle"  id="menu-control-0"><div><label for="menu-control-0">IT</label><span></span></div>        <ul>
+        <div><input type="checkbox" class="hidden toggle"  checked id="menu-control-0"><div><label for="menu-control-0">IT</label><span></span></div>        <ul>
             <li><a href="./dns.html">DNS</a><span></span></li>
             <li><a href="./os.html">OS</a><span></span></li>
             <li><a href="./port.html">Port</a><span></span></li>
-            <li><a href="./smtp.html">SMTP</a><span></span></li>
+            <li class="coloredMenu"><a href="./smtp.html">SMTP</a><span></span></li>
             <li><a href="./sql.html">SQL</a><span></span></li>
             <li><a href="./docker.html">Docker</a><span></span></li>
         </ul></div>
@@ -52,10 +52,10 @@
             <li><a href="./javascript.html">Javascript</a><span></span></li>
             <li><a href="./node-js.html">Node-js</a><span></span></li>
         </ul></div>
-        <div><input type="checkbox" class="hidden toggle"  checked id="menu-control-4"><div><label for="menu-control-4">Languages</label><span></span></div>        <ul>
+        <div><input type="checkbox" class="hidden toggle"  id="menu-control-4"><div><label for="menu-control-4">Languages</label><span></span></div>        <ul>
             <li><a href="./clanguage.html">C Langage</a><span></span></li>
             <li><a href="./java-apk.html">Java-apk</a><span></span></li>
-            <li class="coloredMenu"><a href="./java.html">Java</a><span></span></li>
+            <li><a href="./java.html">Java</a><span></span></li>
             <li><a href="./php.html">PHP</a><span></span></li>
             <li><a href="./python.html">Python</a><span></span></li>
         </ul></div>
@@ -81,71 +81,13 @@
     </ul>
 </nav>
     <section id="contenuMain">
-        <h1 id="java">Java</h1>
-<h2 id="try-catch-with-autocloseable">try catch with <code>AutoCloseable</code></h2>
-<pre><code class="hljs java language-java"><span class="hljs-keyword">try</span>(
-<span class="hljs-comment">// AutoCloseable here</span>
-) {
-
-} <span class="hljs-keyword">catch</span>(Expression e) {
-
-}</code></pre>
-<h2 id="examples-of-stream">Examples of stream</h2>
-<table>
-<thead>
-<tr>
-<th id="input" style="text-align:center;">Input</th>
-<th id="output" style="text-align:center;">Output</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center;"><code>FileInputStream</code></td>
-<td style="text-align:center;"><code>FileOutputStream</code></td>
-</tr>
-<tr>
-<td style="text-align:center;"><code>BiteArrayInputStream</code></td>
-<td style="text-align:center;"><code>BiteArrayOutputStream</code></td>
-</tr>
-<tr>
-<td style="text-align:center;"><code>BufferedInputStream</code></td>
-<td style="text-align:center;"><code>BufferedOutputStream</code></td>
-</tr>
-<tr>
-<td style="text-align:center;"><code>DataInputStream</code></td>
-<td style="text-align:center;"><code>DataOutputStream</code></td>
-</tr>
-<tr>
-<td style="text-align:center;"><code>ObjectInputStream</code></td>
-<td style="text-align:center;"><code>ObjectOutputStream</code></td>
-</tr>
-<tr>
-<td style="text-align:center;"><code>PipedInputStream</code></td>
-<td style="text-align:center;"><code>PipedOutputStream</code></td>
-</tr>
-<tr>
-<td style="text-align:center;"><code>GzipInputStream</code></td>
-<td style="text-align:center;"><code>GzipOutputStream</code></td>
-</tr>
-<tr>
-<td style="text-align:center;"><code>SequenceInputStream</code></td>
-<td style="text-align:center;"><code>SequenceOutputStream</code></td>
-</tr>
-<tr>
-<td style="text-align:center;"><code>AudioInputStream</code></td>
-<td style="text-align:center;"><code>AudioOutputStream</code></td>
-</tr>
-</tbody>
-</table>
-<h2 id="useful-class">Useful class</h2>
+        <h1 id="le-protocole-smtp">Le Protocole SMTP</h1>
+<p>Le protocole SMTP est le protocole à configurer lors de la creation et la configuration d'un serveur de gestion d'e-mails (envoi). Son port par défaut est le <code>25</code>.</p>
+<p>Afin de recevoir des emails sur un client (comme Thunderbird ou Outlook), il est possible d'utiliser les protocoles suivants:</p>
 <ul>
-<li><code>FileReader</code></li>
-<li><code>Scanner</code></li>
-<li><code>PrintWriter</code></li>
-<li><code>BufferedReader</code></li>
+<li><code>IMAP4</code>: Il permet de visualiser et d'apporter les modifications directement sur le serveur de messagerie a partir du client. Seuls les entêtes des messages sont téléchargées. Son port par défaut est le <code>143</code>.</li>
+<li><code>POP3</code>: Le protocole télécharge une copie des messages sur I'ordinateur. Cela permet notamment de travailler sans connexion Internet. Cependant une connexion est nécessaire pour synchroniser les nouveaux messages. Il communique sur le port <code>110</code>.</li>
 </ul>
-<p>Use buffer with a file : <code>FileReader</code>-&gt;<code>BufferedReader</code>-&gt;<code>Scanner</code></p>
-<h2 id="protected-public-private">Protected, public private</h2>
     </section>
     <!--SPECIAL_SCRIPT-->
 </body>

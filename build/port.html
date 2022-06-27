@@ -6,7 +6,7 @@
 <meta name="description" content="Just a simple website" />
 <link rel="icon" href="https://its-just-nans.github.io/favicon.ico" />
 <link rel="stylesheet" href="./style.css" />
-    <title>golb | Java</title>
+    <title>golb | Port</title>
 </head>
 
 <body>
@@ -29,10 +29,10 @@
     <nav>
 <ul class="open-nav">
         <li><a href="./index.html">Index</a><span></span></li>
-        <div><input type="checkbox" class="hidden toggle"  id="menu-control-0"><div><label for="menu-control-0">IT</label><span></span></div>        <ul>
+        <div><input type="checkbox" class="hidden toggle"  checked id="menu-control-0"><div><label for="menu-control-0">IT</label><span></span></div>        <ul>
             <li><a href="./dns.html">DNS</a><span></span></li>
             <li><a href="./os.html">OS</a><span></span></li>
-            <li><a href="./port.html">Port</a><span></span></li>
+            <li class="coloredMenu"><a href="./port.html">Port</a><span></span></li>
             <li><a href="./smtp.html">SMTP</a><span></span></li>
             <li><a href="./sql.html">SQL</a><span></span></li>
             <li><a href="./docker.html">Docker</a><span></span></li>
@@ -52,10 +52,10 @@
             <li><a href="./javascript.html">Javascript</a><span></span></li>
             <li><a href="./node-js.html">Node-js</a><span></span></li>
         </ul></div>
-        <div><input type="checkbox" class="hidden toggle"  checked id="menu-control-4"><div><label for="menu-control-4">Languages</label><span></span></div>        <ul>
+        <div><input type="checkbox" class="hidden toggle"  id="menu-control-4"><div><label for="menu-control-4">Languages</label><span></span></div>        <ul>
             <li><a href="./clanguage.html">C Langage</a><span></span></li>
             <li><a href="./java-apk.html">Java-apk</a><span></span></li>
-            <li class="coloredMenu"><a href="./java.html">Java</a><span></span></li>
+            <li><a href="./java.html">Java</a><span></span></li>
             <li><a href="./php.html">PHP</a><span></span></li>
             <li><a href="./python.html">Python</a><span></span></li>
         </ul></div>
@@ -81,71 +81,21 @@
     </ul>
 </nav>
     <section id="contenuMain">
-        <h1 id="java">Java</h1>
-<h2 id="try-catch-with-autocloseable">try catch with <code>AutoCloseable</code></h2>
-<pre><code class="hljs java language-java"><span class="hljs-keyword">try</span>(
-<span class="hljs-comment">// AutoCloseable here</span>
-) {
-
-} <span class="hljs-keyword">catch</span>(Expression e) {
-
-}</code></pre>
-<h2 id="examples-of-stream">Examples of stream</h2>
-<table>
-<thead>
-<tr>
-<th id="input" style="text-align:center;">Input</th>
-<th id="output" style="text-align:center;">Output</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center;"><code>FileInputStream</code></td>
-<td style="text-align:center;"><code>FileOutputStream</code></td>
-</tr>
-<tr>
-<td style="text-align:center;"><code>BiteArrayInputStream</code></td>
-<td style="text-align:center;"><code>BiteArrayOutputStream</code></td>
-</tr>
-<tr>
-<td style="text-align:center;"><code>BufferedInputStream</code></td>
-<td style="text-align:center;"><code>BufferedOutputStream</code></td>
-</tr>
-<tr>
-<td style="text-align:center;"><code>DataInputStream</code></td>
-<td style="text-align:center;"><code>DataOutputStream</code></td>
-</tr>
-<tr>
-<td style="text-align:center;"><code>ObjectInputStream</code></td>
-<td style="text-align:center;"><code>ObjectOutputStream</code></td>
-</tr>
-<tr>
-<td style="text-align:center;"><code>PipedInputStream</code></td>
-<td style="text-align:center;"><code>PipedOutputStream</code></td>
-</tr>
-<tr>
-<td style="text-align:center;"><code>GzipInputStream</code></td>
-<td style="text-align:center;"><code>GzipOutputStream</code></td>
-</tr>
-<tr>
-<td style="text-align:center;"><code>SequenceInputStream</code></td>
-<td style="text-align:center;"><code>SequenceOutputStream</code></td>
-</tr>
-<tr>
-<td style="text-align:center;"><code>AudioInputStream</code></td>
-<td style="text-align:center;"><code>AudioOutputStream</code></td>
-</tr>
-</tbody>
-</table>
-<h2 id="useful-class">Useful class</h2>
+        <h1 id="les-ports-applicatifs">Les ports applicatifs</h1>
+<p>Différence des ports :</p>
 <ul>
-<li><code>FileReader</code></li>
-<li><code>Scanner</code></li>
-<li><code>PrintWriter</code></li>
-<li><code>BufferedReader</code></li>
+<li>port <strong>materiel</strong> : désigne I'interface physique à laquelle un cable doit être branche</li>
+<li>port <strong>logiciel</strong> : point d'entrer dans une communication utilisant un protocole particulier</li>
 </ul>
-<p>Use buffer with a file : <code>FileReader</code>-&gt;<code>BufferedReader</code>-&gt;<code>Scanner</code></p>
-<h2 id="protected-public-private">Protected, public private</h2>
+<p>Le port logiciel est aussi appelé port applicatif car il fait correspondre un numero code sur <code>16</code> bits (allant de <code>1</code> à <code>65536</code>) avec une application.</p>
+<p>Principaux ports :</p>
+<ul>
+<li>Port <code>21</code> : le protocole <code>FTP</code>. C'est un protocole d'échange de fichiers.</li>
+<li>Port <code>22</code> : le protocole <code>SSH</code>. Il est utilisé dans la quasi-totalité des connexions à des machines distantes. II permet de crypter les échanges et de rendre illisibles les informations si celles-ci venaient à être interceptées.</li>
+<li>Port <code>25</code>, <code>465</code>, <code>587</code> : le protocole <code>SMTP</code>. II s'agit d'un protocole permettant I'envoi de message.</li>
+<li>Port <code>53</code> : le protocole <code>DNS</code>. Sa fonction est de faire correspondre une adresse IP et un nom de domaine, et réciproquement.</li>
+<li>Port <code>67</code> (serveur), <code>68</code> (client) : le protocole <code>DHCP</code>. II permet d'attribuer une adresse IP (ainsi que les configurations d'adressage associées comme le masque, I'adresse de passerelle) de manière automatique à un noeud du reseau qui en fait la demande.</li>
+</ul>
     </section>
     <!--SPECIAL_SCRIPT-->
 </body>

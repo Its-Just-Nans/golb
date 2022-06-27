@@ -6,7 +6,7 @@
 <meta name="description" content="Just a simple website" />
 <link rel="icon" href="https://its-just-nans.github.io/favicon.ico" />
 <link rel="stylesheet" href="./style.css" />
-    <title>golb | Java</title>
+    <title>golb | SQL</title>
 </head>
 
 <body>
@@ -29,12 +29,12 @@
     <nav>
 <ul class="open-nav">
         <li><a href="./index.html">Index</a><span></span></li>
-        <div><input type="checkbox" class="hidden toggle"  id="menu-control-0"><div><label for="menu-control-0">IT</label><span></span></div>        <ul>
+        <div><input type="checkbox" class="hidden toggle"  checked id="menu-control-0"><div><label for="menu-control-0">IT</label><span></span></div>        <ul>
             <li><a href="./dns.html">DNS</a><span></span></li>
             <li><a href="./os.html">OS</a><span></span></li>
             <li><a href="./port.html">Port</a><span></span></li>
             <li><a href="./smtp.html">SMTP</a><span></span></li>
-            <li><a href="./sql.html">SQL</a><span></span></li>
+            <li class="coloredMenu"><a href="./sql.html">SQL</a><span></span></li>
             <li><a href="./docker.html">Docker</a><span></span></li>
         </ul></div>
         <div><input type="checkbox" class="hidden toggle"  id="menu-control-1"><div><label for="menu-control-1">Courses</label><span></span></div>        <ul>
@@ -52,10 +52,10 @@
             <li><a href="./javascript.html">Javascript</a><span></span></li>
             <li><a href="./node-js.html">Node-js</a><span></span></li>
         </ul></div>
-        <div><input type="checkbox" class="hidden toggle"  checked id="menu-control-4"><div><label for="menu-control-4">Languages</label><span></span></div>        <ul>
+        <div><input type="checkbox" class="hidden toggle"  id="menu-control-4"><div><label for="menu-control-4">Languages</label><span></span></div>        <ul>
             <li><a href="./clanguage.html">C Langage</a><span></span></li>
             <li><a href="./java-apk.html">Java-apk</a><span></span></li>
-            <li class="coloredMenu"><a href="./java.html">Java</a><span></span></li>
+            <li><a href="./java.html">Java</a><span></span></li>
             <li><a href="./php.html">PHP</a><span></span></li>
             <li><a href="./python.html">Python</a><span></span></li>
         </ul></div>
@@ -81,71 +81,25 @@
     </ul>
 </nav>
     <section id="contenuMain">
-        <h1 id="java">Java</h1>
-<h2 id="try-catch-with-autocloseable">try catch with <code>AutoCloseable</code></h2>
-<pre><code class="hljs java language-java"><span class="hljs-keyword">try</span>(
-<span class="hljs-comment">// AutoCloseable here</span>
-) {
-
-} <span class="hljs-keyword">catch</span>(Expression e) {
-
-}</code></pre>
-<h2 id="examples-of-stream">Examples of stream</h2>
-<table>
-<thead>
-<tr>
-<th id="input" style="text-align:center;">Input</th>
-<th id="output" style="text-align:center;">Output</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center;"><code>FileInputStream</code></td>
-<td style="text-align:center;"><code>FileOutputStream</code></td>
-</tr>
-<tr>
-<td style="text-align:center;"><code>BiteArrayInputStream</code></td>
-<td style="text-align:center;"><code>BiteArrayOutputStream</code></td>
-</tr>
-<tr>
-<td style="text-align:center;"><code>BufferedInputStream</code></td>
-<td style="text-align:center;"><code>BufferedOutputStream</code></td>
-</tr>
-<tr>
-<td style="text-align:center;"><code>DataInputStream</code></td>
-<td style="text-align:center;"><code>DataOutputStream</code></td>
-</tr>
-<tr>
-<td style="text-align:center;"><code>ObjectInputStream</code></td>
-<td style="text-align:center;"><code>ObjectOutputStream</code></td>
-</tr>
-<tr>
-<td style="text-align:center;"><code>PipedInputStream</code></td>
-<td style="text-align:center;"><code>PipedOutputStream</code></td>
-</tr>
-<tr>
-<td style="text-align:center;"><code>GzipInputStream</code></td>
-<td style="text-align:center;"><code>GzipOutputStream</code></td>
-</tr>
-<tr>
-<td style="text-align:center;"><code>SequenceInputStream</code></td>
-<td style="text-align:center;"><code>SequenceOutputStream</code></td>
-</tr>
-<tr>
-<td style="text-align:center;"><code>AudioInputStream</code></td>
-<td style="text-align:center;"><code>AudioOutputStream</code></td>
-</tr>
-</tbody>
-</table>
-<h2 id="useful-class">Useful class</h2>
+        <h1 id="les-commandes-sql">Les Commandes SQL</h1>
+<p>SQL fournit plusieurs commandes permettant de manipuler les données:</p>
 <ul>
-<li><code>FileReader</code></li>
-<li><code>Scanner</code></li>
-<li><code>PrintWriter</code></li>
-<li><code>BufferedReader</code></li>
+<li><code>SELECT</code> : sélectionner des données issues de la base de données.</li>
+<li><code>INSERT</code> : ajouter de nouvelles lignes a une table.</li>
+<li><code>UPDATE</code> : changer des valeurs d'attributs de lignes existantes.</li>
+<li><code>DELETE</code> : enlever des lignes dans une table.</li>
 </ul>
-<p>Use buffer with a file : <code>FileReader</code>-&gt;<code>BufferedReader</code>-&gt;<code>Scanner</code></p>
-<h2 id="protected-public-private">Protected, public private</h2>
+<h2 id="fonctions-de-calculs">Fonctions de calculs</h2>
+<p>SQL fournit des fonctions de calcul operant sur I'ensemble des valeurs d'une colonne de table. Elle comporte plusieurs parties:</p>
+<ul>
+<li><code>COUNT</code> : nombre de valeurs</li>
+<li><code>SUM</code> : somme des valeurs</li>
+<li><code>AVG</code> : moyenne des valeurs</li>
+<li><code>MAX</code> : plus grande valeur</li>
+<li><code>MIN</code> : plus petite valeur</li>
+</ul>
+<p>On peut faire précéder I'argument du mot cle <code>DISTINCT</code> pour indiquer que les valeurs redondantes doivent être éliminées avant application de la fonction.</p>
+<p>La fonction spéciale <code>COUNT</code> compte toutes les lignes dans une table. Les valeurs nulles ne sont pas prises en compte, sauf pour <code>COUNT(*)</code>.</p>
     </section>
     <!--SPECIAL_SCRIPT-->
 </body>
