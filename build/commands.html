@@ -82,6 +82,15 @@
 </nav>
     <section id="contenuMain">
         <h1 id="useful-commands-on-linux">Useful commands on Linux</h1>
+<h2 id="cool-commands">Cool commands</h2>
+<pre><code class="hljs sh language-sh">!! <span class="hljs-comment"># last command</span>
+sudo !! <span class="hljs-comment"># last command as root</span>
+
+mkdir -p /mnt/ram; mount -t tmpfs tmpfs /mnt/ram -o size=4096M <span class="hljs-comment"># create a ram disk</span>
+
+ls <span class="hljs-comment"># with a trailing space -&gt; not in history</span>
+<span class="hljs-built_in">disown</span> -a &amp;&amp; <span class="hljs-built_in">exit</span> <span class="hljs-comment"># leave terminal but don&#x27;t kill running processes</span></code></pre>
+<h2 id="basic-commmands">Basic commmands</h2>
 <ul>
 <li>create a file</li>
 </ul>
@@ -118,7 +127,9 @@ gunzip
 <span class="hljs-comment"># gzip FILE</span>
 bzip2
 <span class="hljs-comment"># bzip2 FILE</span></code></pre>
-<p>-get information about a file</p>
+<ul>
+<li>get information about a file</li>
+</ul>
 <pre><code class="hljs sh language-sh">file
 <span class="hljs-comment"># file temp.txt</span></code></pre>
 <ul>
@@ -138,7 +149,7 @@ bzip2
 <pre><code class="hljs sh language-sh">cat
 <span class="hljs-comment"># cat FILE_1 FILE_2</span>
 paste
-<span class="hljs-comment">#&amp;nbsp;paste FILE_1 FILE_2</span></code></pre>
+<span class="hljs-comment"># paste FILE_1 FILE_2</span></code></pre>
 <pre><code class="hljs"><span class="hljs-built_in">umask</span></code></pre>
 <blockquote>
   <p>set file mode creation mask</p>
