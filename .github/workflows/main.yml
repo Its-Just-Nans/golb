@@ -9,6 +9,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: 'true'
+          ssh-key: ${{ secrets.SSH_KEY_ARTICLES }}
       - name: ls
         run: ls articles/
       - name: Deploy 🚀
