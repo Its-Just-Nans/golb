@@ -19,37 +19,37 @@
     }
 }
 
-nav ul>li {
+nav ul > li {
     padding: 0px;
 }
 
-nav ul>li>span {
+nav ul > li > span {
     padding: 10px;
 }
 
-nav ul>li>a {
+nav ul > li > a {
     padding: 10px;
     padding-left: 20px;
 }
 
-nav .coloredMenu>span::after {
+nav .coloredMenu > span::after {
     content: "⬅️";
 }
 
-nav ul>div>div {
+nav ul > div > div {
     border-top: 1px solid black;
     display: flex;
 }
 
-nav ul>div>div>span {
+nav ul > div > div > span {
     padding: 10px;
 }
 
-nav ul>div>div>label {
+nav ul > div > div > label {
     padding: 10px;
 }
 
-nav>ul>div:last-child {
+nav > ul > div:last-child {
     border-bottom: 1px solid black;
 }
 
@@ -68,58 +68,62 @@ nav {
 nav {
     overflow-x: hidden;
     overflow-y: auto;
-    transition: .2s ease-in-out;
+    transition: 0.2s ease-in-out;
     transition-property: transform, margin, opacity, visibility;
     will-change: transform, margin, opacity;
 }
 
 #label-control-menu {
+    cursor: pointer;
     flex: 0;
     display: none;
 }
 
-nav div input:checked~div span::after {
+nav div input:checked ~ div span:last-child::after {
     content: "-";
 }
 
-nav div input:checked~ul li {
+nav div input:checked ~ ul li {
     display: flex;
 }
 
-nav div div span::after {
+nav div div span:last-child::after {
     content: "+";
 }
 
-nav div div label {
+nav div div label span:first-child {
     flex: 0.98;
+}
+
+nav div div label {
+    display: flex;
+    flex: 1;
     cursor: pointer;
     padding-left: 10px;
     margin: 0;
 }
 
-nav>ul>div>ul>li:first-child {
+nav > ul > div > ul > li:first-child {
     border-top: 1px solid var(--color-first-child);
 }
 
-nav>ul>div>ul>li {
+nav > ul > div > ul > li {
     border-top: 1px dashed var(--color-first-child);
 }
 
-
-
-nav>ul>li {
+nav > ul > li {
     background-color: var(--color-li);
     display: flex;
 }
 
-nav ul ul>li {
+nav ul ul > li {
     display: none;
     margin: 0px;
     background-color: var(--color-li);
 }
 
-
-[type=checkbox], [type=radio] {
+[type="checkbox"],
+[type="radio"] {
     box-sizing: border-box;
     padding: 0;
 }
@@ -153,11 +157,9 @@ nav ul p {
 }
 
 @media screen and (min-width: 0px) and (max-width: 1050px) {
-
     nav {
         width: 16rem;
         visibility: hidden;
         transform: translateX(-16rem);
-
     }
 }

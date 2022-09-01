@@ -115,7 +115,7 @@ const makeHTMLMenu = (menu, actualPath, offset = 1) => {
                 return el.files === actualPath;
             })
             const menuList = makeHTMLMenu(oneEntry.files, actualPath, offset + 1, isCorrect + 1);
-            html += addToHtml(`<div><input type="checkbox" class="hidden toggle" ${isCorrect === -1 ? "" : ` checked`} id="menu-control-${number}"><div><label for="menu-control-${number++}">${oneEntry.name}</label><span></span></div>${menuList}</div>`, offset + 1);
+            html += addToHtml(`<div><input type="checkbox" class="hidden toggle" ${isCorrect === -1 ? "" : ` checked`} id="menu-control-${number}"><div><label for="menu-control-${number++}"><span>${oneEntry.name}</span><span></span></label></div>${menuList}</div>`, offset + 1);
         }
     }
     html += addToHtml("</ul>", offset, false);
