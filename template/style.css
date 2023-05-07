@@ -10,16 +10,13 @@ body {
     --color-first-child: grey;
 }
 
-
-
 p img {
     max-width: 40vw;
 }
 
-header>label>img {
+header > label > img {
     cursor: pointer;
 }
-
 
 @media screen and (min-width: 0px) and (max-width: 1050px) {
     p img {
@@ -31,7 +28,7 @@ header>label>img {
         margin-right: 10px !important;
     }
 
-    #menu-control:checked~#label-control {
+    #menu-control:checked ~ #label-control {
         display: block;
         position: absolute;
         top: 0;
@@ -42,7 +39,7 @@ header>label>img {
         z-index: 500;
     }
 
-    #menu-control:checked~nav {
+    #menu-control:checked ~ nav {
         transform: translateX(0rem);
         box-shadow: 0 0 0.5rem rgb(0 0 0 / 10%);
         visibility: visible;
@@ -59,7 +56,7 @@ header>label>img {
     }
 }
 
-#label-control-menu>svg {
+#label-control-menu > svg {
     margin: 0px;
 }
 
@@ -118,11 +115,9 @@ pre::-webkit-scrollbar-track {
     margin: 14px auto;
 }
 
-
 #titleNav {
     text-align: center;
 }
-
 
 #contenuMain {
     position: fixed;
@@ -134,13 +129,12 @@ pre::-webkit-scrollbar-track {
     box-sizing: border-box;
     overflow: auto;
     padding-bottom: 70px;
-    font-family: 'Segoe UI', Ubuntu, sans-serif;
+    font-family: "Segoe UI", Ubuntu, sans-serif;
 }
 
 #globalReadMe {
     font-size: 1.15em;
 }
-
 
 @media screen and (min-width: 0px) and (max-width: 1050px) {
     .open-button {
@@ -148,7 +142,6 @@ pre::-webkit-scrollbar-track {
         height: 5vh;
         flex: 0.1;
     }
-
 
     #contenuMain {
         width: 100vw;
@@ -163,15 +156,14 @@ pre::-webkit-scrollbar-track {
         font-size: 0.9em;
     }
 
-    #globalReadMe>ul {
+    #globalReadMe > ul {
         padding-inline-start: 20px;
     }
 
-    #globalReadMe>blockquote>ul {
+    #globalReadMe > blockquote > ul {
         padding-inline-start: 20px;
     }
 }
-
 
 /* KATEX */
 
@@ -179,12 +171,11 @@ pre::-webkit-scrollbar-track {
     margin-bottom: 5px;
 }
 
-
 .katex-center {
     display: flex;
 }
 
-.katex-center>span {
+.katex-center > span {
     margin: auto;
     background: lightcyan;
     padding: 10px;
@@ -193,15 +184,22 @@ pre::-webkit-scrollbar-track {
     border-radius: 10px;
 }
 
-
 pre code.hljs {
     display: block;
     overflow-x: auto;
-    padding: 1em
+    padding: 1em;
 }
 
 code.hljs {
-    padding: 3px 5px
+    padding: 3px 5px;
+}
+
+p,
+ul,
+ol,
+table,
+dl {
+    margin: 0 0 10px;
 }
 
 @media screen and (min-width: 512px) {
