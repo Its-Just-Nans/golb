@@ -9,5 +9,6 @@
     "quantum_mechanics.md": "Quantum mechanics",
     "node-js.md": "Node.js",
     "c_plusplus.md": "C++",
-    "utils-linux.md": "utils linux"
+    "utils-linux.md": "utils linux",
+    "go.md": "Go lang"
 }
