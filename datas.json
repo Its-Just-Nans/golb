@@ -10,5 +10,6 @@
     "node-js.md": "Node.js",
     "c_plusplus.md": "C++",
     "utils-linux.md": "utils linux",
-    "go.md": "Go lang"
+    "go.md": "Go lang",
+    "computer_science.md": "Computer science"
 }
