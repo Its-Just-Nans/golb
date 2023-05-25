@@ -1,5 +1,5 @@
 const { promises: fs, existsSync: eS, createReadStream, createWriteStream, mkdirSync } = require("fs");
-const config = require("./config.json")
+const config = require("./config.json");
 const path = require("path");
 const numberOfSpace = 4;
 const pathToProject = __dirname;
@@ -9,7 +9,7 @@ const pathToTemplate = path.join(pathToProject, config.templateDir);
 const keyword = require("./datas.json");
 
 const CleanCSS = require("clean-css");
-const showdown = require('showdown');
+const showdown = require("showdown");
 const showdownKatex = require("showdown-katex");
 const showdownHighlight = require("showdown-highlight");
 const { default: axios } = require("axios");
@@ -20,7 +20,7 @@ const converter = new showdown.Converter({
             throwOnError: true,
             displayMode: false,
         }),
-        showdownHighlight()
+        showdownHighlight(),
     ],
 });
 converter.setFlavor("github");
@@ -28,7 +28,7 @@ converter.setFlavor("github");
 const renderMarkdown = (string) => {
     const finalStr = converter.makeHtml(string);
     return finalStr.endsWith("\n") ? finalStr.slice(0, -1) : finalStr;
-}
+};
 
 const makeMenu = async (pathToCheck = pathToSrc) => {
     const navigation = [];
@@ -46,17 +46,21 @@ const makeMenu = async (pathToCheck = pathToSrc) => {
                     name: correctName(oneElement),
                     htmlName: correctHTMLName(oneElement),
                     isDir: true,
-                    files: res
+                    files: res,
                 });
             } else {
-                if (pathToElement.endsWith(".git") || pathToElement.endsWith("LICENSE") || pathToElement.endsWith("README.md")) {
+                if (
+                    pathToElement.endsWith(".git") ||
+                    pathToElement.endsWith("LICENSE") ||
+                    pathToElement.endsWith("README.md")
+                ) {
                     continue;
                 }
                 navigation.push({
                     name: correctName(oneElement),
                     htmlName: correctHTMLName(oneElement),
                     isDir: false,
-                    files: pathToElement
+                    files: pathToElement,
                 });
             }
         }
@@ -77,18 +81,18 @@ const makeMenu = async (pathToCheck = pathToSrc) => {
             return 0;
         }
     });
-}
+};
 
-const correctName = badName => {
+const correctName = (badName) => {
     if (keyword[badName]) {
-        badName = keyword[badName]
+        badName = keyword[badName];
     } else {
         badName = badName.charAt(0).toUpperCase() + badName.slice(1);
         const lastIndex = badName.lastIndexOf(".");
         badName = lastIndex === -1 ? badName : badName.substring(0, lastIndex);
     }
     return badName;
-}
+};
 
 const correctHTMLName = (badName) => {
     badName = badName.toLowerCase();
@@ -96,31 +100,43 @@ const correctHTMLName = (badName) => {
     badName = badName.substring(0, lastIndex);
     badName = `${badName}.html`;
     return badName;
-}
+};
 let number = 0;
 
 const makeHTMLMenu = (menu, actualPath, offset = 1) => {
     if (offset == 1) {
         console.log(`making ${actualPath}`);
     }
-    const addToHtml = (str, time = offset, lineReturn = true,) => {
+    const addToHtml = (str, time = offset, lineReturn = true) => {
         return `${" ".repeat(numberOfSpace * time)}${str}${lineReturn ? "\n" : ""}`;
-    }
+    };
     let html = addToHtml(`<ul>`);
     for (const oneEntry of menu) {
         if (oneEntry.isDir === false) {
-            html += addToHtml(`<li${oneEntry.files === actualPath ? ` class="coloredMenu"` : ""}><a href="./${oneEntry.htmlName}">${oneEntry.name}</a><span></span></li>`, offset + 1);
+            html += addToHtml(
+                `<li${
+                    oneEntry.files === actualPath ? ` class="coloredMenu"` : ""
+                }><a href="./${oneEntry.htmlName.replace(".html", "")}">${oneEntry.name}</a><span></span></li>`,
+                offset + 1
+            );
         } else {
             const isCorrect = oneEntry.files.findIndex((el) => {
                 return el.files === actualPath;
-            })
+            });
             const menuList = makeHTMLMenu(oneEntry.files, actualPath, offset + 1, isCorrect + 1);
-            html += addToHtml(`<div><input type="checkbox" class="hidden toggle" ${isCorrect === -1 ? "" : ` checked`} id="menu-control-${number}"><div><label for="menu-control-${number++}"><span>${oneEntry.name}</span><span></span></label></div>${menuList}</div>`, offset + 1);
+            html += addToHtml(
+                `<div><input type="checkbox" class="hidden toggle" ${
+                    isCorrect === -1 ? "" : ` checked`
+                } id="menu-control-${number}"><div><label for="menu-control-${number++}"><span>${
+                    oneEntry.name
+                }</span><span></span></label></div>${menuList}</div>`,
+                offset + 1
+            );
         }
     }
     html += addToHtml("</ul>", offset, false);
     return html;
-}
+};
 
 const build = async (menu, completeMenu = menu, variable = {}) => {
     const { dev, files } = variable;
@@ -134,18 +150,21 @@ const build = async (menu, completeMenu = menu, variable = {}) => {
     for (const oneEntry of menu) {
         if (oneEntry.isDir === false) {
             number = 0;
-            const htmlMenu = `<nav>\n${makeHTMLMenu(completeMenu, oneEntry.files).slice(4)}\n</nav>`.replace("<ul>", `<ul class="open-nav">`);
+            const htmlMenu = `<nav>\n${makeHTMLMenu(completeMenu, oneEntry.files).slice(4)}\n</nav>`.replace(
+                "<ul>",
+                `<ul class="open-nav">`
+            );
             let data = (await fs.readFile(oneEntry.files)).toString();
             let finalFile = "";
             if (oneEntry.files.endsWith(".md")) {
                 const markdown = renderMarkdown(data);
-                finalFile = template.replace("<!--FILE-->", markdown)
+                finalFile = template.replace("<!--FILE-->", markdown);
             } else if (oneEntry.files.endsWith(".html")) {
                 finalFile = template.replace("<!--FILE-->", data);
             }
             finalFile = finalFile.replace("<!--TITLE-->", `<title>golb | ${oneEntry.name}</title>`);
             finalFile = finalFile.replace("<head>", `<head>\n${cssLinks}`);
-            finalFile = finalFile.replace("<!--MENU-->", htmlMenu)
+            finalFile = finalFile.replace("<!--MENU-->", htmlMenu);
             //finalFile = finalFile.replace("<!--STYLE-->", `<style> ${styles4} ${styles} ${styles3}</style>`)
             //finalFile = finalFile.replace("<!--SPECIAL_SCRIPT-->", `<script>${indexJS}</script>`)
             await fs.writeFile(path.join(pathToBuild, oneEntry.htmlName), finalFile);
@@ -153,20 +172,20 @@ const build = async (menu, completeMenu = menu, variable = {}) => {
             await build(oneEntry.files, completeMenu, { dev });
         }
     }
-}
+};
 
 const compileCSS = async () => {
     let css = "";
     const CSScompiler = new CleanCSS();
     for (const oneFile of config.cssFile) {
-        var filename = oneFile.split('/').pop();
+        var filename = oneFile.split("/").pop();
         if (!eS("raws")) {
             mkdirSync("raws");
         }
         const listOfRaws = await fs.readdir("raws");
         let dataCSS = "";
         if (listOfRaws.includes(filename)) {
-            dataCSS = await fs.readFile(path.join("raws", filename))
+            dataCSS = await fs.readFile(path.join("raws", filename));
         } else {
             const req = await axios.get(oneFile);
             await fs.writeFile(path.join("raws", filename), req.data);
@@ -174,7 +193,7 @@ const compileCSS = async () => {
         }
         css += CSScompiler.minify(dataCSS).styles;
     }
-    const pathToCompiled = path.join(config.buildDir, "style.css")
+    const pathToCompiled = path.join(config.buildDir, "style.css");
     const cssFile = (await fs.readFile(path.join(pathToTemplate, "style.css"))).toString();
     const cssFile2 = (await fs.readFile(path.join(pathToTemplate, "dark_theme.css"))).toString();
     const cssFile3 = (await fs.readFile(path.join(pathToTemplate, "github_theme.css"))).toString();
@@ -183,27 +202,27 @@ const compileCSS = async () => {
     css += CSScompiler.minify(cssFile).styles;
     css += CSScompiler.minify(cssFile3).styles;
     await fs.writeFile(pathToCompiled, css);
-}
+};
 
 const moveFile = async () => {
-    const array = ["style.css"]
+    const array = ["style.css"];
     for (const oneElement of array) {
         const oldPath = path.join(__dirname, config.templateDir, oneElement);
         const goodPath = path.join(__dirname, config.buildDir, oneElement);
         const writeStream = createWriteStream(goodPath);
         createReadStream(oldPath).pipe(writeStream);
     }
-}
+};
 
 const copyDataFolder = async () => {
-    const list = await fs.readdir("./articles/")
+    const list = await fs.readdir("./articles/");
     for (const oneFolder of list) {
         const pathFile = path.join(__dirname, "articles", oneFolder);
         const statOfElement = await fs.lstat(pathFile);
         if (statOfElement.isDirectory()) {
-            const list2 = await fs.readdir(pathFile)
+            const list2 = await fs.readdir(pathFile);
             for (const oneElement of list2) {
-                const pathFile2 = path.join(pathFile, oneElement)
+                const pathFile2 = path.join(pathFile, oneElement);
                 const statOfElement2 = await fs.lstat(pathFile2);
                 if (statOfElement2.isDirectory() && oneElement == "data") {
                     // we move
@@ -212,7 +231,7 @@ const copyDataFolder = async () => {
             }
         }
     }
-}
+};
 
 async function copyDir(src, dest) {
     await fs.mkdir(dest, { recursive: true });
@@ -222,9 +241,7 @@ async function copyDir(src, dest) {
         let srcPath = path.join(src, entry.name);
         let destPath = path.join(dest, entry.name);
 
-        entry.isDirectory() ?
-            await copyDir(srcPath, destPath) :
-            await fs.copyFile(srcPath, destPath);
+        entry.isDirectory() ? await copyDir(srcPath, destPath) : await fs.copyFile(srcPath, destPath);
     }
 }
 
@@ -233,5 +250,5 @@ module.exports = {
     makeHTMLMenu,
     build,
     copyDataFolder,
-    compileCSS
-}
+    compileCSS,
+};
