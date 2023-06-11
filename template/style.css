@@ -194,15 +194,6 @@ code.hljs {
     padding: 3px 5px;
 }
 
-ul {
-    margin: 1px;
-    padding-inline-start: 30px;
-}
-
-blockquote {
-    padding: 2px 0 2px 2px;
-}
-
 p,
 ul,
 ol,
@@ -211,6 +202,18 @@ dl {
     margin: 0 0 10px;
 }
 
+ul {
+    margin: 1px;
+    padding-inline-start: 30px;
+}
+
+blockquote > ul {
+    padding-inline-start: 25px;
+}
+
+blockquote {
+    padding: 2px 0 2px 5px;
+}
 @media screen and (min-width: 512px) {
     #contenuMain::-webkit-scrollbar {
         width: 10px;
