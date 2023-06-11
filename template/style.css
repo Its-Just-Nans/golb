@@ -194,6 +194,15 @@ code.hljs {
     padding: 3px 5px;
 }
 
+ul {
+    margin: 1px;
+    padding-inline-start: 30px;
+}
+
+blockquote {
+    padding: 2px 0 2px 2px;
+}
+
 p,
 ul,
 ol,
