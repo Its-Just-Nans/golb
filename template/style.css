@@ -146,6 +146,7 @@ pre::-webkit-scrollbar-track {
     #contenuMain {
         width: 100vw;
         padding: 20px;
+        padding-bottom: 120px;
     }
 
     #titleNav {
