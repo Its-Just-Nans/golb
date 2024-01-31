@@ -12,6 +12,10 @@
     "cpp.md": "C++",
     "html_css.md": "HTML - CSS",
     "utils-linux.md": "utils linux",
+    "ssh.md": "ssh",
+    "gpg.md": "GPG",
+    "useful-commands.md": "useful commands",
+    "utils-debug.md": "utils debug",
     "go.md": "Go lang",
     "computer_science.md": "Computer science"
 }
