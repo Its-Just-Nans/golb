@@ -4,7 +4,6 @@
     "templateDir": "template",
     "cssFile": [
         "https://its-just-nans.github.io/cdn/custom.showdown.css",
-        "https://unpkg.com/katex@0.10.0/dist/katex.min.css",
         "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css"
     ]
 }
