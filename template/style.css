@@ -33,7 +33,8 @@ header > label > img {
         position: absolute;
         top: 0;
         bottom: 0;
-        width: 100vw;
+        right: 0;
+        width: calc(100vw - 16rem);
         height: 100vh;
         background-color: transparent;
         z-index: 500;
@@ -45,19 +46,9 @@ header > label > img {
         visibility: visible;
     }
 
-    #label-control-menu {
-        display: inline;
-        margin: auto 10px;
-        flex: var(--flexing);
-    }
-
     #title-div {
         flex: calc(1 - var(--flexing));
     }
-}
-
-#label-control-menu > svg {
-    margin: 0px;
 }
 
 input.toggle {
@@ -124,6 +115,7 @@ pre::-webkit-scrollbar-track {
     right: 0px;
     top: var(--header-height);
     width: 80vw;
+    z-index: -1;
     height: calc(100vh - var(--header-height));
     padding: 50px;
     box-sizing: border-box;

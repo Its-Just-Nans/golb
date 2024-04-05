@@ -9,10 +9,9 @@
   },
   "author": "n4n5",
   "license": "MIT",
-  "dependencies": {},
   "scripts": {
     "start": "http-server -p 8088",
-    "build": "node index.js build",
+    "build": "node index.js build && node search.js",
     "build2": "while true; do npm run build; sleep 10; done",
     "dev": "node index.js build --dev"
   },
@@ -20,6 +19,8 @@
     "axios": "^0.25.0",
     "clean-css": "^5.2.2",
     "http-server": "^13.0.0",
+    "jsdom": "^24.0.0",
+    "lunr": "^2.3.9",
     "showdown": "^1.9.1",
     "showdown-highlight": "^2.1.8",
     "showdown-katex": "^0.8.0"

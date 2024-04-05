@@ -1,32 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <!--TITLE-->
+    </head>
 
-<head>
-    <!--TITLE-->
-</head>
-
-<body>
-    <input type="checkbox" class="hidden toggle" id="menu-control">
-    <label for="menu-control" id="label-control"></label>
-    <header>
-        <label for="menu-control" id="label-control-menu">
-            <svg class="book-icon" alt="Menu" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                viewBox="0 0 24 24">
-                <path fill="none" d="M0 0h24v24H0V0z" />
-                <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
-            </svg>
-        </label>
-        <div id="title-div">
-            <a href="./">
-                <h1>golb</h1>
-            </a>
-        </div>
-    </header>
-    <!--MENU-->
-    <section id="contenuMain">
-        <!--FILE-->
-    </section>
-    <!--SPECIAL_SCRIPT-->
-</body>
-
+    <body>
+        <input type="checkbox" class="hidden toggle" id="menu-control" />
+        <label for="menu-control" id="label-control"></label>
+        <header>
+            <label for="menu-control" id="label-control-menu">
+                <svg
+                    class="book-icon"
+                    alt="Menu"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                >
+                    <path fill="none" d="M0 0h24v24H0V0z" />
+                    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+                </svg>
+            </label>
+            <div id="title-div">
+                <a href="./">
+                    <h1>golb</h1>
+                </a>
+            </div>
+            <div class="search-input">
+                <input type="checkbox" class="hidden toggle" id="search-control" />
+                <label id="search-control-label" for="search-control">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="feather feather-search"
+                    >
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </label>
+                <input type="text" id="search" placeholder="Search..." />
+            </div>
+            <div id="search-results"></div>
+            <script>
+                document.getElementById("search").addEventListener("input", function () {
+                    const query = this.value;
+                    const resultsDiv = document.getElementById("search-results");
+                    if (query === "") {
+                        resultsDiv.innerHTML = "";
+                        document.getElementById("search-control").checked = false;
+                        return;
+                    }
+                    const results = window.searcher.search(query + "*");
+                    resultsDiv.innerHTML = "";
+                    results.slice(0, 10).forEach((result) => {
+                        const item = document.createElement("a");
+                        item.href = result.ref;
+                        item.textContent = result.ref.replace(".html", "");
+                        resultsDiv.appendChild(item);
+                    });
+                });
+            </script>
+        </header>
+        <!--MENU-->
+        <section id="contenuMain">
+            <!--FILE-->
+        </section>
+        <!--SPECIAL_SCRIPT-->
+    </body>
 </html>

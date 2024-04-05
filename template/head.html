@@ -4,3 +4,19 @@
 <link rel="icon" href="https://its-just-nans.github.io/favicon.ico" />
 <link rel="stylesheet" href="./style.css" />
 <link rel="stylesheet" href="https://unpkg.com/katex@0.10.0/dist/katex.min.css" />
+<script src="https://unpkg.com/lunr/lunr.js"></script>
+<script>
+    fetch("./search.json")
+        .then((response) => {
+            return response.json();
+        })
+        .then((indexData) => {
+            // Load the index into Lunr.js
+            const idx = lunr.Index.load(indexData);
+
+            window.searcher = idx;
+        })
+        .catch((error) => {
+            console.error("Error loading index:", error);
+        });
+</script>

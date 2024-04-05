@@ -54,7 +54,7 @@ nav > ul > div:last-child {
 }
 
 nav {
-    z-index: 10000;
+    z-index: 100;
     position: fixed;
     top: var(--header-height);
     width: 20vw;
@@ -63,9 +63,6 @@ nav {
     border-right: 2px solid black;
     box-sizing: border-box;
     overflow: auto;
-}
-
-nav {
     overflow-x: hidden;
     overflow-y: auto;
     transition: 0.2s ease-in-out;
@@ -77,6 +74,18 @@ nav {
     cursor: pointer;
     flex: 0;
     display: none;
+}
+
+.search-input {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    outline: none;
+}
+.search-input input {
+    border-radius: 20px;
+    border: 1px solid gray;
+    padding: 10px;
 }
 
 nav div input:checked ~ div span:last-child::after {
@@ -159,7 +168,15 @@ nav ul p {
 @media screen and (min-width: 0px) and (max-width: 1050px) {
     nav {
         width: 16rem;
-        visibility: hidden;
         transform: translateX(-16rem);
     }
+    #label-control-menu {
+        display: inline;
+        margin: auto 10px;
+        flex: var(--flexing);
+    }
+}
+
+#label-control-menu > svg {
+    margin: 0px;
 }

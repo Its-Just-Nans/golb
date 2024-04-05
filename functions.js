@@ -178,7 +178,7 @@ const compileCSS = async () => {
     let css = "";
     const CSScompiler = new CleanCSS();
     for (const oneFile of config.cssFile) {
-        var filename = oneFile.split("/").pop();
+        const filename = oneFile.split("/").pop();
         if (!eS("raws")) {
             mkdirSync("raws");
         }
@@ -194,13 +194,10 @@ const compileCSS = async () => {
         css += CSScompiler.minify(dataCSS).styles;
     }
     const pathToCompiled = path.join(config.buildDir, "style.css");
-    const cssFile = (await fs.readFile(path.join(pathToTemplate, "style.css"))).toString();
-    const cssFile2 = (await fs.readFile(path.join(pathToTemplate, "dark_theme.css"))).toString();
-    const cssFile3 = (await fs.readFile(path.join(pathToTemplate, "github_theme.css"))).toString();
-    const cssFile4 = (await fs.readFile(path.join(pathToTemplate, "nav.css"))).toString();
-    css += CSScompiler.minify(cssFile4).styles;
-    css += CSScompiler.minify(cssFile).styles;
-    css += CSScompiler.minify(cssFile3).styles;
+    for (const oneFile of config.styles) {
+        const cssFile = (await fs.readFile(path.join(pathToTemplate, oneFile))).toString();
+        css += CSScompiler.minify(cssFile).styles;
+    }
     await fs.writeFile(pathToCompiled, css);
 };
 
