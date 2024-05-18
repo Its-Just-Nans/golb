@@ -12,7 +12,7 @@ code {
 }
 
 .hljs-subst, .hljs-tag {
-    color: #f8f8f2
+    /* color: #f8f8f2 */
 }
 
 .hljs-emphasis, .hljs-strong {
