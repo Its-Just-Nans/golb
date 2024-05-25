@@ -49,6 +49,11 @@
             </div>
             <div id="search-results"></div>
             <script>
+                document.getElementById("search-control").addEventListener("change", function () {
+                    if (this.checked) {
+                        document.getElementById("search").focus();
+                    }
+                });
                 document.getElementById("search").addEventListener("input", function () {
                     const query = this.value;
                     const resultsDiv = document.getElementById("search-results");
