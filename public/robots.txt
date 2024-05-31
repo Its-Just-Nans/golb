@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://golb.n4n5.dev/sitemap.xml

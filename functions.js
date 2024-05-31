@@ -242,10 +242,15 @@ async function copyDir(src, dest) {
     }
 }
 
+async function copyPublicFolder() {
+    await copyDir("./public", path.join(config.buildDir));
+}
+
 module.exports = {
     makeMenu,
     makeHTMLMenu,
     build,
     copyDataFolder,
     compileCSS,
+    copyPublicFolder,
 };

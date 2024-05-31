@@ -19,6 +19,7 @@ const run = async () => {
     await commands.build(completeMenu, completeMenu, { dev, files });
     await commands.compileCSS();
     await commands.copyDataFolder();
+    await commands.copyPublicFolder();
 };
 
 run();
