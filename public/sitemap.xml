@@ -1,290 +1,213 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"  xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
     <url>
-        <loc>
-            https://golb.n4n5.dev/
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/style.css
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/sitemap.xml</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/index
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/style.css</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/links
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/index</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/computer_science
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/links</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/docker
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/computer_science</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/ffmpeg
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/docker</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/git
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/ffmpeg</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/make
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/git</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/mongodb
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/make</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/eco
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/mongodb</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/electricity
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/eco</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/maths
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/electricity</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/network
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/maths</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/optical
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/network</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/others
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/optical</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/quantum_mechanics
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/others</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/telecom
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/quantum_mechanics</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/sql
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/telecom</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/android
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/sql</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/c
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/android</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/cpp
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/c</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/go
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/cpp</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/html_css
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/go</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/java
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/html_css</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/javascript
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/java</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/jupyter-notebook
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/javascript</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/latex
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/jupyter-notebook</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/php
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/latex</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/python
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/php</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/rust
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/python</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/commands
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/rust</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/gpg
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/commands</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/ip
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/gpg</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/nix
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/ip</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/ssh
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/nix</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/useful-commands
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/ssh</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/utils-debug
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/useful-commands</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/utils-linux
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/utils-debug</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/js
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/utils-linux</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>
-            https://golb.n4n5.dev/knowledge
-        </loc>
-        <lastmod>2024-05-31T19:46:05Z</lastmod>
+        <loc>https://golb.n4n5.dev/js</loc>
         <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    <url>
+        <loc>https://golb.n4n5.dev/knowledge</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
     </url>
 </urlset>
