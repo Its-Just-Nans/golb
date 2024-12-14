@@ -30,9 +30,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          submodules: "true"
-          ssh-key: ${{ secrets.SSH_KEY_ARTICLES }}
       - name: Setup Pages
         uses: actions/configure-pages@v2
       - name: Use Node.js
