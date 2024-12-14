@@ -1,3 +1,4 @@
 [submodule "golb-articles"]
 	path = golb-articles
 	url = git@github.com:Its-Just-Nans/golb-articles.git
+	branch = main
