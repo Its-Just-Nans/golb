@@ -8,6 +8,7 @@ const pathToBuild = path.join(pathToProject, config.buildDir);
 const pathToTemplate = path.join(pathToProject, config.templateDir);
 const keyword = require("./datas.json");
 
+const articleDir = "golb-articles"
 const CleanCSS = require("clean-css");
 const showdown = require("showdown");
 const showdownKatex = require("showdown-katex");
@@ -212,7 +213,7 @@ const moveFile = async () => {
 };
 
 const copyDataFolder = async () => {
-    const list = await fs.readdir("./articles/");
+    const list = await fs.readdir(`./${articleDir}/`);
     for (const oneFolder of list) {
         const pathFile = path.join(__dirname, "articles", oneFolder);
         const statOfElement = await fs.lstat(pathFile);
@@ -223,7 +224,7 @@ const copyDataFolder = async () => {
                 const statOfElement2 = await fs.lstat(pathFile2);
                 if (statOfElement2.isDirectory() && oneElement == "data") {
                     // we move
-                    await copyDir(`./articles/${oneFolder}/data`, path.join(config.buildDir, "data"));
+                    await copyDir(`./${articleDir}/${oneFolder}/data`, path.join(config.buildDir, "data"));
                 }
             }
         }
