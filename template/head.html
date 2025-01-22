@@ -14,7 +14,6 @@
         .then((indexData) => {
             // Load the index into Lunr.js
             const idx = lunr.Index.load(indexData);
-
             window.searcher = idx;
         })
         .catch((error) => {

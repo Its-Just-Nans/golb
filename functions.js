@@ -154,6 +154,12 @@ const build = async (menu, completeMenu = menu, variable = {}) => {
                 "<ul>",
                 `<ul class="open-nav">`
             );
+            let headData = `${cssLinks}<link rel="canonical" href="https://golb.n4n5.dev/${oneEntry.htmlName.replace(
+                ".html",
+                ""
+            )}" />\n<title>golb | ${oneEntry.name}</title>`
+                .split("\n")
+                .join("\n        ");
             let data = (await fs.readFile(oneEntry.files)).toString();
             let finalFile = "";
             if (oneEntry.files.endsWith(".md")) {
@@ -162,8 +168,7 @@ const build = async (menu, completeMenu = menu, variable = {}) => {
             } else if (oneEntry.files.endsWith(".html")) {
                 finalFile = template.replace("<!--FILE-->", data);
             }
-            finalFile = finalFile.replace("<!--TITLE-->", `<title>golb | ${oneEntry.name}</title>`);
-            finalFile = finalFile.replace("<head>", `<head>\n${cssLinks}`);
+            finalFile = finalFile.replace("<!--HEAD-->", headData);
             finalFile = finalFile.replace("<!--MENU-->", htmlMenu);
             //finalFile = finalFile.replace("<!--STYLE-->", `<style> ${styles4} ${styles} ${styles3}</style>`)
             //finalFile = finalFile.replace("<!--SPECIAL_SCRIPT-->", `<script>${indexJS}</script>`)
