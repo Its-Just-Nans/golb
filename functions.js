@@ -182,21 +182,24 @@ const build = async (menu, completeMenu = menu, variable = {}) => {
 const compileCSS = async () => {
     let css = "";
     const CSScompiler = new CleanCSS();
-    for (const oneFile of config.cssFile) {
-        const filename = oneFile.split("/").pop();
-        if (!eS("raws")) {
-            mkdirSync("raws");
+    if (config.cssFile) {
+        for (const oneFile of config.cssFile) {
+            const filename = oneFile.split("/").pop();
+            if (!eS("raws")) {
+                mkdirSync("raws");
+            }
+            const listOfRaws = await fs.readdir("raws");
+            let dataCSS = "";
+            if (listOfRaws.includes(filename)) {
+                dataCSS = await fs.readFile(path.join("raws", filename));
+            } else {
+                const req = await axios.get(oneFile);
+                await fs.writeFile(path.join("raws", filename), req.data);
+                dataCSS = req.data;
+            }
+            css += CSScompiler.minify(dataCSS).styles;
         }
-        const listOfRaws = await fs.readdir("raws");
-        let dataCSS = "";
-        if (listOfRaws.includes(filename)) {
-            dataCSS = await fs.readFile(path.join("raws", filename));
-        } else {
-            const req = await axios.get(oneFile);
-            await fs.writeFile(path.join("raws", filename), req.data);
-            dataCSS = req.data;
-        }
-        css += CSScompiler.minify(dataCSS).styles;
+        return;
     }
     const pathToCompiled = path.join(config.buildDir, "style.css");
     for (const oneFile of config.styles) {

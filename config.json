@@ -2,9 +2,13 @@
     "srcDir": "golb-articles",
     "buildDir": "build",
     "templateDir": "template",
-    "cssFile": [
-        "https://its-just-nans.github.io/cdn/custom.showdown.css",
-        "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css"
-    ],
-    "styles": ["style.css", "dark_theme.css", "github_theme.css", "nav.css", "search.css"]
+    "styles": [
+        "default.min.css",
+        "custom.showdown.css",
+        "style.css",
+        "dark_theme.css",
+        "github_theme.css",
+        "nav.css",
+        "search.css"
+    ]
 }
