@@ -8,7 +8,7 @@ const main = async () => {
     const files = buildDir.filter((file) => file.endsWith(".html"));
 
     const cleanupText = (t) => {
-        return t.trim().replaceAll("\n", "");
+        return t.trim().replaceAll("\n\n", "");
     };
 
     const promises = files.map((filename) => {
