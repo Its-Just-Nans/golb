@@ -7,22 +7,34 @@ const main = async () => {
     const buildDir = await readdir("build");
     const files = buildDir.filter((file) => file.endsWith(".html"));
 
+    const cleanupText = (t) => {
+        return t.trim().replaceAll("\n", "");
+    };
+
     const promises = files.map((filename) => {
         return readFile(`build/${filename}`, "utf-8").then((file) => {
             const dom = new JSDOM(file);
-            const title = dom.window.document.querySelector("title");
-            const content = dom.window.document
-                .querySelector("#contenuMain")
-                .textContent.trim()
-                .replaceAll("\n\n", "\n")
-                .replaceAll("\n", " ");
-            return { title: title.textContent, content, url: filename };
+            const contents = dom.window.document.querySelector("#contenuMain").querySelectorAll("h2");
+            const sections = [...contents].map((h2, index) => {
+                let text = cleanupText(h2.textContent);
+                let next = h2.nextElementSibling;
+                while (next && next.tagName !== "H2") {
+                    text += " " + cleanupText(next.textContent);
+                    next = next.nextElementSibling;
+                }
+                return {
+                    title: h2.textContent.trim(),
+                    content: text,
+                    url: `${filename}#${h2.id}`,
+                };
+            });
+            return sections;
         });
     });
 
     const results = await Promise.all(promises);
 
-    const flatResults = results.flat();
+    const flatResults = results.flat(2);
     const idx = lunr(function () {
         this.ref("url");
         this.field("title");
