@@ -81,8 +81,11 @@
                     resultsDiv.innerHTML = "";
                     results.slice(0, 10).forEach((result) => {
                         const item = document.createElement("a");
-                        item.href = result.ref;
-                        item.textContent = result.ref.replace(".html", "");
+                        const [href, page] = result.ref.split("|");
+                        item.href = href;
+                        item.innerHTML = `<span>${page}</span><span style="color: black;"> ${
+                            Object.keys(result.matchData.metadata)[0]
+                        }</<span>`;
                         resultsDiv.appendChild(item);
                     });
                 });

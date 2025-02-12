@@ -14,6 +14,8 @@ const main = async () => {
     const promises = files.map((filename) => {
         return readFile(`build/${filename}`, "utf-8").then((file) => {
             const dom = new JSDOM(file);
+            console.log(`Indexing ${filename}`);
+            const pageTitle = dom.window.document.querySelector("#contenuMain").querySelectorAll("h1")[0].textContent;
             const contents = dom.window.document.querySelector("#contenuMain").querySelectorAll("h2");
             const sections = [...contents].map((h2, index) => {
                 let text = cleanupText(h2.textContent);
@@ -25,7 +27,7 @@ const main = async () => {
                 return {
                     title: h2.textContent.trim(),
                     content: text,
-                    url: `${filename}#${h2.id}`,
+                    url: `${filename}#${h2.id}|${pageTitle} > ${h2.textContent} >`,
                 };
             });
             return sections;
