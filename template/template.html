@@ -49,20 +49,35 @@
             </div>
             <div id="search-results"></div>
             <script>
+                const resultsDiv = document.getElementById("search-results");
                 document.getElementById("search-control").addEventListener("change", function () {
                     if (this.checked) {
                         document.getElementById("search").focus();
                     }
                 });
-                document.getElementById("search").addEventListener("input", function () {
+                const reset = () => {
+                    resultsDiv.innerHTML = "";
+                    document.getElementById("search-control").checked = false;
+                };
+                const ctrlf = (e) => {
+                    if (e.key === "f" && e.ctrlKey) {
+                        if (document.getElementById("search-control").checked) {
+                            reset();
+                            return;
+                        }
+                        e.preventDefault();
+                        document.getElementById("search-control").checked = true;
+                        document.getElementById("search").focus();
+                    }
+                };
+                document.addEventListener("keydown", ctrlf);
+                document.getElementById("search").addEventListener("input", function (e) {
                     const query = this.value;
-                    const resultsDiv = document.getElementById("search-results");
                     if (query === "") {
-                        resultsDiv.innerHTML = "";
-                        document.getElementById("search-control").checked = false;
+                        reset();
                         return;
                     }
-                    const results = window.searcher.search(query + "*");
+                    const results = window.searcher.search("*" + query + "*");
                     resultsDiv.innerHTML = "";
                     results.slice(0, 10).forEach((result) => {
                         const item = document.createElement("a");
