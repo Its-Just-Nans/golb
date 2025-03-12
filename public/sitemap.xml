@@ -51,7 +51,22 @@
         <priority>0.5</priority>
     </url>
     <url>
-        <loc>https://golb.n4n5.dev/eco</loc>
+        <loc>https://golb.n4n5.dev/networks</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    <url>
+        <loc>https://golb.n4n5.dev/software</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    <url>
+        <loc>https://golb.n4n5.dev/virtualization</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    <url>
+        <loc>https://golb.n4n5.dev/web_knowledge</loc>
         <changefreq>weekly</changefreq>
         <priority>0.5</priority>
     </url>
@@ -66,17 +81,7 @@
         <priority>0.5</priority>
     </url>
     <url>
-        <loc>https://golb.n4n5.dev/network</loc>
-        <changefreq>weekly</changefreq>
-        <priority>0.5</priority>
-    </url>
-    <url>
         <loc>https://golb.n4n5.dev/optical</loc>
-        <changefreq>weekly</changefreq>
-        <priority>0.5</priority>
-    </url>
-    <url>
-        <loc>https://golb.n4n5.dev/others</loc>
         <changefreq>weekly</changefreq>
         <priority>0.5</priority>
     </url>
@@ -181,27 +186,7 @@
         <priority>0.5</priority>
     </url>
     <url>
-        <loc>https://golb.n4n5.dev/useful-commands</loc>
-        <changefreq>weekly</changefreq>
-        <priority>0.5</priority>
-    </url>
-    <url>
-        <loc>https://golb.n4n5.dev/utils-debug</loc>
-        <changefreq>weekly</changefreq>
-        <priority>0.5</priority>
-    </url>
-    <url>
         <loc>https://golb.n4n5.dev/utils-linux</loc>
-        <changefreq>weekly</changefreq>
-        <priority>0.5</priority>
-    </url>
-    <url>
-        <loc>https://golb.n4n5.dev/js</loc>
-        <changefreq>weekly</changefreq>
-        <priority>0.5</priority>
-    </url>
-    <url>
-        <loc>https://golb.n4n5.dev/knowledge</loc>
         <changefreq>weekly</changefreq>
         <priority>0.5</priority>
     </url>
