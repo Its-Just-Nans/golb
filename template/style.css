@@ -1,8 +1,6 @@
-@import url("https://fonts.googleapis.com/css2?family=PT+Sans&display=swap");
-
 body {
     margin: 0px;
-    font-family: "PT Sans", sans-serif;
+    font-family: "Segoe UI", Ubuntu, sans-serif;
     --header-height: 60px;
     --flexing: 0.5;
     --color-li: ghostwhite;

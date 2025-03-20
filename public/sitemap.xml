@@ -6,6 +6,11 @@
         <priority>0.5</priority>
     </url>
     <url>
+        <loc>https://golb.n4n5.dev/favicon.ico</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    <url>
         <loc>https://golb.n4n5.dev/sitemap.xml</loc>
         <changefreq>weekly</changefreq>
         <priority>0.5</priority>
@@ -187,6 +192,11 @@
     </url>
     <url>
         <loc>https://golb.n4n5.dev/utils-linux</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    <url>
+        <loc>https://golb.n4n5.dev/physics</loc>
         <changefreq>weekly</changefreq>
         <priority>0.5</priority>
     </url>
