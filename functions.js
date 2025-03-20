@@ -13,6 +13,8 @@ const showdown = require("showdown");
 const showdownKatex = require("showdown-katex");
 const showdownHighlight = require("showdown-highlight");
 const { default: axios } = require("axios");
+const matter = require("gray-matter");
+
 const converter = new showdown.Converter({
     openLinksInNewWindow: true,
     extensions: [
@@ -24,11 +26,6 @@ const converter = new showdown.Converter({
     ],
 });
 converter.setFlavor("github");
-
-const renderMarkdown = (string) => {
-    const finalStr = converter.makeHtml(string);
-    return finalStr.endsWith("\n") ? finalStr.slice(0, -1) : finalStr;
-};
 
 const makeMenu = async (pathToCheck = pathToSrc) => {
     const navigation = [];
@@ -139,14 +136,9 @@ const makeHTMLMenu = (menu, actualPath, offset = 1) => {
 };
 
 const build = async (menu, completeMenu = menu, variable = {}) => {
-    const { dev, files } = variable;
-    const prod = !dev;
+    const { dev } = variable;
     const cssLinks = (await fs.readFile(path.join(pathToTemplate, "head.html"))).toString();
     const template = (await fs.readFile(path.join(pathToTemplate, "template.html"))).toString();
-    // let indexJS = (await fs.readFile(path.join(pathToTemplate, "index.js"))).toString();
-    // if (prod) {
-    //     indexJS = UglifyJS.minify(indexJS).code;
-    // }
     for (const oneEntry of menu) {
         if (oneEntry.isDir === false) {
             number = 0;
@@ -160,13 +152,24 @@ const build = async (menu, completeMenu = menu, variable = {}) => {
             )}" />\n<title>golb | ${oneEntry.name}</title>`
                 .split("\n")
                 .join("\n        ");
-            let data = (await fs.readFile(oneEntry.files)).toString();
+            let fileContent = (await fs.readFile(oneEntry.files)).toString();
             let finalFile = "";
             if (oneEntry.files.endsWith(".md")) {
-                const markdown = renderMarkdown(data);
-                finalFile = template.replace("<!--FILE-->", markdown);
+                const { content, data } = matter(fileContent);
+                const finalStr = converter.makeHtml(content);
+                const html = finalStr.endsWith("\n") ? finalStr.slice(0, -1) : finalStr;
+                finalFile = template.replace("<!--FILE-->", html);
+                if (data.title) {
+                    headData = `${headData}\n        <meta name="title" content="${data.title}" />`;
+                }
+                if (data.description) {
+                    headData = `${headData}\n        <meta name="description" content="${data.description}" />`;
+                }
+                if (data.keywords) {
+                    headData = `${headData}\n        <meta name="keywords" content="${data.keywords}" />`;
+                }
             } else if (oneEntry.files.endsWith(".html")) {
-                finalFile = template.replace("<!--FILE-->", data);
+                finalFile = template.replace("<!--FILE-->", fileContent);
             }
             finalFile = finalFile.replace("<!--HEAD-->", headData);
             finalFile = finalFile.replace("<!--MENU-->", htmlMenu);

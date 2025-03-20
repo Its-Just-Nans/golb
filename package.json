@@ -24,7 +24,8 @@
     "lunr": "^2.3.9",
     "showdown": "^1.9.1",
     "showdown-highlight": "^2.1.8",
-    "showdown-katex": "^0.8.0"
+    "showdown-katex": "^0.8.0",
+    "gray-matter": "^4.0.3"
   },
   "bugs": {
     "url": "https://github.com/Its-Just-Nans/golb/issues"
