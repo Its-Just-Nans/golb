@@ -98,9 +98,8 @@ const correctHTMLName = (badName) => {
     badName = `${badName}.html`;
     return badName;
 };
-let number = 0;
 
-const makeHTMLMenu = (menu, actualPath, offset = 1) => {
+const makeHTMLMenu = (menu, actualPath, offset = 1, number = 0) => {
     if (offset == 1) {
         console.log(`making ${actualPath}`);
     }
@@ -120,7 +119,7 @@ const makeHTMLMenu = (menu, actualPath, offset = 1) => {
             const isCorrect = oneEntry.files.findIndex((el) => {
                 return el.files === actualPath;
             });
-            const menuList = makeHTMLMenu(oneEntry.files, actualPath, offset + 1, isCorrect + 1);
+            const menuList = makeHTMLMenu(oneEntry.files, actualPath, offset + 1, number + 1);
             html += addToHtml(
                 `<div><input type="checkbox" class="hidden toggle" ${
                     isCorrect === -1 ? "" : ` checked`
@@ -135,51 +134,54 @@ const makeHTMLMenu = (menu, actualPath, offset = 1) => {
     return html;
 };
 
-const build = async (menu, completeMenu = menu, variable = {}) => {
-    const { dev } = variable;
+const buildSingleFile =
+    ({ cssLinks, template }) =>
+    async (oneEntry, completeMenu) => {
+        const htmlMenu = `<nav>\n${makeHTMLMenu(completeMenu, oneEntry.files).slice(4)}\n</nav>`.replace(
+            "<ul>",
+            `<ul class="open-nav">`
+        );
+        let headData = `${cssLinks}<link rel="canonical" href="https://golb.n4n5.dev/${oneEntry.htmlName.replace(
+            ".html",
+            ""
+        )}" />\n<title>golb | ${oneEntry.name}</title>`;
+        let fileContent = (await fs.readFile(oneEntry.files)).toString();
+        let finalFile = "";
+        if (oneEntry.files.endsWith(".md")) {
+            const { content, data } = matter(fileContent);
+            const finalStr = converter.makeHtml(content);
+            const html = finalStr.endsWith("\n") ? finalStr.slice(0, -1) : finalStr;
+            finalFile = template.replace("<!--FILE-->", html);
+            if (data.title) {
+                headData = `${headData}\n<meta name="title" content="${data.title}" />`;
+            }
+            if (data.description) {
+                headData = `${headData}\n<meta name="description" content="${data.description}" />`;
+            }
+            if (data.keywords) {
+                headData = `${headData}\n<meta name="keywords" content="${data.keywords}" />`;
+            }
+        } else if (oneEntry.files.endsWith(".html")) {
+            finalFile = template.replace("<!--FILE-->", fileContent);
+        }
+        finalFile = finalFile.replace("<!--HEAD-->", headData.split("\n").join("\n        "));
+        finalFile = finalFile.replace("<!--MENU-->", htmlMenu);
+        await fs.writeFile(path.join(pathToBuild, oneEntry.htmlName), finalFile);
+    };
+
+const build = async (menu, completeMenu = menu) => {
     const cssLinks = (await fs.readFile(path.join(pathToTemplate, "head.html"))).toString();
     const template = (await fs.readFile(path.join(pathToTemplate, "template.html"))).toString();
-    for (const oneEntry of menu) {
-        if (oneEntry.isDir === false) {
-            number = 0;
-            const htmlMenu = `<nav>\n${makeHTMLMenu(completeMenu, oneEntry.files).slice(4)}\n</nav>`.replace(
-                "<ul>",
-                `<ul class="open-nav">`
-            );
-            let headData = `${cssLinks}<link rel="canonical" href="https://golb.n4n5.dev/${oneEntry.htmlName.replace(
-                ".html",
-                ""
-            )}" />\n<title>golb | ${oneEntry.name}</title>`
-                .split("\n")
-                .join("\n        ");
-            let fileContent = (await fs.readFile(oneEntry.files)).toString();
-            let finalFile = "";
-            if (oneEntry.files.endsWith(".md")) {
-                const { content, data } = matter(fileContent);
-                const finalStr = converter.makeHtml(content);
-                const html = finalStr.endsWith("\n") ? finalStr.slice(0, -1) : finalStr;
-                finalFile = template.replace("<!--FILE-->", html);
-                if (data.title) {
-                    headData = `${headData}\n        <meta name="title" content="${data.title}" />`;
-                }
-                if (data.description) {
-                    headData = `${headData}\n        <meta name="description" content="${data.description}" />`;
-                }
-                if (data.keywords) {
-                    headData = `${headData}\n        <meta name="keywords" content="${data.keywords}" />`;
-                }
-            } else if (oneEntry.files.endsWith(".html")) {
-                finalFile = template.replace("<!--FILE-->", fileContent);
+    const builderFunc = buildSingleFile({ cssLinks, template });
+    await Promise.allSettled(
+        menu.map((oneEntry) => {
+            if (oneEntry.isDir === false) {
+                return builderFunc(oneEntry, completeMenu);
+            } else {
+                return build(oneEntry.files, completeMenu);
             }
-            finalFile = finalFile.replace("<!--HEAD-->", headData);
-            finalFile = finalFile.replace("<!--MENU-->", htmlMenu);
-            //finalFile = finalFile.replace("<!--STYLE-->", `<style> ${styles4} ${styles} ${styles3}</style>`)
-            //finalFile = finalFile.replace("<!--SPECIAL_SCRIPT-->", `<script>${indexJS}</script>`)
-            await fs.writeFile(path.join(pathToBuild, oneEntry.htmlName), finalFile);
-        } else {
-            await build(oneEntry.files, completeMenu, { dev });
-        }
-    }
+        })
+    );
 };
 
 const compileCSS = async () => {

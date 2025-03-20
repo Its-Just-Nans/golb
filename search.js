@@ -3,7 +3,7 @@ const { writeFileSync } = require("fs");
 const { JSDOM } = require("jsdom");
 const lunr = require("lunr");
 
-const main = async () => {
+const buildSearch = async () => {
     const buildDir = await readdir("build");
     const files = buildDir.filter((file) => file.endsWith(".html"));
 
@@ -34,7 +34,7 @@ const main = async () => {
         });
     });
 
-    const results = await Promise.all(promises);
+    const results = await Promise.allSettled(promises);
 
     const flatResults = results.flat(2);
     const idx = lunr(function () {
@@ -50,4 +50,6 @@ const main = async () => {
     writeFileSync("build/search.json", JSON.stringify(idx));
 };
 
-main();
+module.exports = {
+    buildSearch,
+};
