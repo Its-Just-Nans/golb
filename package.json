@@ -10,7 +10,7 @@
   "author": "n4n5",
   "license": "MIT",
   "scripts": {
-    "build": "node index.js build",
+    "build": "node index.js",
     "build2": "while true; do npm run build; sleep 10; done",
     "dev": "node index.js build --dev",
     "sitemap": "cd public && python -m static_sitemap https://golb.n4n5.dev/ --sitemap --verbose"

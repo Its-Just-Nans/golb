@@ -14,7 +14,7 @@ const run = async () => {
     await commands.compileCSS();
     await commands.copyDataFolder();
     await commands.copyPublicFolder();
-    await buildSearch();
+    await buildSearch({ buildDir: config.buildDir });
 };
 
 run();
