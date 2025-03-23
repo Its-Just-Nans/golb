@@ -10,5 +10,5 @@ Links:
 ## Sitemap
 
 ```sh
-python -m static_sitemap https://golb.n4n5.dev/ --sitemap
+npm run sitemap
 ```
