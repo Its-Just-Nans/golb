@@ -32,7 +32,7 @@ nav ul > li > a {
     padding-left: 20px;
 }
 
-nav .coloredMenu > span::after {
+.selected-menu > span::after {
     content: "⬅️";
 }
 

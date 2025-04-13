@@ -27,7 +27,13 @@ const converter = new showdown.Converter({
 });
 converter.setFlavor("github");
 
-const makeMenu = async (pathToCheck = pathToSrc) => {
+const slugify = (str) => {
+    str = str.toLowerCase();
+    str = str.replace(/[^a-zA-Z0-9]+/g, "-");
+    return str;
+};
+
+const makeMenu = async (parentSlug, pathToCheck = pathToSrc) => {
     const navigation = [];
     if (eS(pathToCheck)) {
         const list = await fs.readdir(pathToCheck);
@@ -38,10 +44,12 @@ const makeMenu = async (pathToCheck = pathToSrc) => {
                 if (["data", ".git"].includes(oneElement)) {
                     continue;
                 }
-                const res = await makeMenu(pathToElement);
+                const slug = slugify(oneElement);
+                const res = await makeMenu(slug, pathToElement);
                 navigation.push({
                     name: correctName(oneElement),
                     htmlName: correctHTMLName(oneElement),
+                    slug: slug,
                     isDir: true,
                     files: res,
                 });
@@ -56,6 +64,8 @@ const makeMenu = async (pathToCheck = pathToSrc) => {
                 navigation.push({
                     name: correctName(oneElement),
                     htmlName: correctHTMLName(oneElement),
+                    slug: slugify(oneElement),
+                    parentSlug,
                     isDir: false,
                     files: pathToElement,
                 });
@@ -99,7 +109,8 @@ const correctHTMLName = (badName) => {
     return badName;
 };
 
-const makeHTMLMenu = (menu, actualPath, offset = 1, number = 0) => {
+const makeHTMLMenu = (menu, offset = 1, number = 0) => {
+    let actualPath = "";
     if (offset == 1) {
         console.log(`making ${actualPath}`);
     }
@@ -110,22 +121,26 @@ const makeHTMLMenu = (menu, actualPath, offset = 1, number = 0) => {
     for (const oneEntry of menu) {
         if (oneEntry.isDir === false) {
             html += addToHtml(
-                `<li${
-                    oneEntry.files === actualPath ? ` class="coloredMenu"` : ""
-                }><a href="./${oneEntry.htmlName.replace(".html", "")}">${oneEntry.name}</a><span></span></li>`,
+                `<li id="menu-${oneEntry.slug}">
+<a href="./${oneEntry.htmlName.replace(".html", "")}">${oneEntry.name}</a>
+<span></span>
+</li>`,
                 offset + 1
             );
         } else {
-            const isCorrect = oneEntry.files.findIndex((el) => {
-                return el.files === actualPath;
-            });
-            const menuList = makeHTMLMenu(oneEntry.files, actualPath, offset + 1, number + 1);
+            const menuList = makeHTMLMenu(oneEntry.files, offset + 1, number + 1);
             html += addToHtml(
-                `<div><input type="checkbox" class="hidden toggle" ${
-                    isCorrect === -1 ? "" : ` checked`
-                } id="menu-control-${number}"><div><label for="menu-control-${number++}"><span>${
-                    oneEntry.name
-                }</span><span></span></label></div>${menuList}</div>`,
+                `
+<div>
+    <input type="checkbox" class="hidden toggle input-menu-${oneEntry.slug}" id="menu-control-${number}" />
+<div>
+<label for="menu-control-${number++}">
+    <span>${oneEntry.name}</span>
+    <span></span>
+</label>
+</div>
+    ${menuList}
+</div>`,
                 offset + 1
             );
         }
@@ -134,13 +149,26 @@ const makeHTMLMenu = (menu, actualPath, offset = 1, number = 0) => {
     return html;
 };
 
+const makeStyleMenu = (menuHtml, oneEntry) => {
+    menuHtml = menuHtml.replace(`id="menu-${oneEntry.slug}"`, `id="menu-${oneEntry.slug}" class="selected-menu"`);
+    menuHtml = menuHtml.replace(`input-menu-${oneEntry.parentSlug}"`, `input-menu-${oneEntry.parentSlug}" checked`);
+    return menuHtml;
+};
+
 const buildSingleFile =
-    ({ cssLinks, template }) =>
-    async (oneEntry, completeMenu) => {
-        const htmlMenu = `<nav>\n${makeHTMLMenu(completeMenu, oneEntry.files).slice(4)}\n</nav>`.replace(
-            "<ul>",
-            `<ul class="open-nav">`
-        );
+    ({ menuHtml, cssLinks, template }) =>
+    async (oneEntry) => {
+        if (oneEntry.isDir) {
+            const builderFunc = buildSingleFile({
+                menuHtml,
+                cssLinks,
+                template,
+            });
+            await Promise.allSettled(oneEntry.files.map(builderFunc));
+            return;
+        }
+        console.log(`Building ${oneEntry.name}`);
+        const htmlMenu = `<nav>\n${makeStyleMenu(menuHtml, oneEntry)}\n</nav>`.replace("<ul>", `<ul class="open-nav">`);
         let headData = `${cssLinks}<link rel="canonical" href="https://golb.n4n5.dev/${oneEntry.htmlName.replace(
             ".html",
             ""
@@ -169,19 +197,12 @@ const buildSingleFile =
         await fs.writeFile(path.join(pathToBuild, oneEntry.htmlName), finalFile);
     };
 
-const build = async (menu, completeMenu = menu) => {
+const build = async (menu) => {
     const cssLinks = (await fs.readFile(path.join(pathToTemplate, "head.html"))).toString();
     const template = (await fs.readFile(path.join(pathToTemplate, "template.html"))).toString();
-    const builderFunc = buildSingleFile({ cssLinks, template });
-    await Promise.allSettled(
-        menu.map((oneEntry) => {
-            if (oneEntry.isDir === false) {
-                return builderFunc(oneEntry, completeMenu);
-            } else {
-                return build(oneEntry.files, completeMenu);
-            }
-        })
-    );
+    const menuHtml = makeHTMLMenu(menu);
+    const builderFunc = buildSingleFile({ menuHtml, cssLinks, template });
+    await Promise.allSettled(menu.map(builderFunc));
 };
 
 const compileCSS = async () => {
