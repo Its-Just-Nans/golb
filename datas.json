@@ -1,22 +1,14 @@
 {
     "ffmpeg.md": "ffmpeg",
     "web.md": "web",
-    "ppc.md": "PPC",
     "php.md": "PHP",
     "make.md": "make",
     "cLanguage.md": "C",
-    "discord_webhook.md": "Discord Webhooks",
-    "cool_projects.md": "Cool projects",
-    "quantum_mechanics.md": "Quantum mechanics",
     "node-js.md": "Node.js",
     "cpp.md": "C++",
     "html_css.md": "HTML - CSS",
     "utils-linux.md": "utils linux",
     "ssh.md": "ssh",
     "gpg.md": "GPG",
-    "useful-commands.md": "useful commands",
-    "utils-debug.md": "utils debug",
-    "go.md": "Go lang",
-    "computer_science.md": "Computer science",
-    "web_knowledge.md": "Web knowledge"
+    "go.md": "Go lang"
 }
