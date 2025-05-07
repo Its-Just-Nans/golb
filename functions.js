@@ -6,7 +6,6 @@ const pathToProject = __dirname;
 const pathToSrc = path.join(pathToProject, config.srcDir);
 const pathToBuild = path.join(pathToProject, config.buildDir);
 const pathToTemplate = path.join(pathToProject, config.templateDir);
-const keyword = require("./datas.json");
 
 const CleanCSS = require("clean-css");
 const showdown = require("showdown");
@@ -14,6 +13,18 @@ const showdownKatex = require("showdown-katex");
 const showdownHighlight = require("showdown-highlight");
 const { default: axios } = require("axios");
 const matter = require("gray-matter");
+const { readFile } = require("fs/promises");
+
+const fileCache = new Map();
+
+const readFileCache = async (filePath) => {
+    if (fileCache.has(filePath)) {
+        return fileCache.get(filePath);
+    }
+    const data = await readFile(filePath);
+    fileCache.set(filePath, data);
+    return data;
+};
 
 const converter = new showdown.Converter({
     openLinksInNewWindow: true,
@@ -54,6 +65,9 @@ const makeMenu = async (parentSlug, pathToCheck = pathToSrc) => {
                     files: res,
                 });
             } else {
+                const content = await readFileCache(pathToElement);
+                const { data } = matter(content);
+
                 if (
                     pathToElement.endsWith(".git") ||
                     pathToElement.endsWith("LICENSE") ||
@@ -61,14 +75,17 @@ const makeMenu = async (parentSlug, pathToCheck = pathToSrc) => {
                 ) {
                     continue;
                 }
-                navigation.push({
-                    name: correctName(oneElement),
-                    htmlName: correctHTMLName(oneElement),
-                    slug: slugify(oneElement),
+                const nameNoExt = oneElement.slice(0, oneElement.lastIndexOf("."));
+                const name = data.name || correctName(oneElement);
+                const entry = {
+                    name,
+                    htmlName: correctHTMLName(nameNoExt),
+                    slug: slugify(nameNoExt),
                     parentSlug,
                     isDir: false,
                     files: pathToElement,
-                });
+                };
+                navigation.push(entry);
             }
         }
     }
@@ -90,23 +107,15 @@ const makeMenu = async (parentSlug, pathToCheck = pathToSrc) => {
     });
 };
 
-const correctName = (badName) => {
-    if (keyword[badName]) {
-        badName = keyword[badName];
-    } else {
-        badName = badName.charAt(0).toUpperCase() + badName.slice(1);
-        const lastIndex = badName.lastIndexOf(".");
-        badName = lastIndex === -1 ? badName : badName.substring(0, lastIndex);
-    }
-    return badName;
+const correctName = (name) => {
+    const badName = name.charAt(0).toUpperCase() + name.slice(1);
+    const lastIndex = badName.lastIndexOf(".");
+    return lastIndex === -1 ? badName : badName.substring(0, lastIndex);
 };
 
-const correctHTMLName = (badName) => {
-    badName = badName.toLowerCase();
-    const lastIndex = badName.lastIndexOf(".");
-    badName = badName.substring(0, lastIndex);
-    badName = `${badName}.html`;
-    return badName;
+const correctHTMLName = (name) => {
+    const fullBadNameWithHtml = `${name}.html`;
+    return fullBadNameWithHtml;
 };
 
 const makeHTMLMenu = (menu, offset = 1, number = 0) => {
@@ -173,7 +182,7 @@ const buildSingleFile =
             ".html",
             ""
         )}" />\n<title>golb | ${oneEntry.name}</title>`;
-        let fileContent = (await fs.readFile(oneEntry.files)).toString();
+        let fileContent = (await readFileCache(oneEntry.files)).toString();
         let finalFile = "";
         if (oneEntry.files.endsWith(".md")) {
             const { content, data } = matter(fileContent);
