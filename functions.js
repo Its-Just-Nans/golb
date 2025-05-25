@@ -15,6 +15,8 @@ const { default: axios } = require("axios");
 const matter = require("gray-matter");
 const { readFile } = require("fs/promises");
 
+const sidebar_name_key = "sidebar_name";
+
 const fileCache = new Map();
 
 const readFileCache = async (filePath) => {
@@ -76,7 +78,7 @@ const makeMenu = async (parentSlug, pathToCheck = pathToSrc) => {
                     continue;
                 }
                 const nameNoExt = oneElement.slice(0, oneElement.lastIndexOf("."));
-                const name = data.name || correctName(oneElement);
+                const name = data[sidebar_name_key] || correctName(oneElement);
                 const entry = {
                     name,
                     htmlName: correctHTMLName(nameNoExt),
@@ -131,7 +133,7 @@ const makeHTMLMenu = (menu, offset = 1, number = 0) => {
         if (oneEntry.isDir === false) {
             html += addToHtml(
                 `<li id="menu-${oneEntry.slug}">
-<a href="./${oneEntry.htmlName.replace(".html", "")}">${oneEntry.name}</a>
+<a href="./${oneEntry.htmlName.replace(".html", "")}">${oneEntry[sidebar_name_key]}</a>
 <span></span>
 </li>`,
                 offset + 1
@@ -144,7 +146,7 @@ const makeHTMLMenu = (menu, offset = 1, number = 0) => {
     <input type="checkbox" class="hidden toggle input-menu-${oneEntry.slug}" id="menu-control-${number}" />
 <div>
 <label for="menu-control-${number++}">
-    <span>${oneEntry.name}</span>
+    <span>${oneEntry[sidebar_name_key]}</span>
     <span></span>
 </label>
 </div>
@@ -176,17 +178,21 @@ const buildSingleFile =
             await Promise.allSettled(oneEntry.files.map(builderFunc));
             return;
         }
-        console.log(`Building ${oneEntry.name}`);
+        console.log(`Building ${oneEntry[sidebar_name_key]}`);
         const htmlMenu = `<nav>\n${makeStyleMenu(menuHtml, oneEntry)}\n</nav>`.replace("<ul>", `<ul class="open-nav">`);
         let headData = `${cssLinks}<link rel="canonical" href="https://golb.n4n5.dev/${oneEntry.htmlName.replace(
             ".html",
             ""
-        )}" />\n<title>golb | ${oneEntry.name}</title>`;
+        )}" />\n<title>golb | ${oneEntry[sidebar_name_key]}</title>`;
         let fileContent = (await readFileCache(oneEntry.files)).toString();
         let finalFile = "";
         if (oneEntry.files.endsWith(".md")) {
             const { content, data } = matter(fileContent);
-            const finalStr = converter.makeHtml(content);
+            let finalStr = converter.makeHtml(content);
+            if (!finalStr.includes("h1")) {
+                const title = data.title || oneEntry[sidebar_name_key];
+                finalStr = `<h1>${title}</h1>\n${finalStr}`;
+            }
             const html = finalStr.endsWith("\n") ? finalStr.slice(0, -1) : finalStr;
             finalFile = template.replace("<!--FILE-->", html);
             if (data.title) {
@@ -278,8 +284,8 @@ async function copyDir(src, dest) {
     let entries = await fs.readdir(src, { withFileTypes: true });
 
     for (let entry of entries) {
-        let srcPath = path.join(src, entry.name);
-        let destPath = path.join(dest, entry.name);
+        let srcPath = path.join(src, entry[sidebar_name_key]);
+        let destPath = path.join(dest, entry[sidebar_name_key]);
 
         entry.isDirectory() ? await copyDir(srcPath, destPath) : await fs.copyFile(srcPath, destPath);
     }
