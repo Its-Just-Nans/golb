@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="description" content="golb - 404" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="golb" />
+        <link rel="sitemap" href="/sitemap-index.xml" />
+        <title>404</title>
+        <!-- No SEO -->
+        <style>
+            @font-face {
+                font-family: Montserrat-Medium;
+                src: url(/fonts/Montserrat-Medium.ttf) format("truetype");
+                font-display: fallback;
+            }
+
+            html {
+                font-family: Montserrat-Medium, monospace, system-ui, sans-serif;
+                background-color: snow;
+            }
+
+            body {
+                margin: 0;
+            }
+
+            body::-webkit-scrollbar {
+                width: 10px;
+                height: 5px;
+            }
+
+            body::-webkit-scrollbar-track {
+                background: #f1f1f1;
+            }
+
+            body::-webkit-scrollbar-thumb {
+                background: #888;
+            }
+
+            body ::-webkit-scrollbar-thumb:hover {
+                background: #555;
+            }
+
+            .container[data-astro-cid-zetdm5md] {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container" data-astro-cid-zetdm5md>
+            <div data-astro-cid-zetdm5md>
+                <p data-astro-cid-zetdm5md>404 Page Not found</p>
+                <p data-astro-cid-zetdm5md>
+                    Redirecting to <span class="redirection" data-astro-cid-zetdm5md>/</span> in
+                    <span class="countdown" data-astro-cid-zetdm5md>3</span>
+                    s
+                </p>
+            </div>
+        </div>
+        <script type="module">
+            let e = 3;
+            const n = document.querySelector(".redirection"),
+                o = document.querySelector(".countdown");
+            n.innerHTML = window.location.origin;
+            setInterval(() => {
+                e -= 1;
+                o.innerHTML = e.toString();
+            }, 1e3);
+            setTimeout(() => {
+                window.location.href = "/";
+            }, 3e3);
+        </script>
+    </body>
+</html>
