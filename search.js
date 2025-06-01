@@ -40,6 +40,7 @@ const buildSearch = async ({ buildDir }) => {
             .catch((err) => {
                 console.error(`Error indexing ${filename}: ${err}`);
                 // throw err;
+                return [];
             });
     });
 
