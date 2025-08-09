@@ -11,7 +11,6 @@ const CleanCSS = require("clean-css");
 const showdown = require("showdown");
 const showdownKatex = require("showdown-katex");
 const showdownHighlight = require("showdown-highlight");
-const { default: axios } = require("axios");
 const matter = require("gray-matter");
 const { readFile } = require("fs/promises");
 
@@ -234,13 +233,13 @@ const compileCSS = async () => {
             if (listOfRaws.includes(filename)) {
                 dataCSS = await fs.readFile(path.join("raws", filename));
             } else {
-                const req = await axios.get(oneFile);
-                await fs.writeFile(path.join("raws", filename), req.data);
-                dataCSS = req.data;
+                const req = await fetch(oneFile);
+                const txt = await req.text();
+                await fs.writeFile(path.join("raws", filename), txt);
+                dataCSS = txt;
             }
             css += CSScompiler.minify(dataCSS).styles;
         }
-        return;
     }
     const pathToCompiled = path.join(config.buildDir, "style.css");
     for (const oneFile of config.styles) {
@@ -248,16 +247,6 @@ const compileCSS = async () => {
         css += CSScompiler.minify(cssFile).styles;
     }
     await fs.writeFile(pathToCompiled, css);
-};
-
-const moveFile = async () => {
-    const array = ["style.css"];
-    for (const oneElement of array) {
-        const oldPath = path.join(__dirname, config.templateDir, oneElement);
-        const goodPath = path.join(__dirname, config.buildDir, oneElement);
-        const writeStream = createWriteStream(goodPath);
-        createReadStream(oldPath).pipe(writeStream);
-    }
 };
 
 const copyDataFolder = async () => {

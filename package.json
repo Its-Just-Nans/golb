@@ -16,7 +16,6 @@
     "sitemap": "cd public && python -m static_sitemap https://golb.n4n5.dev/ --sitemap"
   },
   "devDependencies": {
-    "axios": "^0.25.0",
     "clean-css": "^5.2.2",
     "jsdom": "^24.0.0",
     "lunr": "^2.3.9",
