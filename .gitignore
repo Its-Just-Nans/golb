@@ -2,3 +2,4 @@ node_modules/
 menu.json
 raws/
 build/
+dist/

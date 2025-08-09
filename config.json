@@ -1,6 +1,6 @@
 {
     "srcDir": "golb-articles",
-    "buildDir": "build",
+    "buildDir": "dist",
     "templateDir": "template",
     "styles": [
         "default.min.css",
