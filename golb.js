@@ -189,9 +189,9 @@ const makeHTMLMenu = ({ menu, offset = 1, number = 0, compact = null }) => {
                 menu: oneEntry.files,
                 offset: offset + 1,
                 number: number + 1,
-                defaultSpacing,
+                compact,
             });
-            html += "\n";
+            html += compact ? "\n" : "";
             html += addToHtml("<div>", offset + 1);
             html += addToHtml(
                 `<input type="checkbox" class="hidden toggle input-menu-${oneEntry.slug}" id="menu-control-${number}" />`,
