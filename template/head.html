@@ -7,16 +7,12 @@
 <link rel="stylesheet" href="./style.css" />
 <script src="./lunr.js" defer></script>
 <script>
-    fetch("./search.json")
-        .then((response) => {
-            return response.json();
-        })
-        .then((indexData) => {
-            document.addEventListener("DOMContentLoaded", (event) => {
-                // Load the index into Lunr.js
-                const idx = lunr.Index.load(indexData);
-                window.searcher = idx;
-            });
+    document
+        .addEventListener("DOMContentLoaded", async (event) => {
+            const file = await fetch("./search.json");
+            const json = await file.json();
+            const indexed = lunr.Index.load(indexData);
+            window.searcher = indexed;
         })
         .catch((error) => {
             console.error("Error loading index:", error);
