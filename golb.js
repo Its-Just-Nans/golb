@@ -170,39 +170,44 @@ const correctHTMLName = (name) => {
     return fullBadNameWithHtml;
 };
 
-const makeHTMLMenu = (menu, offset = 1, number = 0) => {
-    const addToHtml = (str, time = offset, lineReturn = true) => {
-        return `${" ".repeat(numberOfSpace * time)}${str}${lineReturn ? "\n" : ""}`;
+const makeHTMLMenu = ({ menu, offset = 1, number = 0, compact = null }) => {
+    const defaultSpacing = compact ? "" : null;
+    const addToHtml = (str, times, lineReturn = true) => {
+        const lineReturned = defaultSpacing == null ? lineReturn : false;
+        const addedSpacing = defaultSpacing ?? " ".repeat(numberOfSpace * times);
+        return `${addedSpacing}${str}${lineReturned ? "\n" : ""}`;
     };
-    let html = addToHtml(`<ul>`);
+    let html = addToHtml(`<ul>`, offset + 1, true);
     for (const oneEntry of menu) {
         if (oneEntry.isDir === false) {
-            html += addToHtml(
-                `<li id="menu-${oneEntry.slug}">
-<a href="./${oneEntry.htmlName.replace(".html", "")}">${oneEntry.name}</a>
-<span></span>
-</li>`,
-                offset + 1
-            );
+            html += addToHtml(`<li id="menu-${oneEntry.slug}">`, offset + 2);
+            html += addToHtml(`<a href="./${oneEntry.htmlName.replace(".html", "")}">${oneEntry.name}</a>`, offset + 3);
+            html += addToHtml(`<span></span>`, offset + 3);
+            html += addToHtml(`</li>`, offset + 2);
         } else {
-            const menuList = makeHTMLMenu(oneEntry.files, offset + 1, number + 1);
+            const menuList = makeHTMLMenu({
+                menu: oneEntry.files,
+                offset: offset + 1,
+                number: number + 1,
+                defaultSpacing,
+            });
+            html += "\n";
+            html += addToHtml("<div>", offset + 1);
             html += addToHtml(
-                `
-<div>
-    <input type="checkbox" class="hidden toggle input-menu-${oneEntry.slug}" id="menu-control-${number}" />
-<div>
-<label for="menu-control-${number++}">
-    <span>${oneEntry.name}</span>
-    <span></span>
-</label>
-</div>
-    ${menuList}
-</div>`,
-                offset + 1
+                `<input type="checkbox" class="hidden toggle input-menu-${oneEntry.slug}" id="menu-control-${number}" />`,
+                offset + 2
             );
+            html += addToHtml("<div>", offset + 2);
+            html += addToHtml(`<label for="menu-control-${number++}">`, offset + 3);
+            html += addToHtml(`<span>${oneEntry.name}</span>`, offset + 4);
+            html += addToHtml("<span></span>", offset + 4);
+            html += addToHtml("</label>", offset + 3);
+            html += addToHtml("</div>", offset + 2);
+            html += addToHtml(menuList, offset + 2);
+            html += addToHtml(`</div>`, offset + 1);
         }
     }
-    html += addToHtml("</ul>", offset, false);
+    html += addToHtml("</ul>", offset + 1, false);
     return html;
 };
 
@@ -261,10 +266,10 @@ const buildSingleFile =
         await writeFile(join(buildDir, oneEntry.htmlName), finalFile);
     };
 
-const build = async (menu, { buildDir, templateDir }) => {
+const build = async (menu, { buildDir, templateDir, compact }) => {
     const cssLinks = (await readFile(join(templateDir, "head.html"))).toString();
     const template = (await readFile(join(templateDir, "template.html"))).toString();
-    const menuHtml = makeHTMLMenu(menu);
+    const menuHtml = makeHTMLMenu({ menu, compact });
     const builderFunc = buildSingleFile({ menuHtml, cssLinks, template }, buildDir);
     await Promise.allSettled(menu.map(builderFunc));
 };
@@ -349,6 +354,7 @@ const downloadExternalFiles = async ({ buildDir, externalFiles }) => {
 };
 
 const main = async () => {
+    const compact = process.argv.some((arg) => ["--prod"].includes(arg));
     const configFile = (await readFile("./config.json")).toString();
     const config = JSON.parse(configFile);
     const { buildDir, templateDir, publicDir, srcDir, cssFile, styles, externalFiles } = config;
@@ -362,7 +368,7 @@ const main = async () => {
     compileCSS({ templateDir, cssFile, styles, buildDir }, "style.css");
     const completeMenu = await makeMenu("", srcDir);
     await writeFile("menu.json", JSON.stringify(completeMenu, null, 4));
-    await build(completeMenu, { buildDir, templateDir });
+    await build(completeMenu, { buildDir, templateDir, compact });
     await buildSearch({ buildDir: config.buildDir });
 };
 

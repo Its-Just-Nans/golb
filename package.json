@@ -11,7 +11,8 @@
   "author": "n4n5",
   "license": "MIT",
   "scripts": {
-    "build": "node golb.js",
+    "dev": "node golb.js",
+    "build": "node golb.js --prod",
     "sitemap": "cd public && python -m static_sitemap https://golb.n4n5.dev/ --sitemap"
   },
   "devDependencies": {
