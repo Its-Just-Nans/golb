@@ -48,10 +48,9 @@ export const buildSearch = async ({ buildDir }) => {
             .then((file) => {
                 const dom = new JSDOM(file);
                 console.log(`Indexing ${filename}`);
-                const pageTitle = dom.window.document
-                    .querySelector("#contenuMain")
-                    .querySelectorAll("h1")[0].textContent;
-                const contents = dom.window.document.querySelector("#contenuMain").querySelectorAll("h2");
+                const contentMain = dom.window.document.querySelector("#contenuMain");
+                const pageTitle = contentMain.querySelectorAll("h1")[0].textContent;
+                const contents = contentMain.querySelectorAll("h2");
                 const sections = [...contents].map((h2, index) => {
                     let text = cleanupText(h2.textContent);
                     let next = h2.nextElementSibling;
@@ -172,10 +171,6 @@ const correctHTMLName = (name) => {
 };
 
 const makeHTMLMenu = (menu, offset = 1, number = 0) => {
-    let actualPath = "";
-    if (offset == 1) {
-        console.log(`making ${actualPath}`);
-    }
     const addToHtml = (str, time = offset, lineReturn = true) => {
         return `${" ".repeat(numberOfSpace * time)}${str}${lineReturn ? "\n" : ""}`;
     };
@@ -356,13 +351,12 @@ const downloadExternalFiles = async ({ buildDir, externalFiles }) => {
 const main = async () => {
     const configFile = (await readFile("./config.json")).toString();
     const config = JSON.parse(configFile);
-    const { buildDir, templateDir, srcDir, cssFile, styles, externalFiles } = config;
-    await rm(config.buildDir, { recursive: true, force: true });
+    const { buildDir, templateDir, publicDir, srcDir, cssFile, styles, externalFiles } = config;
     await rm(config.buildDir, { recursive: true, force: true });
     if (!existsSync(config.buildDir)) {
         mkdirSync(config.buildDir);
     }
-    copyDir("./public", join(buildDir));
+    copyDir(publicDir, join(buildDir));
     copyDataFolder({ srcDir, buildDir });
     downloadExternalFiles({ buildDir, externalFiles });
     compileCSS({ templateDir, cssFile, styles, buildDir }, "style.css");
