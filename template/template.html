@@ -86,6 +86,7 @@
                         item.innerHTML = `<span>${page}</span><span style="color: black;"> ${
                             Object.keys(result.matchData.metadata)[0]
                         }</<span>`;
+                        item.onclick = reset;
                         resultsDiv.appendChild(item);
                     });
                 });
