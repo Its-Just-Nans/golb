@@ -100,8 +100,8 @@ nav div input:checked ~ ul li {
     background: none;
     border: none;
     font-size: 1em;
+    pointer-events: none;
 }
-
 
 nav div div .menu-button:last-child::after {
     content: "+";
