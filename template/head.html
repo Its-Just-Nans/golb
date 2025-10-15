@@ -7,14 +7,14 @@
 <link rel="stylesheet" href="./style.css" />
 <script src="./lunr.js" defer></script>
 <script>
-    document
-        .addEventListener("DOMContentLoaded", async (event) => {
+    document.addEventListener("DOMContentLoaded", async (event) => {
+        try {
             const file = await fetch("./search.json");
             const json = await file.json();
             const indexed = lunr.Index.load(json);
             window.searcher = indexed;
-        })
-        .catch((error) => {
-            console.error("Error loading index:", error);
-        });
+        } catch (e) {
+            console.error("Error loading index:", e);
+        }
+    });
 </script>
