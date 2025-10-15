@@ -5,16 +5,18 @@
 <link rel="icon" href="/favicon.ico" />
 <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
 <link rel="stylesheet" href="./style.css" />
-<script src="./lunr.js"></script>
+<script src="./lunr.js" defer></script>
 <script>
     fetch("./search.json")
         .then((response) => {
             return response.json();
         })
         .then((indexData) => {
-            // Load the index into Lunr.js
-            const idx = lunr.Index.load(indexData);
-            window.searcher = idx;
+            document.addEventListener("DOMContentLoaded", (event) => {
+                // Load the index into Lunr.js
+                const idx = lunr.Index.load(indexData);
+                window.searcher = idx;
+            });
         })
         .catch((error) => {
             console.error("Error loading index:", error);
