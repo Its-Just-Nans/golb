@@ -21,6 +21,11 @@
         <priority>0.5</priority>
     </url>
     <url>
+        <loc>https://golb.n4n5.dev/cid_cd</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    <url>
         <loc>https://golb.n4n5.dev/commands</loc>
         <changefreq>weekly</changefreq>
         <priority>0.5</priority>
@@ -122,6 +127,11 @@
     </url>
     <url>
         <loc>https://golb.n4n5.dev/utils-linux</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    <url>
+        <loc>https://golb.n4n5.dev/vim</loc>
         <changefreq>weekly</changefreq>
         <priority>0.5</priority>
     </url>

@@ -2,17 +2,16 @@
   "name": "golb",
   "version": "1.0.0",
   "description": "\"golb\".split(\"\").reverse().join(\"\")",
-  "main": "index.js",
+  "main": "golb.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Its-Just-Nans/golb.git"
   },
+  "type": "module",
   "author": "n4n5",
   "license": "MIT",
   "scripts": {
-    "build": "node index.js",
-    "build2": "while true; do npm run build; sleep 10; done",
-    "dev": "node index.js build --dev",
+    "build": "node golb.js",
     "sitemap": "cd public && python -m static_sitemap https://golb.n4n5.dev/ --sitemap"
   },
   "devDependencies": {

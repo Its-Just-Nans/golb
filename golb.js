@@ -1,21 +1,16 @@
-const { promises: fs, existsSync: eS, createReadStream, createWriteStream, mkdirSync } = require("fs");
-const config = require("./config.json");
-const path = require("path");
+import { existsSync, mkdirSync } from "node:fs";
+import { rm, writeFile, readdir, readFile, lstat, mkdir, copyFile } from "node:fs/promises";
+import { join, dirname } from "node:path";
+import CleanCSS from "clean-css";
+import showdown from "showdown";
+import showdownKatex from "showdown-katex";
+import showdownHighlight from "showdown-highlight";
+import matter from "gray-matter";
+import { JSDOM } from "jsdom";
+import lunr from "lunr";
+
 const numberOfSpace = 4;
-const pathToProject = __dirname;
-const pathToSrc = path.join(pathToProject, config.srcDir);
-const pathToBuild = path.join(pathToProject, config.buildDir);
-const pathToTemplate = path.join(pathToProject, config.templateDir);
-
-const CleanCSS = require("clean-css");
-const showdown = require("showdown");
-const showdownKatex = require("showdown-katex");
-const showdownHighlight = require("showdown-highlight");
-const matter = require("gray-matter");
-const { readFile } = require("fs/promises");
-
 const sidebar_name_key = "sidebar_name";
-
 const fileCache = new Map();
 
 const readFileCache = async (filePath) => {
@@ -39,19 +34,76 @@ const converter = new showdown.Converter({
 });
 converter.setFlavor("github");
 
+export const buildSearch = async ({ buildDir }) => {
+    const buildFolder = await readdir(buildDir);
+    const files = buildFolder.filter((file) => file.endsWith(".html"));
+
+    const cleanupText = (t) => {
+        return t.trim().replaceAll("\n\n", "");
+    };
+
+    const promises = files.map((filename) => {
+        const filepath = join(buildDir, filename);
+        return readFile(filepath, "utf-8")
+            .then((file) => {
+                const dom = new JSDOM(file);
+                console.log(`Indexing ${filename}`);
+                const pageTitle = dom.window.document
+                    .querySelector("#contenuMain")
+                    .querySelectorAll("h1")[0].textContent;
+                const contents = dom.window.document.querySelector("#contenuMain").querySelectorAll("h2");
+                const sections = [...contents].map((h2, index) => {
+                    let text = cleanupText(h2.textContent);
+                    let next = h2.nextElementSibling;
+                    while (next && next.tagName !== "H2") {
+                        text += " " + cleanupText(next.textContent);
+                        next = next.nextElementSibling;
+                    }
+                    return {
+                        title: h2.textContent.trim(),
+                        content: text,
+                        url: `${filename}#${h2.id}|${pageTitle} > ${h2.textContent} >`,
+                    };
+                });
+                return sections;
+            })
+            .catch((err) => {
+                console.error(`Error indexing ${filename}: ${err}`);
+                // throw err;
+                return [];
+            });
+    });
+
+    const results = await Promise.all(promises);
+
+    const flatResults = results.flat(2);
+    const idx = lunr(function () {
+        this.ref("url");
+        this.field("title");
+        this.field("content");
+
+        flatResults.forEach(function (post) {
+            this.add(post);
+        }, this);
+    });
+
+    const searchPath = join(buildDir, "search.json");
+    await writeFile(searchPath, JSON.stringify(idx));
+};
+
 const slugify = (str) => {
     str = str.toLowerCase();
     str = str.replace(/[^a-zA-Z0-9]+/g, "-");
     return str;
 };
 
-const makeMenu = async (parentSlug, pathToCheck = pathToSrc) => {
+const makeMenu = async (parentSlug, pathToCheck) => {
     const navigation = [];
-    if (eS(pathToCheck)) {
-        const list = await fs.readdir(pathToCheck);
+    if (existsSync(pathToCheck)) {
+        const list = await readdir(pathToCheck);
         for (const oneElement of list) {
-            const pathToElement = path.join(pathToCheck, oneElement);
-            const statOfElement = await fs.lstat(pathToElement);
+            const pathToElement = join(pathToCheck, oneElement);
+            const statOfElement = await lstat(pathToElement);
             if (statOfElement.isDirectory()) {
                 if (["data", ".git"].includes(oneElement)) {
                     continue;
@@ -166,14 +218,17 @@ const makeStyleMenu = (menuHtml, oneEntry) => {
 };
 
 const buildSingleFile =
-    ({ menuHtml, cssLinks, template }) =>
+    ({ menuHtml, cssLinks, template }, buildDir) =>
     async (oneEntry) => {
         if (oneEntry.isDir) {
-            const builderFunc = buildSingleFile({
-                menuHtml,
-                cssLinks,
-                template,
-            });
+            const builderFunc = buildSingleFile(
+                {
+                    menuHtml,
+                    cssLinks,
+                    template,
+                },
+                buildDir
+            );
             await Promise.allSettled(oneEntry.files.map(builderFunc));
             return;
         }
@@ -208,60 +263,62 @@ const buildSingleFile =
         }
         finalFile = finalFile.replace("<!--HEAD-->", headData.split("\n").join("\n        "));
         finalFile = finalFile.replace("<!--MENU-->", htmlMenu);
-        await fs.writeFile(path.join(pathToBuild, oneEntry.htmlName), finalFile);
+        await writeFile(join(buildDir, oneEntry.htmlName), finalFile);
     };
 
-const build = async (menu) => {
-    const cssLinks = (await fs.readFile(path.join(pathToTemplate, "head.html"))).toString();
-    const template = (await fs.readFile(path.join(pathToTemplate, "template.html"))).toString();
+const build = async (menu, { buildDir, templateDir }) => {
+    const cssLinks = (await readFile(join(templateDir, "head.html"))).toString();
+    const template = (await readFile(join(templateDir, "template.html"))).toString();
     const menuHtml = makeHTMLMenu(menu);
-    const builderFunc = buildSingleFile({ menuHtml, cssLinks, template });
+    const builderFunc = buildSingleFile({ menuHtml, cssLinks, template }, buildDir);
     await Promise.allSettled(menu.map(builderFunc));
 };
 
-const compileCSS = async () => {
+const compileCSS = async ({ cssFile, templateDir, buildDir, styles }, outFile) => {
     let css = "";
     const CSScompiler = new CleanCSS();
-    if (config.cssFile) {
-        for (const oneFile of config.cssFile) {
+    if (cssFile) {
+        for (const oneFile of cssFile) {
             const filename = oneFile.split("/").pop();
-            if (!eS("raws")) {
+            if (!existsSync("raws")) {
                 mkdirSync("raws");
             }
-            const listOfRaws = await fs.readdir("raws");
+            const listOfRaws = await readdir("raws");
             let dataCSS = "";
             if (listOfRaws.includes(filename)) {
-                dataCSS = await fs.readFile(path.join("raws", filename));
+                dataCSS = await readFile(join("raws", filename));
             } else {
                 const req = await fetch(oneFile);
                 const txt = await req.text();
-                await fs.writeFile(path.join("raws", filename), txt);
+                await writeFile(join("raws", filename), txt);
                 dataCSS = txt;
             }
             css += CSScompiler.minify(dataCSS).styles;
         }
     }
-    const pathToCompiled = path.join(config.buildDir, "style.css");
-    for (const oneFile of config.styles) {
-        const cssFile = (await fs.readFile(path.join(pathToTemplate, oneFile))).toString();
+    const pathToCompiled = join(buildDir, outFile);
+    for (const oneFile of styles) {
+        const cssFile = (await readFile(join(templateDir, oneFile))).toString();
         css += CSScompiler.minify(cssFile).styles;
     }
-    await fs.writeFile(pathToCompiled, css);
+    await writeFile(pathToCompiled, css);
 };
 
-const copyDataFolder = async () => {
-    const list = await fs.readdir(`./${config.srcDir}/`);
+const copyDataFolder = async ({ srcDir, buildDir }) => {
+    const list = await readdir(`./${srcDir}/`);
     for (const oneFolder of list) {
-        const pathFile = path.join(__dirname, config.srcDir, oneFolder);
-        const statOfElement = await fs.lstat(pathFile);
+        const pathFile = join(srcDir, oneFolder);
+        const statOfElement = await lstat(pathFile);
         if (statOfElement.isDirectory()) {
-            const list2 = await fs.readdir(pathFile);
+            const list2 = await readdir(pathFile);
             for (const oneElement of list2) {
-                const pathFile2 = path.join(pathFile, oneElement);
-                const statOfElement2 = await fs.lstat(pathFile2);
+                const pathFile2 = join(pathFile, oneElement);
+                const statOfElement2 = await lstat(pathFile2);
                 if (statOfElement2.isDirectory() && oneElement == "data") {
+                    const inputDir = join(srcDir, oneFolder, "data");
+                    const outputDir = join(buildDir, "data");
                     // we move
-                    await copyDir(`./${config.srcDir}/${oneFolder}/data`, path.join(config.buildDir, "data"));
+                    await copyDir(inputDir, outputDir);
                 }
             }
         }
@@ -269,26 +326,50 @@ const copyDataFolder = async () => {
 };
 
 async function copyDir(src, dest) {
-    await fs.mkdir(dest, { recursive: true });
-    let entries = await fs.readdir(src, { withFileTypes: true });
+    await mkdir(dest, { recursive: true });
+    let entries = await readdir(src, { withFileTypes: true });
 
     for (let entry of entries) {
-        let srcPath = path.join(src, entry.name);
-        let destPath = path.join(dest, entry.name);
+        let srcPath = join(src, entry.name);
+        let destPath = join(dest, entry.name);
 
-        entry.isDirectory() ? await copyDir(srcPath, destPath) : await fs.copyFile(srcPath, destPath);
+        entry.isDirectory() ? await copyDir(srcPath, destPath) : await copyFile(srcPath, destPath);
     }
 }
 
-async function copyPublicFolder() {
-    await copyDir("./public", path.join(config.buildDir));
-}
-
-module.exports = {
-    makeMenu,
-    makeHTMLMenu,
-    build,
-    copyDataFolder,
-    compileCSS,
-    copyPublicFolder,
+const downloadExternalFiles = async ({ buildDir, externalFiles }) => {
+    const downloadSingleFile = async ([oneUrl, outputPath]) => {
+        const file = await fetch(oneUrl);
+        const content = await file.arrayBuffer();
+        const output = join(buildDir, outputPath);
+        if (!existsSync(dirname(output))) {
+            mkdirSync(dirname(output), { recursive: true });
+        }
+        await writeFile(output, Buffer.from(content));
+        console.log(`Downloaded ${oneUrl} to ${outputPath}`);
+    };
+    const promises = Object.entries(externalFiles).map(downloadSingleFile);
+    await Promise.all(promises);
+    console.log("All external files downloaded");
 };
+
+const main = async () => {
+    const configFile = (await readFile("./config.json")).toString();
+    const config = JSON.parse(configFile);
+    const { buildDir, templateDir, srcDir, cssFile, styles, externalFiles } = config;
+    await rm(config.buildDir, { recursive: true, force: true });
+    await rm(config.buildDir, { recursive: true, force: true });
+    if (!existsSync(config.buildDir)) {
+        mkdirSync(config.buildDir);
+    }
+    copyDir("./public", join(buildDir));
+    copyDataFolder({ srcDir, buildDir });
+    downloadExternalFiles({ buildDir, externalFiles });
+    compileCSS({ templateDir, cssFile, styles, buildDir }, "style.css");
+    const completeMenu = await makeMenu("", srcDir);
+    await writeFile("menu.json", JSON.stringify(completeMenu, null, 4));
+    await build(completeMenu, { buildDir, templateDir });
+    await buildSearch({ buildDir: config.buildDir });
+};
+
+main();
