@@ -11,7 +11,7 @@
         .addEventListener("DOMContentLoaded", async (event) => {
             const file = await fetch("./search.json");
             const json = await file.json();
-            const indexed = lunr.Index.load(indexData);
+            const indexed = lunr.Index.load(json);
             window.searcher = indexed;
         })
         .catch((error) => {
