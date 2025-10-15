@@ -217,61 +217,55 @@ const makeStyleMenu = (menuHtml, oneEntry) => {
     return menuHtml;
 };
 
-const buildSingleFile =
-    ({ menuHtml, cssLinks, template }, buildDir) =>
-    async (oneEntry) => {
-        if (oneEntry.isDir) {
-            const builderFunc = buildSingleFile(
-                {
-                    menuHtml,
-                    cssLinks,
-                    template,
-                },
-                buildDir
-            );
-            await Promise.allSettled(oneEntry.files.map(builderFunc));
-            return;
+const buildSingleFile = async ({ menuHtml, cssLinks, template, buildDir }, oneEntry) => {
+    if (oneEntry.isDir) {
+        const promises = oneEntry.files.map((subEntry) =>
+            buildSingleFile({ menuHtml, cssLinks, template, buildDir }, subEntry)
+        );
+        await Promise.allSettled(promises);
+        return;
+    }
+    console.log(`Building ${oneEntry.name}`);
+    const htmlMenu = `<nav>\n${makeStyleMenu(menuHtml, oneEntry)}\n</nav>`.replace("<ul>", `<ul class="open-nav">`);
+    let headData = `${cssLinks}<link rel="canonical" href="https://golb.n4n5.dev/${oneEntry.htmlName.replace(
+        ".html",
+        ""
+    )}" />\n<title>golb | ${oneEntry.name}</title>`;
+    let fileContent = (await readFileCache(oneEntry.files)).toString();
+    let finalFile = "";
+    if (oneEntry.files.endsWith(".md")) {
+        const { content, data } = matter(fileContent);
+        let finalStr = converter.makeHtml(content);
+        if (!finalStr.includes("h1")) {
+            const title = data.title || oneEntry.name;
+            finalStr = `<h1>${title}</h1>\n${finalStr}`;
         }
-        console.log(`Building ${oneEntry.name}`);
-        const htmlMenu = `<nav>\n${makeStyleMenu(menuHtml, oneEntry)}\n</nav>`.replace("<ul>", `<ul class="open-nav">`);
-        let headData = `${cssLinks}<link rel="canonical" href="https://golb.n4n5.dev/${oneEntry.htmlName.replace(
-            ".html",
-            ""
-        )}" />\n<title>golb | ${oneEntry.name}</title>`;
-        let fileContent = (await readFileCache(oneEntry.files)).toString();
-        let finalFile = "";
-        if (oneEntry.files.endsWith(".md")) {
-            const { content, data } = matter(fileContent);
-            let finalStr = converter.makeHtml(content);
-            if (!finalStr.includes("h1")) {
-                const title = data.title || oneEntry.name;
-                finalStr = `<h1>${title}</h1>\n${finalStr}`;
-            }
-            const html = finalStr.endsWith("\n") ? finalStr.slice(0, -1) : finalStr;
-            finalFile = template.replace("<!--FILE-->", html);
-            if (data.title) {
-                headData = `${headData}\n<meta name="title" content="${data.title}" />`;
-            }
-            if (data.description) {
-                headData = `${headData}\n<meta name="description" content="${data.description}" />`;
-            }
-            if (data.keywords) {
-                headData = `${headData}\n<meta name="keywords" content="${data.keywords}" />`;
-            }
-        } else if (oneEntry.files.endsWith(".html")) {
-            finalFile = template.replace("<!--FILE-->", fileContent);
+        const html = finalStr.endsWith("\n") ? finalStr.slice(0, -1) : finalStr;
+        finalFile = template.replace("<!--FILE-->", html);
+        if (data.title) {
+            headData = `${headData}\n<meta name="title" content="${data.title}" />`;
         }
-        finalFile = finalFile.replace("<!--HEAD-->", headData.split("\n").join("\n        "));
-        finalFile = finalFile.replace("<!--MENU-->", htmlMenu);
-        await writeFile(join(buildDir, oneEntry.htmlName), finalFile);
-    };
+        if (data.description) {
+            headData = `${headData}\n<meta name="description" content="${data.description}" />`;
+        }
+        if (data.keywords) {
+            headData = `${headData}\n<meta name="keywords" content="${data.keywords}" />`;
+        }
+    } else if (oneEntry.files.endsWith(".html")) {
+        finalFile = template.replace("<!--FILE-->", fileContent);
+    }
+    finalFile = finalFile.replace("<!--HEAD-->", headData.split("\n").join("\n        "));
+    finalFile = finalFile.replace("<!--MENU-->", htmlMenu);
+    await writeFile(join(buildDir, oneEntry.htmlName), finalFile);
+};
 
 const build = async (menu, { buildDir, templateDir, compact }) => {
     const cssLinks = (await readFile(join(templateDir, "head.html"))).toString();
     const template = (await readFile(join(templateDir, "template.html"))).toString();
     const menuHtml = makeHTMLMenu({ menu, compact });
-    const builderFunc = buildSingleFile({ menuHtml, cssLinks, template }, buildDir);
-    await Promise.allSettled(menu.map(builderFunc));
+    await Promise.allSettled(
+        menu.map((oneEntry) => buildSingleFile({ menuHtml, cssLinks, template, buildDir }, oneEntry))
+    );
 };
 
 const compileCSS = async ({ cssFile, templateDir, buildDir, styles }, outFile) => {
@@ -367,7 +361,7 @@ const main = async () => {
     downloadExternalFiles({ buildDir, externalFiles });
     compileCSS({ templateDir, cssFile, styles, buildDir }, "style.css");
     const completeMenu = await makeMenu("", srcDir);
-    await writeFile("menu.json", JSON.stringify(completeMenu, null, 4));
+    writeFile("menu.json", JSON.stringify(completeMenu, null, 4));
     await build(completeMenu, { buildDir, templateDir, compact });
     await buildSearch({ buildDir: config.buildDir });
 };
