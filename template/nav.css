@@ -88,7 +88,7 @@ nav {
     padding: 10px;
 }
 
-nav div input:checked ~ div span:last-child::after {
+nav div input:checked ~ div .menu-button:last-child::after {
     content: "-";
 }
 
@@ -96,7 +96,14 @@ nav div input:checked ~ ul li {
     display: flex;
 }
 
-nav div div span:last-child::after {
+.menu-button {
+    background: none;
+    border: none;
+    font-size: 1em;
+}
+
+
+nav div div .menu-button:last-child::after {
     content: "+";
 }
 

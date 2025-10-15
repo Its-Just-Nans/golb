@@ -200,7 +200,7 @@ const makeHTMLMenu = ({ menu, offset = 1, number = 0, compact = null }) => {
             html += addToHtml("<div>", offset + 2);
             html += addToHtml(`<label for="menu-control-${number++}">`, offset + 3);
             html += addToHtml(`<span>${oneEntry.name}</span>`, offset + 4);
-            html += addToHtml("<span role='button'></span>", offset + 4);
+            html += addToHtml("<button class='menu-button'></button>", offset + 4);
             html += addToHtml("</label>", offset + 3);
             html += addToHtml("</div>", offset + 2);
             html += addToHtml(menuList, offset + 2);
