@@ -80,7 +80,7 @@
                     resultsDiv.innerHTML = "";
                     results.slice(0, 10).forEach((result) => {
                         const item = document.createElement("a");
-                        const [href, page] = result.ref.split("|");
+                        const { href, page } = result.ref;
                         item.href = href;
                         item.innerHTML = `<span>${page}</span><span style="color: black;"> ${
                             Object.keys(result.matchData.metadata)[0]

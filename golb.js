@@ -48,7 +48,7 @@ export const buildSearch = async ({ buildDir }) => {
                     return {
                         title: h2.textContent.trim(),
                         content: text,
-                        url: `${filename}#${h2.id}|${pageTitle} > ${h2.textContent} >`,
+                        data: { href: `${filename}#${h2.id}`, page: `${pageTitle} > ${h2.textContent} >` },
                     };
                 });
                 return sections;
@@ -64,7 +64,7 @@ export const buildSearch = async ({ buildDir }) => {
 
     const flatResults = results.flat(2);
     const idx = lunr(function () {
-        this.ref("url");
+        this.ref("data");
         this.field("title");
         this.field("content");
 
