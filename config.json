@@ -3,6 +3,7 @@
     "buildDir": "dist",
     "templateDir": "template",
     "publicDir": "public",
+    "stylesDir": "styles",
     "styles": [
         "default.min.css",
         "custom.showdown.css",

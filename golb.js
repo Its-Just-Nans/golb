@@ -21,14 +21,6 @@ const readFileCache = async (filePath) => {
     return data;
 };
 
-const converter = new showdown.Converter({
-    openLinksInNewWindow: true,
-    extensions: [
-        showdownHighlight(),
-    ],
-});
-converter.setFlavor("github");
-
 export const buildSearch = async ({ buildDir }) => {
     const buildFolder = await readdir(buildDir);
     const files = buildFolder.filter((file) => file.endsWith(".html"));
@@ -212,10 +204,10 @@ const makeStyleMenu = (menuHtml, oneEntry) => {
     return menuHtml;
 };
 
-const buildSingleFile = async ({ menuHtml, cssLinks, template, buildDir }, oneEntry) => {
+const buildSingleFile = async ({ menuHtml, cssLinks, template, buildDir, converter }, oneEntry) => {
     if (oneEntry.isDir) {
         const promises = oneEntry.files.map((subEntry) =>
-            buildSingleFile({ menuHtml, cssLinks, template, buildDir }, subEntry)
+            buildSingleFile({ menuHtml, cssLinks, template, buildDir, converter }, subEntry)
         );
         await Promise.allSettled(promises);
         return;
@@ -258,8 +250,13 @@ const build = async (menu, { buildDir, templateDir, compact }) => {
     const cssLinks = (await readFile(join(templateDir, "head.html"))).toString();
     const template = (await readFile(join(templateDir, "template.html"))).toString();
     const menuHtml = makeHTMLMenu({ menu, compact });
+    const converter = new showdown.Converter({
+        openLinksInNewWindow: true,
+        extensions: [showdownHighlight()],
+    });
+    converter.setFlavor("github");
     await Promise.allSettled(
-        menu.map((oneEntry) => buildSingleFile({ menuHtml, cssLinks, template, buildDir }, oneEntry))
+        menu.map((oneEntry) => buildSingleFile({ menuHtml, cssLinks, template, buildDir, converter }, oneEntry))
     );
 };
 
@@ -275,7 +272,7 @@ const compileCSS = async ({ stylesDir, buildDir, styles }, outFile) => {
 };
 
 const copyDataFolder = async ({ srcDir, buildDir }) => {
-    const list = await readdir(`./${srcDir}/`);
+    const list = await readdir(srcDir);
     for (const oneFolder of list) {
         const pathFile = join(srcDir, oneFolder);
         const statOfElement = await lstat(pathFile);
@@ -328,9 +325,9 @@ const main = async () => {
     const configFile = (await readFile("./config.json")).toString();
     const config = JSON.parse(configFile);
     const { buildDir, templateDir, publicDir, srcDir, styles, stylesDir, externalFiles } = config;
-    await rm(config.buildDir, { recursive: true, force: true });
-    if (!existsSync(config.buildDir)) {
-        mkdirSync(config.buildDir);
+    await rm(buildDir, { recursive: true, force: true });
+    if (!existsSync(buildDir)) {
+        mkdirSync(buildDir);
     }
     copyDir(publicDir, join(buildDir));
     copyDataFolder({ srcDir, buildDir });
@@ -339,7 +336,7 @@ const main = async () => {
     const completeMenu = await makeMenu("", srcDir);
     writeFile("menu.json", JSON.stringify(completeMenu, null, 4));
     await build(completeMenu, { buildDir, templateDir, compact });
-    await buildSearch({ buildDir: config.buildDir });
+    await buildSearch({ buildDir });
 };
 
 main();

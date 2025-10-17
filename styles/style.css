@@ -157,25 +157,6 @@ pre::-webkit-scrollbar-track {
     }
 }
 
-/* KATEX */
-
-.katex-html .base {
-    margin-bottom: 5px;
-}
-
-.katex-center {
-    display: flex;
-}
-
-.katex-center > span {
-    margin: auto;
-    background: lightcyan;
-    padding: 10px;
-    padding-bottom: 5px;
-    border: 1px solid black;
-    border-radius: 10px;
-}
-
 pre code.hljs {
     display: block;
     overflow-x: auto;
