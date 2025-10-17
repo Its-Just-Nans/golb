@@ -45,10 +45,10 @@ export const buildSearch = async ({ buildDir }) => {
                         text += " " + cleanupText(next.textContent);
                         next = next.nextElementSibling;
                     }
+                    const title = h2.textContent.trim();
                     return {
-                        title: h2.textContent.trim(),
                         content: text,
-                        data: { href: `${filename}#${h2.id}`, page: `${pageTitle} > ${h2.textContent} >` },
+                        data: `${filename}#${h2.id}|${pageTitle} > ${title} >`,
                     };
                 });
                 return sections;
@@ -65,7 +65,6 @@ export const buildSearch = async ({ buildDir }) => {
     const flatResults = results.flat(2);
     const idx = lunr(function () {
         this.ref("data");
-        this.field("title");
         this.field("content");
 
         flatResults.forEach(function (post) {
