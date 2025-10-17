@@ -3,7 +3,6 @@ import { rm, writeFile, readdir, readFile, lstat, mkdir, copyFile } from "node:f
 import { join, dirname } from "node:path";
 import CleanCSS from "clean-css";
 import showdown from "showdown";
-import showdownKatex from "showdown-katex";
 import showdownHighlight from "showdown-highlight";
 import matter from "gray-matter";
 import { JSDOM } from "jsdom";
@@ -25,10 +24,6 @@ const readFileCache = async (filePath) => {
 const converter = new showdown.Converter({
     openLinksInNewWindow: true,
     extensions: [
-        showdownKatex({
-            throwOnError: true,
-            displayMode: false,
-        }),
         showdownHighlight(),
     ],
 });
@@ -268,31 +263,12 @@ const build = async (menu, { buildDir, templateDir, compact }) => {
     );
 };
 
-const compileCSS = async ({ cssFile, templateDir, buildDir, styles }, outFile) => {
+const compileCSS = async ({ stylesDir, buildDir, styles }, outFile) => {
     let css = "";
     const CSScompiler = new CleanCSS();
-    if (cssFile) {
-        for (const oneFile of cssFile) {
-            const filename = oneFile.split("/").pop();
-            if (!existsSync("raws")) {
-                mkdirSync("raws");
-            }
-            const listOfRaws = await readdir("raws");
-            let dataCSS = "";
-            if (listOfRaws.includes(filename)) {
-                dataCSS = await readFile(join("raws", filename));
-            } else {
-                const req = await fetch(oneFile);
-                const txt = await req.text();
-                await writeFile(join("raws", filename), txt);
-                dataCSS = txt;
-            }
-            css += CSScompiler.minify(dataCSS).styles;
-        }
-    }
     const pathToCompiled = join(buildDir, outFile);
     for (const oneFile of styles) {
-        const cssFile = (await readFile(join(templateDir, oneFile))).toString();
+        const cssFile = (await readFile(join(stylesDir, oneFile))).toString();
         css += CSScompiler.minify(cssFile).styles;
     }
     await writeFile(pathToCompiled, css);
@@ -351,7 +327,7 @@ const main = async () => {
     const compact = process.argv.some((arg) => ["--prod"].includes(arg));
     const configFile = (await readFile("./config.json")).toString();
     const config = JSON.parse(configFile);
-    const { buildDir, templateDir, publicDir, srcDir, cssFile, styles, externalFiles } = config;
+    const { buildDir, templateDir, publicDir, srcDir, styles, stylesDir, externalFiles } = config;
     await rm(config.buildDir, { recursive: true, force: true });
     if (!existsSync(config.buildDir)) {
         mkdirSync(config.buildDir);
@@ -359,7 +335,7 @@ const main = async () => {
     copyDir(publicDir, join(buildDir));
     copyDataFolder({ srcDir, buildDir });
     downloadExternalFiles({ buildDir, externalFiles });
-    compileCSS({ templateDir, cssFile, styles, buildDir }, "style.css");
+    compileCSS({ stylesDir, styles, buildDir }, "style.css");
     const completeMenu = await makeMenu("", srcDir);
     writeFile("menu.json", JSON.stringify(completeMenu, null, 4));
     await build(completeMenu, { buildDir, templateDir, compact });
