@@ -203,17 +203,17 @@ const makeStyleMenu = (menuHtml, oneEntry) => {
     return menuHtml;
 };
 
-const buildSingleFile = async ({ menuHtml, cssLinks, template, buildDir, converter }, oneEntry) => {
+const buildSingleFile = async ({ menuHtml, template, buildDir, converter }, oneEntry) => {
     if (oneEntry.isDir) {
         const promises = oneEntry.files.map((subEntry) =>
-            buildSingleFile({ menuHtml, cssLinks, template, buildDir, converter }, subEntry)
+            buildSingleFile({ menuHtml, template, buildDir, converter }, subEntry)
         );
         await Promise.allSettled(promises);
         return;
     }
     console.log(`Building ${oneEntry.name}`);
     const htmlMenu = `<nav>\n${makeStyleMenu(menuHtml, oneEntry)}\n</nav>`.replace("<ul>", `<ul class="open-nav">`);
-    let headData = `${cssLinks}<link rel="canonical" href="https://golb.n4n5.dev/${oneEntry.htmlName.replace(
+    let headData = `<link rel="canonical" href="https://golb.n4n5.dev/${oneEntry.htmlName.replace(
         ".html",
         ""
     )}" />\n<title>golb | ${oneEntry.name}</title>`;
@@ -246,7 +246,6 @@ const buildSingleFile = async ({ menuHtml, cssLinks, template, buildDir, convert
 };
 
 const build = async (menu, { buildDir, templateDir, compact }) => {
-    const cssLinks = (await readFile(join(templateDir, "head.html"))).toString();
     const template = (await readFile(join(templateDir, "template.html"))).toString();
     const menuHtml = makeHTMLMenu({ menu, compact });
     const converter = new showdown.Converter({
@@ -255,7 +254,7 @@ const build = async (menu, { buildDir, templateDir, compact }) => {
     });
     converter.setFlavor("github");
     await Promise.allSettled(
-        menu.map((oneEntry) => buildSingleFile({ menuHtml, cssLinks, template, buildDir, converter }, oneEntry))
+        menu.map((oneEntry) => buildSingleFile({ menuHtml, template, buildDir, converter }, oneEntry))
     );
 };
 

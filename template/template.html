@@ -2,6 +2,15 @@
 <html lang="en">
     <head>
         <!--HEAD-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta charset="utf-8" />
+        <meta name="description" content="Just a simple knowledge base" />
+        <meta name="generator" content="golb" />
+        <link rel="icon" href="favicon.ico" />
+        <link rel="sitemap" type="application/xml" href="sitemap.xml" />
+        <link rel="stylesheet" href="style.css" />
+        <script src="lunr.js" defer></script>
+        <link rel="prefetch" href="search.json" />
     </head>
 
     <body>
@@ -48,45 +57,56 @@
             </div>
             <div id="search-results"></div>
             <script>
-                const resultsDiv = document.getElementById("search-results");
-                document.getElementById("search-control").addEventListener("change", function () {
-                    if (this.checked) {
-                        document.getElementById("search").focus();
+                document.addEventListener("DOMContentLoaded", async (event) => {
+                    try {
+                        const file = await fetch("search.json");
+                        const json = await file.json();
+                        const indexed = lunr.Index.load(json);
+                        window.searcher = indexed;
+                    } catch (e) {
+                        console.error("Error loading index:", e);
                     }
-                });
-                const reset = () => {
-                    resultsDiv.innerHTML = "";
-                    document.getElementById("search-control").checked = false;
-                };
-                const ctrlf = (e) => {
-                    if (e.key === "f" && e.ctrlKey) {
-                        if (document.getElementById("search-control").checked) {
+
+                    const resultsDiv = document.getElementById("search-results");
+                    document.getElementById("search-control").addEventListener("change", function () {
+                        if (this.checked) {
+                            document.getElementById("search").focus();
+                        }
+                    });
+                    const reset = () => {
+                        resultsDiv.innerHTML = "";
+                        document.getElementById("search-control").checked = false;
+                    };
+                    const ctrlf = (e) => {
+                        if (e.key === "f" && e.ctrlKey) {
+                            if (document.getElementById("search-control").checked) {
+                                reset();
+                                return;
+                            }
+                            e.preventDefault();
+                            document.getElementById("search-control").checked = true;
+                            document.getElementById("search").focus();
+                        }
+                    };
+                    document.addEventListener("keydown", ctrlf);
+                    document.getElementById("search").addEventListener("input", function (e) {
+                        const query = this.value;
+                        if (query === "") {
                             reset();
                             return;
                         }
-                        e.preventDefault();
-                        document.getElementById("search-control").checked = true;
-                        document.getElementById("search").focus();
-                    }
-                };
-                document.addEventListener("keydown", ctrlf);
-                document.getElementById("search").addEventListener("input", function (e) {
-                    const query = this.value;
-                    if (query === "") {
-                        reset();
-                        return;
-                    }
-                    const results = window.searcher.search("*" + query + "*");
-                    resultsDiv.innerHTML = "";
-                    results.slice(0, 10).forEach((result) => {
-                        const item = document.createElement("a");
-                        const [href, page] = result.ref.split("|");
-                        item.href = href;
-                        item.innerHTML = `<span>${page}</span><span style="color: black;"> ${
-                            Object.keys(result.matchData.metadata)[0]
-                        }</<span>`;
-                        item.onclick = reset;
-                        resultsDiv.appendChild(item);
+                        const results = window.searcher.search("*" + query + "*");
+                        resultsDiv.innerHTML = "";
+                        results.slice(0, 10).forEach((result) => {
+                            const item = document.createElement("a");
+                            const [href, page] = result.ref.split("|");
+                            item.href = href;
+                            item.innerHTML = `<span>${page}</span><span style="color: black;"> ${
+                                Object.keys(result.matchData.metadata)[0]
+                            }</<span>`;
+                            item.onclick = reset;
+                            resultsDiv.appendChild(item);
+                        });
                     });
                 });
             </script>
