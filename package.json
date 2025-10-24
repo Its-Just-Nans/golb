@@ -20,8 +20,7 @@
     "jsdom": "^24.0.0",
     "lunr": "^2.3.9",
     "showdown": "^1.9.1",
-    "showdown-highlight": "^2.1.8",
-    "gray-matter": "^4.0.3"
+    "showdown-highlight": "^2.1.8"
   },
   "bugs": {
     "url": "https://github.com/Its-Just-Nans/golb/issues"

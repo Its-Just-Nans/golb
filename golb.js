@@ -4,13 +4,37 @@ import { join, dirname } from "node:path";
 import CleanCSS from "clean-css";
 import showdown from "showdown";
 import showdownHighlight from "showdown-highlight";
-import matter from "gray-matter";
 import { JSDOM } from "jsdom";
 import lunr from "lunr";
 
 const numberOfSpace = 4;
 const sidebar_name_key = "sidebar_name";
 const fileCache = new Map();
+
+const matter = (inputFile) => {
+    const separator = "---";
+    const lines = inputFile.toString().split("\n");
+    if (!lines[0].startsWith(separator)) {
+        return { content: inputFile, data: {} };
+    }
+    let idxMatter = 0;
+    for (const oneLine of lines) {
+        if (oneLine.startsWith(separator) && idxMatter !== 0) {
+            break;
+        }
+        idxMatter++;
+    }
+    const data = lines.slice(1, idxMatter).reduce((acc, oneLineTag) => {
+        const [key, value] = oneLineTag.split(": ");
+        const cleanValue = key === "keywords" ? value.split(", ") : value;
+        return {
+            [key]: cleanValue,
+            ...acc,
+        };
+    }, {});
+    const content = lines.slice(idxMatter).join("\n");
+    return { content, data };
+};
 
 const readFileCache = async (filePath) => {
     if (fileCache.has(filePath)) {
