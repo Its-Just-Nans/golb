@@ -8,8 +8,8 @@ import { JSDOM } from "jsdom";
 import lunr from "lunr";
 
 const numberOfSpace = 4;
-const sidebar_name_key = "sidebar_name";
 const fileCache = new Map();
+const matterKeySplit = ["keywords"];
 
 const matter = (inputFile) => {
     const separator = "---";
@@ -26,7 +26,7 @@ const matter = (inputFile) => {
     }
     const data = lines.slice(1, idxMatter).reduce((acc, oneLineTag) => {
         const [key, value] = oneLineTag.split(": ");
-        const cleanValue = key === "keywords" ? value.split(", ") : value;
+        const cleanValue = matterKeySplit.includes(key) ? value.split(", ") : value;
         return {
             [key]: cleanValue,
             ...acc,
@@ -45,7 +45,7 @@ const readFileCache = async (filePath) => {
     return data;
 };
 
-export const buildSearch = async ({ buildDir }) => {
+const buildSearch = async ({ buildDir }) => {
     const buildFolder = await readdir(buildDir);
     const files = buildFolder.filter((file) => file.endsWith(".html"));
 
@@ -138,7 +138,7 @@ const makeMenu = async (parentSlug, pathToCheck) => {
                     continue;
                 }
                 const nameNoExt = oneElement.slice(0, oneElement.lastIndexOf("."));
-                const name = data[sidebar_name_key] || correctName(oneElement);
+                const name = data.sidebar_name || correctName(oneElement);
                 const entry = {
                     name,
                     htmlName: correctHTMLName(nameNoExt),

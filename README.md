@@ -9,7 +9,6 @@ Links:
 
 ## More
 
-- <https://github.com/Its-Just-Nans/golb-articles> - articles
 - <https://yakb.n4n5.dev/> - for less code and more words
 
 ## Sitemap
