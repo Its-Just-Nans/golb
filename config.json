@@ -1,5 +1,5 @@
 {
-    "srcDir": "golb-articles",
+    "srcDir": "Its-Just-Nans/golb-articles",
     "buildDir": "dist",
     "templateDir": "template",
     "publicDir": "public",
