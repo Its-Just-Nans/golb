@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync } from "node:fs";
-import { rm, writeFile, readdir, readFile, lstat, mkdir, copyFile } from "node:fs/promises";
+import { rm, writeFile, readdir, readFile, mkdir, copyFile } from "node:fs/promises";
 import { join, dirname } from "node:path";
 import showdown from "showdown";
 import showdownHighlight from "showdown-highlight";
@@ -13,16 +13,15 @@ type GolbMatter = {
     description?: string;
 };
 
-type Entry = {
+type MenuEntry = {
     htmlName: string;
     sidebarName: string;
     slug: string;
     parentSlug: string;
-    isDir: boolean;
-    path: string;
+    filePath: string;
     content: string;
     data: GolbMatter;
-    files?: Array<Entry>;
+    files: Array<MenuEntry> | null;
 };
 
 const parseFrontMatter = (inputFile: string, filename: string) => {
@@ -54,7 +53,7 @@ const parseFrontMatter = (inputFile: string, filename: string) => {
     return { content, data };
 };
 
-const indexFile = async (entry: Entry) => {
+const indexFile = async (entry: MenuEntry) => {
     const out = [];
     const lines = entry.content.split("\n");
     let currSection: null | { title: string; content: Array<string> } = null;
@@ -108,78 +107,79 @@ const slugify = (str: string) =>
         .trim()
         .replace(/\s+/g, "-"); // convert spaces to hyphens
 
-const makeMenu = async (parentSlug: string, pathToCheck: string): Promise<Array<Entry>> => {
-    const navigation: Array<Entry> = [];
+const makeMenu = async (parentSlug: string, pathToCheck: string, buildDir: string): Promise<Array<MenuEntry>> => {
+    const navigation: Array<MenuEntry> = [];
     if (existsSync(pathToCheck)) {
-        const list = await readdir(pathToCheck);
-        for (const oneElement of list) {
+        const list = await readdir(pathToCheck, { withFileTypes: true });
+        for (const dirEntry of list) {
+            const oneElement = dirEntry.name;
             const pathToElement = join(pathToCheck, oneElement);
-            const statOfElement = await lstat(pathToElement);
-            if (statOfElement.isDirectory()) {
+            if (dirEntry.isDirectory()) {
                 if (["data", ".git"].includes(oneElement)) {
+                    if (oneElement == "data") {
+                        copyDir(pathToElement, join(buildDir, "data"));
+                    }
                     continue;
                 }
                 const slug = slugify(oneElement);
-                const res = await makeMenu(slug, pathToElement);
+                const res = await makeMenu(slug, pathToElement, buildDir);
                 const title = oneElement.charAt(0).toUpperCase() + oneElement.slice(1);
                 navigation.push({
                     htmlName: `${oneElement}.html`, // add extension
                     slug: slug,
                     parentSlug,
                     sidebarName: title,
-                    path: pathToElement,
+                    filePath: pathToElement,
                     content: "",
-                    isDir: true,
                     data: {
                         title,
                     },
                     files: res,
                 });
             } else {
-                if (
-                    pathToElement.endsWith(".git") ||
-                    pathToElement.endsWith("LICENSE") ||
-                    pathToElement.endsWith("README.md")
-                ) {
+                if (["README.md"].includes(oneElement)) {
                     continue;
                 }
                 const fileContent = (await readFile(pathToElement)).toString();
                 const { data, content } = parseFrontMatter(fileContent, pathToElement);
                 const nameNoExt = oneElement.slice(0, oneElement.lastIndexOf("."));
+                const sidebarName = data.sidebar_name || data.title;
                 const entry = {
                     htmlName: `${nameNoExt}.html`, // add extension
-                    slug: slugify(nameNoExt),
+                    slug: slugify(sidebarName),
                     content,
                     data,
-                    sidebarName: data.sidebar_name || data.title,
+                    sidebarName,
                     parentSlug,
-                    path: pathToElement,
-                    isDir: false,
+                    filePath: pathToElement,
+                    files: null,
                 };
                 navigation.push(entry);
             }
         }
     }
     return navigation.sort((a, b) => {
+        const aIsDir = a.files !== null;
+        const bIsDir = b.files !== null;
         if (a.htmlName === "index.html") {
             return -1;
         } else if (b.htmlName === "index.html") {
             return 1;
         }
-        if (a.isDir && b.isDir) {
+        if (aIsDir && bIsDir) {
             return 0;
-        } else if (a.isDir && !b.isDir) {
+        } else if (aIsDir && !bIsDir) {
             return 1;
-        } else if (!a.isDir && b.isDir) {
+        } else if (!aIsDir && bIsDir) {
             return -1;
-        } else if (!a.isDir && !b.isDir) {
+        } else if (!aIsDir && !bIsDir) {
             return 0;
         }
         return 0;
     });
 };
 
-const makeHTMLMenu = (menu: Array<Entry>, { offset = 1, number = 0, compact = false }) => {
+const makeHTMLMenu = (menu: Array<MenuEntry>, { offset = 1, number = 0, compact = false }) => {
     const defaultSpacing = compact ? "" : null;
     const addToHtml = (str: string, times: number, lineReturn = true) => {
         const numberOfSpace = 4;
@@ -189,7 +189,7 @@ const makeHTMLMenu = (menu: Array<Entry>, { offset = 1, number = 0, compact = fa
     };
     let html = addToHtml(`<ul>`, offset + 1, true);
     for (const oneEntry of menu) {
-        if (oneEntry.isDir === false) {
+        if (oneEntry.files === null) {
             html += addToHtml(`<li id="menu-${oneEntry.slug}">`, offset + 2);
             html += addToHtml(
                 `<a href="./${oneEntry.htmlName.replace(".html", "")}">${oneEntry.sidebarName}</a>`,
@@ -230,10 +230,10 @@ const buildSingleFile = async (
         buildDir,
         converter,
     }: { menuHtml: string; template: string; buildDir: string; converter: any },
-    oneEntry: Entry
+    oneEntry: MenuEntry
 ): Promise<Array<{ fileWritten: string; dataIndexed: Array<{ content: string; data: string }> }>> => {
     console.log(`Building and indexing '${oneEntry.data.title}'`);
-    if (oneEntry.isDir && oneEntry.files) {
+    if (oneEntry.files !== null) {
         const promises = oneEntry.files.map((subEntry) =>
             buildSingleFile({ menuHtml, template, buildDir, converter }, subEntry)
         );
@@ -246,7 +246,7 @@ const buildSingleFile = async (
     const htmlNoExt = oneEntry.htmlName.replace(".html", "");
     let headData = `<link rel="canonical" href="https://golb.n4n5.dev/${htmlNoExt}" />\n<title>golb | ${oneEntry.data.title}</title>`;
     let finalFile = "";
-    if (oneEntry.path.endsWith(".md")) {
+    if (oneEntry.filePath.endsWith(".md")) {
         const data = oneEntry.data;
         let finalStr = converter.makeHtml(oneEntry.content);
         if (!finalStr.includes("h1")) {
@@ -261,7 +261,7 @@ const buildSingleFile = async (
         if (data.keywords) {
             headData = `${headData}\n<meta name="keywords" content="${data.keywords}" />`;
         }
-    } else if (oneEntry.path.endsWith(".html")) {
+    } else if (oneEntry.filePath.endsWith(".html")) {
         finalFile = template.replace("<!--FILE-->", oneEntry.content);
     }
     finalFile = finalFile.replace("<!--HEAD-->", headData.split("\n").join(`\n${" ".repeat(4 * 2)}`));
@@ -275,7 +275,7 @@ const buildSingleFile = async (
 };
 
 const build = async (
-    menu: Array<Entry>,
+    menu: Array<MenuEntry>,
     { buildDir, templateDir, compact }: { buildDir: string; templateDir: string; compact: boolean }
 ) => {
     const template = (await readFile(join(templateDir, "template.html"))).toString();
@@ -319,27 +319,6 @@ const compileCSS = async (
         )
     );
     await writeFile(join(buildDir, outFile), css.join("\n"));
-};
-
-const copyDataFolder = async (srcDir: string, buildDir: string) => {
-    const list = await readdir(srcDir);
-    for (const oneFolder of list) {
-        const pathFile = join(srcDir, oneFolder);
-        const statOfElement = await lstat(pathFile);
-        if (statOfElement.isDirectory()) {
-            const list2 = await readdir(pathFile);
-            for (const oneElement of list2) {
-                const pathFile2 = join(pathFile, oneElement);
-                const statOfElement2 = await lstat(pathFile2);
-                if (statOfElement2.isDirectory() && oneElement == "data") {
-                    const inputDir = join(srcDir, oneFolder, "data");
-                    const outputDir = join(buildDir, "data");
-                    // we move
-                    await copyDir(inputDir, outputDir);
-                }
-            }
-        }
-    }
 };
 
 async function copyDir(src: string, dest: string) {
@@ -386,10 +365,9 @@ const main = async () => {
         mkdirSync(buildDir);
     }
     copyDir(publicDir, buildDir);
-    copyDataFolder(srcDir, buildDir);
     downloadExternalFiles(buildDir, externalFiles);
     compileCSS({ compact, stylesDir, styles, buildDir }, "style.css");
-    const completeMenu = await makeMenu("", srcDir);
+    const completeMenu = await makeMenu("", srcDir, buildDir);
     writeFile("menu.json", JSON.stringify(completeMenu, null, 4));
     const indexed = await build(completeMenu, { buildDir, templateDir, compact });
     writeIndex(indexed, buildDir);
