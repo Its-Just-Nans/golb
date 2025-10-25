@@ -20,7 +20,7 @@ type Entry = {
     parentSlug: string;
     isDir: boolean;
     path: string;
-    content?: string;
+    content: string;
     data: GolbMatter;
     files?: Entry[];
 };
@@ -29,7 +29,7 @@ const parseFrontMatter = (inputFile: string, filename: string) => {
     const separator = "---";
     const matterKeySplit = ["keywords"];
     const lines = inputFile.toString().split("\n");
-    if (!lines[0].startsWith(separator)) {
+    if (!lines[0] || !lines[0].startsWith(separator)) {
         throw `Head (matter) must be present for ${filename}`;
     }
     let idxMatter = 0;
@@ -55,24 +55,19 @@ const parseFrontMatter = (inputFile: string, filename: string) => {
 };
 
 const indexFile = async (entry: Entry) => {
-    if (!entry.content) {
-        return [];
-    }
     console.log(`Indexing ${entry.data.title}`);
     const out = [];
     const lines = entry.content.split("\n");
     let sec: null | { title: string; content: Array<string> } = null;
     let code = false;
-
-    for (const l of lines) {
-        const t = l.trim();
+    for (const oneLine of lines.concat(["#"])) {
+        const t = oneLine.trim();
         if (t.startsWith("```")) code = !code;
         let h = null;
-        if (!code && l.startsWith("#")) {
-            h = l.slice(l.indexOf("# ") + 2);
+        if (!code && oneLine.startsWith("#")) {
+            h = oneLine.slice(oneLine.indexOf("# ") + 2);
         }
-
-        if (h) {
+        if (h !== null) {
             if (sec)
                 out.push({
                     title: sec.title,
@@ -81,14 +76,8 @@ const indexFile = async (entry: Entry) => {
             sec = { title: h, content: [] };
         } else {
             if (!sec) sec = { title: "", content: [] };
-            sec.content.push(l);
+            sec.content.push(oneLine);
         }
-    }
-    if (sec) {
-        out.push({
-            title: sec.title,
-            content: sec.content.join("\n"),
-        });
     }
     return out.map(({ title, content }) => ({
         content,
@@ -135,6 +124,7 @@ const makeMenu = async (parentSlug: string, pathToCheck: string): Promise<Entry[
                     parentSlug,
                     sidebarName: title,
                     path: pathToElement,
+                    content: "",
                     isDir: true,
                     data: {
                         title,
@@ -245,20 +235,16 @@ const buildSingleFile = async (
         );
         return (await Promise.all(promises)).flat();
     }
-    if (!oneEntry.content) {
-        throw "Missing content";
-    }
     const correctMenu = menuHtml
         .replace(`id="menu-${oneEntry.slug}"`, `id="menu-${oneEntry.slug}" class="selected-menu"`)
         .replace(`input-menu-${oneEntry.parentSlug}"`, `input-menu-${oneEntry.parentSlug}" checked`);
     const htmlMenu = `<nav>\n${correctMenu}\n</nav>`.replace("<ul>", `<ul class="open-nav">`);
     const htmlNoExt = oneEntry.htmlName.replace(".html", "");
     let headData = `<link rel="canonical" href="https://golb.n4n5.dev/${htmlNoExt}" />\n<title>golb | ${oneEntry.data.title}</title>`;
-    let fileContent = oneEntry.content;
     let finalFile = "";
     if (oneEntry.path.endsWith(".md")) {
         const data = oneEntry.data;
-        let finalStr = converter.makeHtml(fileContent);
+        let finalStr = converter.makeHtml(oneEntry.content);
         if (!finalStr.includes("h1")) {
             finalStr = `<h1>${data.title}</h1>\n${finalStr}`;
         }
@@ -272,7 +258,7 @@ const buildSingleFile = async (
             headData = `${headData}\n<meta name="keywords" content="${data.keywords}" />`;
         }
     } else if (oneEntry.path.endsWith(".html")) {
-        finalFile = template.replace("<!--FILE-->", fileContent);
+        finalFile = template.replace("<!--FILE-->", oneEntry.content);
     }
     finalFile = finalFile.replace("<!--HEAD-->", headData.split("\n").join(`\n${" ".repeat(4 * 2)}`));
     finalFile = finalFile.replace("<!--MENU-->", htmlMenu);
@@ -304,22 +290,31 @@ const build = async (
 };
 
 const compileCSS = async (
-    { stylesDir, buildDir, styles }: { stylesDir: string; buildDir: string; styles: string },
+    {
+        stylesDir,
+        buildDir,
+        styles,
+        compact,
+    }: { stylesDir: string; buildDir: string; styles: Array<string>; compact: boolean },
     outFile: string
 ) => {
-    let css = "";
-    const pathToCompiled = join(buildDir, outFile);
-    for (const oneFile of styles) {
-        const cssFile = (await readFile(join(stylesDir, oneFile))).toString();
-        css += cssFile
-            .replace(/\s+/g, " ") // collapse whitespace
-            .replace(/\s*([{}:;,])\s*/g, "$1") // remove space around symbols
-            .replace(/;}/g, "}") // remove unnecessary ;
-            .replaceAll("*/", "*/\n")
-            .replaceAll("/*", "\n/*")
-            .trim();
-    }
-    await writeFile(pathToCompiled, css);
+    const css = await Promise.all(
+        styles.map((oneFile) =>
+            readFile(join(stylesDir, oneFile)).then(
+                (fileContent) =>
+                    (compact ? "" : `/* ${oneFile} */\n`) +
+                    fileContent
+                        .toString()
+                        .replace(/\s+/g, " ") // collapse whitespace
+                        .replace(/\s*([{}:;,])\s*/g, "$1") // remove space around symbols
+                        .replace(/;}/g, "}") // remove unnecessary ;
+                        .replaceAll("*/", "*/\n")
+                        .replaceAll("/*", "\n/*")
+                        .trim()
+            )
+        )
+    );
+    await writeFile(join(buildDir, outFile), css.join("\n"));
 };
 
 const copyDataFolder = async (srcDir: string, buildDir: string) => {
@@ -377,7 +372,7 @@ const main = async () => {
         templateDir: string;
         publicDir: string;
         srcDir: string;
-        styles: string;
+        styles: Array<string>;
         stylesDir: string;
         externalFiles: Map<string, string>;
     };
@@ -389,7 +384,7 @@ const main = async () => {
     copyDir(publicDir, join(buildDir));
     copyDataFolder(srcDir, buildDir);
     downloadExternalFiles(buildDir, externalFiles);
-    compileCSS({ stylesDir, styles, buildDir }, "style.css");
+    compileCSS({ compact, stylesDir, styles, buildDir }, "style.css");
     const completeMenu = await makeMenu("", srcDir);
     writeFile("menu.json", JSON.stringify(completeMenu, null, 4));
     const indexed = await build(completeMenu, { buildDir, templateDir, compact });
