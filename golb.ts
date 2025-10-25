@@ -55,7 +55,6 @@ const parseFrontMatter = (inputFile: string, filename: string) => {
 };
 
 const indexFile = async (entry: Entry) => {
-    console.log(`Indexing ${entry.data.title}`);
     const out = [];
     const lines = entry.content.split("\n");
     let currSection: null | { title: string; content: Array<string> } = null;
@@ -233,7 +232,7 @@ const buildSingleFile = async (
     }: { menuHtml: string; template: string; buildDir: string; converter: any },
     oneEntry: Entry
 ): Promise<Array<{ fileWritten: string; dataIndexed: Array<{ content: string; data: string }> }>> => {
-    console.log(`Building ${oneEntry.data.title}`);
+    console.log(`Building and indexing '${oneEntry.data.title}'`);
     if (oneEntry.isDir && oneEntry.files) {
         const promises = oneEntry.files.map((subEntry) =>
             buildSingleFile({ menuHtml, template, buildDir, converter }, subEntry)
