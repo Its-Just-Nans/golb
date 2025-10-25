@@ -2,7 +2,7 @@
   "name": "golb",
   "version": "1.0.0",
   "description": "\"golb\".split(\"\").reverse().join(\"\")",
-  "main": "golb.js",
+  "main": "golb.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Its-Just-Nans/golb.git"
@@ -11,13 +11,13 @@
   "author": "n4n5",
   "license": "MIT",
   "scripts": {
-    "dev": "node golb.js",
-    "build": "node golb.js --prod",
+    "dev": "node --experimental-strip-types golb.ts",
+    "build": "node --experimental-strip-types golb.ts --prod",
     "sitemap": "cd public && python -m static_sitemap https://golb.n4n5.dev/ --sitemap"
   },
   "devDependencies": {
-    "clean-css": "^5.2.2",
-    "jsdom": "^24.0.0",
+    "@types/node": "^24.9.1",
+    "@types/showdown": "^2.0.6",
     "lunr": "^2.3.9",
     "showdown": "^1.9.1",
     "showdown-highlight": "^2.1.8"

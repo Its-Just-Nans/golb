@@ -193,17 +193,14 @@ blockquote {
         width: 10px;
     }
 
-    /* Track */
     #contenuMain::-webkit-scrollbar-track {
         background: #f1f1f1;
     }
 
-    /* Handle */
     #contenuMain::-webkit-scrollbar-thumb {
         background: #888;
     }
 
-    /* Handle on hover */
     #contenuMain::-webkit-scrollbar-thumb:hover {
         background: #555;
     }

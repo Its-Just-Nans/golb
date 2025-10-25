@@ -1,21 +1,36 @@
 import { existsSync, mkdirSync } from "node:fs";
 import { rm, writeFile, readdir, readFile, lstat, mkdir, copyFile } from "node:fs/promises";
 import { join, dirname } from "node:path";
-import CleanCSS from "clean-css";
 import showdown from "showdown";
 import showdownHighlight from "showdown-highlight";
-import { JSDOM } from "jsdom";
 import lunr from "lunr";
 
 const numberOfSpace = 4;
-const fileCache = new Map();
-const matterKeySplit = ["keywords"];
 
-const matter = (inputFile) => {
+type GolbMatter = {
+    sidebar_name?: string;
+    keywords?: string[];
+    title: string;
+    description?: string;
+};
+
+type Entry = {
+    htmlName: string;
+    slug: string;
+    parentSlug: string;
+    isDir: boolean;
+    path: string;
+    content?: string;
+    data: GolbMatter;
+    files?: Entry[];
+};
+
+const parseFrontMatter = (inputFile: string, filename: string) => {
     const separator = "---";
+    const matterKeySplit = ["keywords"];
     const lines = inputFile.toString().split("\n");
     if (!lines[0].startsWith(separator)) {
-        return { content: inputFile, data: {} };
+        throw `Head (matter) must be present for ${filename}`;
     }
     let idxMatter = 0;
     for (const oneLine of lines) {
@@ -31,67 +46,66 @@ const matter = (inputFile) => {
             [key]: cleanValue,
             ...acc,
         };
-    }, {});
-    const content = lines.slice(idxMatter).join("\n");
+    }, {} as GolbMatter);
+    if (!data.title) {
+        throw `Title must be in head (matter) for ${filename}`;
+    }
+    const content = lines.slice(idxMatter + 1).join("\n");
     return { content, data };
 };
 
-const readFileCache = async (filePath) => {
-    if (fileCache.has(filePath)) {
-        return fileCache.get(filePath);
-    }
-    const data = await readFile(filePath);
-    fileCache.set(filePath, data);
-    return data;
-};
-
-const buildSearch = async ({ buildDir }) => {
-    const buildFolder = await readdir(buildDir);
-    const files = buildFolder.filter((file) => file.endsWith(".html"));
-
-    const cleanupText = (t) => {
+const indexFile = async (entry: Entry) => {
+    const cleanupText = (t: string) => {
         return t.trim().replaceAll("\n\n", "");
     };
+    if (!entry.content) {
+        return [];
+    }
+    console.log(`Indexing ${entry.data.title}`);
+    const out = [];
+    const lines = entry.content.split("\n");
+    let sec: null | { title: string; content: Array<string> } = null;
+    let code = false;
 
-    const promises = files.map((filename) => {
-        const filepath = join(buildDir, filename);
-        return readFile(filepath, "utf-8")
-            .then((file) => {
-                const dom = new JSDOM(file);
-                console.log(`Indexing ${filename}`);
-                const contentMain = dom.window.document.querySelector("#contenuMain");
-                const pageTitle = contentMain.querySelectorAll("h1")[0].textContent;
-                const contents = contentMain.querySelectorAll("h2");
-                const sections = [...contents].map((h2, index) => {
-                    let text = cleanupText(h2.textContent);
-                    let next = h2.nextElementSibling;
-                    while (next && next.tagName !== "H2") {
-                        text += " " + cleanupText(next.textContent);
-                        next = next.nextElementSibling;
-                    }
-                    const title = h2.textContent.trim();
-                    return {
-                        content: text,
-                        data: `${filename}#${h2.id}|${pageTitle} > ${title} >`,
-                    };
+    for (const l of lines) {
+        const t = l.trim();
+        if (t.startsWith("```")) code = !code;
+
+        let h = null;
+        if (!code && l.startsWith("#")) {
+            h = l.slice(l.indexOf("# ") + 2);
+        }
+
+        if (h) {
+            if (sec)
+                out.push({
+                    title: sec.title,
+                    content: sec.content.join("\n"),
                 });
-                return sections;
-            })
-            .catch((err) => {
-                console.error(`Error indexing ${filename}: ${err}`);
-                // throw err;
-                return [];
-            });
-    });
+            sec = { title: h, content: [] };
+        } else {
+            if (!sec) sec = { title: "", content: [] };
+            sec.content.push(l);
+        }
+    }
+    if (sec) {
+        out.push({
+            title: sec.title,
+            content: sec.content.join("\n"),
+        });
+    }
+    return out.map(({ title, content }) => ({
+        content,
+        data: `${entry.htmlName}#${slugify(title)}|${entry.data.title} > ${title} >`,
+    }));
+};
 
-    const results = await Promise.all(promises);
-
-    const flatResults = results.flat(2);
+const writeIndex = async (indexed: Array<{ content: string; data: string }>, buildDir: string) => {
     const idx = lunr(function () {
         this.ref("data");
         this.field("content");
 
-        flatResults.forEach(function (post) {
+        indexed.forEach(function (post) {
             this.add(post);
         }, this);
     });
@@ -100,14 +114,14 @@ const buildSearch = async ({ buildDir }) => {
     await writeFile(searchPath, JSON.stringify(idx));
 };
 
-const slugify = (str) => {
+const slugify = (str: string) => {
     str = str.toLowerCase();
     str = str.replace(/[^a-zA-Z0-9]+/g, "-");
     return str;
 };
 
-const makeMenu = async (parentSlug, pathToCheck) => {
-    const navigation = [];
+const makeMenu = async (parentSlug: string, pathToCheck: string): Promise<Entry[]> => {
+    const navigation: Entry[] = [];
     if (existsSync(pathToCheck)) {
         const list = await readdir(pathToCheck);
         for (const oneElement of list) {
@@ -119,17 +133,19 @@ const makeMenu = async (parentSlug, pathToCheck) => {
                 }
                 const slug = slugify(oneElement);
                 const res = await makeMenu(slug, pathToElement);
+                const title = oneElement.charAt(0).toUpperCase() + oneElement.slice(1);
                 navigation.push({
-                    name: correctName(oneElement),
                     htmlName: correctHTMLName(oneElement),
                     slug: slug,
+                    parentSlug,
+                    path: pathToElement,
                     isDir: true,
+                    data: {
+                        title,
+                    },
                     files: res,
                 });
             } else {
-                const content = await readFileCache(pathToElement);
-                const { data } = matter(content);
-
                 if (
                     pathToElement.endsWith(".git") ||
                     pathToElement.endsWith("LICENSE") ||
@@ -137,15 +153,17 @@ const makeMenu = async (parentSlug, pathToCheck) => {
                 ) {
                     continue;
                 }
+                const fileContent = (await readFile(pathToElement)).toString();
+                const { data, content } = parseFrontMatter(fileContent, pathToElement);
                 const nameNoExt = oneElement.slice(0, oneElement.lastIndexOf("."));
-                const name = data.sidebar_name || correctName(oneElement);
                 const entry = {
-                    name,
                     htmlName: correctHTMLName(nameNoExt),
                     slug: slugify(nameNoExt),
+                    content,
+                    data,
                     parentSlug,
+                    path: pathToElement,
                     isDir: false,
-                    files: pathToElement,
                 };
                 navigation.push(entry);
             }
@@ -166,23 +184,18 @@ const makeMenu = async (parentSlug, pathToCheck) => {
         } else if (!a.isDir && !b.isDir) {
             return 0;
         }
+        return 0;
     });
 };
 
-const correctName = (name) => {
-    const badName = name.charAt(0).toUpperCase() + name.slice(1);
-    const lastIndex = badName.lastIndexOf(".");
-    return lastIndex === -1 ? badName : badName.substring(0, lastIndex);
-};
-
-const correctHTMLName = (name) => {
+const correctHTMLName = (name: string) => {
     const fullBadNameWithHtml = `${name}.html`;
     return fullBadNameWithHtml;
 };
 
-const makeHTMLMenu = ({ menu, offset = 1, number = 0, compact = null }) => {
+const makeHTMLMenu = (menu: Entry[], { offset = 1, number = 0, compact = false }) => {
     const defaultSpacing = compact ? "" : null;
-    const addToHtml = (str, times, lineReturn = true) => {
+    const addToHtml = (str: string, times: number, lineReturn = true) => {
         const lineReturned = defaultSpacing == null ? lineReturn : false;
         const addedSpacing = defaultSpacing ?? " ".repeat(numberOfSpace * times);
         return `${addedSpacing}${str}${lineReturned ? "\n" : ""}`;
@@ -191,12 +204,14 @@ const makeHTMLMenu = ({ menu, offset = 1, number = 0, compact = null }) => {
     for (const oneEntry of menu) {
         if (oneEntry.isDir === false) {
             html += addToHtml(`<li id="menu-${oneEntry.slug}">`, offset + 2);
-            html += addToHtml(`<a href="./${oneEntry.htmlName.replace(".html", "")}">${oneEntry.name}</a>`, offset + 3);
+            html += addToHtml(
+                `<a href="./${oneEntry.htmlName.replace(".html", "")}">${oneEntry.data.title}</a>`,
+                offset + 3
+            );
             html += addToHtml(`<span></span>`, offset + 3);
             html += addToHtml(`</li>`, offset + 2);
-        } else {
-            const menuList = makeHTMLMenu({
-                menu: oneEntry.files,
+        } else if (oneEntry.files) {
+            const menuList = makeHTMLMenu(oneEntry.files, {
                 offset: offset + 1,
                 number: number + 1,
                 compact,
@@ -209,7 +224,7 @@ const makeHTMLMenu = ({ menu, offset = 1, number = 0, compact = null }) => {
             );
             html += addToHtml("<div>", offset + 2);
             html += addToHtml(`<label for="menu-control-${number++}">`, offset + 3);
-            html += addToHtml(`<span>${oneEntry.name}</span>`, offset + 4);
+            html += addToHtml(`<span>${oneEntry.data.title}</span>`, offset + 4);
             html += addToHtml("<button class='menu-button'></button>", offset + 4);
             html += addToHtml("</label>", offset + 3);
             html += addToHtml("</div>", offset + 2);
@@ -221,33 +236,43 @@ const makeHTMLMenu = ({ menu, offset = 1, number = 0, compact = null }) => {
     return html;
 };
 
-const makeStyleMenu = (menuHtml, oneEntry) => {
+const makeStyleMenu = (menuHtml: string, oneEntry: Entry) => {
     menuHtml = menuHtml.replace(`id="menu-${oneEntry.slug}"`, `id="menu-${oneEntry.slug}" class="selected-menu"`);
     menuHtml = menuHtml.replace(`input-menu-${oneEntry.parentSlug}"`, `input-menu-${oneEntry.parentSlug}" checked`);
     return menuHtml;
 };
 
-const buildSingleFile = async ({ menuHtml, template, buildDir, converter }, oneEntry) => {
-    if (oneEntry.isDir) {
+const buildSingleFile = async (
+    {
+        menuHtml,
+        template,
+        buildDir,
+        converter,
+    }: { menuHtml: string; template: string; buildDir: string; converter: any },
+    oneEntry: Entry
+): Promise<Array<{ fileWritten: string; dataIndexed: Array<{ content: string; data: string }> }>> => {
+    console.log(`Building ${oneEntry.data.title}`);
+    if (oneEntry.isDir && oneEntry.files) {
         const promises = oneEntry.files.map((subEntry) =>
             buildSingleFile({ menuHtml, template, buildDir, converter }, subEntry)
         );
-        await Promise.allSettled(promises);
-        return;
+        return (await Promise.all(promises)).flat();
     }
-    console.log(`Building ${oneEntry.name}`);
+    if (!oneEntry.content) {
+        throw "Missing content";
+    }
     const htmlMenu = `<nav>\n${makeStyleMenu(menuHtml, oneEntry)}\n</nav>`.replace("<ul>", `<ul class="open-nav">`);
     let headData = `<link rel="canonical" href="https://golb.n4n5.dev/${oneEntry.htmlName.replace(
         ".html",
         ""
-    )}" />\n<title>golb | ${oneEntry.name}</title>`;
-    let fileContent = (await readFileCache(oneEntry.files)).toString();
+    )}" />\n<title>golb | ${oneEntry.data.title}</title>`;
+    let fileContent = oneEntry.content;
     let finalFile = "";
-    if (oneEntry.files.endsWith(".md")) {
-        const { content, data } = matter(fileContent);
-        let finalStr = converter.makeHtml(content);
+    if (oneEntry.path.endsWith(".md")) {
+        const data = oneEntry.data;
+        let finalStr = converter.makeHtml(fileContent);
         if (!finalStr.includes("h1")) {
-            const title = data.title || oneEntry.name;
+            const title = data.title || oneEntry.data.title;
             finalStr = `<h1>${title}</h1>\n${finalStr}`;
         }
         const html = finalStr.endsWith("\n") ? finalStr.slice(0, -1) : finalStr;
@@ -261,39 +286,62 @@ const buildSingleFile = async ({ menuHtml, template, buildDir, converter }, oneE
         if (data.keywords) {
             headData = `${headData}\n<meta name="keywords" content="${data.keywords}" />`;
         }
-    } else if (oneEntry.files.endsWith(".html")) {
+    } else if (oneEntry.path.endsWith(".html")) {
         finalFile = template.replace("<!--FILE-->", fileContent);
     }
     finalFile = finalFile.replace("<!--HEAD-->", headData.split("\n").join("\n        "));
     finalFile = finalFile.replace("<!--MENU-->", htmlMenu);
-    await writeFile(join(buildDir, oneEntry.htmlName), finalFile);
+    const outFile = join(buildDir, oneEntry.htmlName);
+    const res = await Promise.all([
+        writeFile(outFile, finalFile).then(() => ({ fileWritten: outFile })),
+        indexFile(oneEntry).then((dataIndexed) => ({ dataIndexed })),
+    ]);
+    return [Object.assign({}, ...res)];
 };
 
-const build = async (menu, { buildDir, templateDir, compact }) => {
+const build = async (
+    menu: Entry[],
+    { buildDir, templateDir, compact }: { buildDir: string; templateDir: string; compact: boolean }
+) => {
     const template = (await readFile(join(templateDir, "template.html"))).toString();
-    const menuHtml = makeHTMLMenu({ menu, compact });
+    const menuHtml = makeHTMLMenu(menu, { compact });
     const converter = new showdown.Converter({
         openLinksInNewWindow: true,
-        extensions: [showdownHighlight()],
+        extensions: [showdownHighlight({})],
     });
     converter.setFlavor("github");
-    await Promise.allSettled(
-        menu.map((oneEntry) => buildSingleFile({ menuHtml, template, buildDir, converter }, oneEntry))
-    );
+    const results = (
+        await Promise.all(
+            menu.map((oneEntry) => buildSingleFile({ menuHtml, template, buildDir, converter }, oneEntry))
+        )
+    ).flat();
+    return results.map((r) => r.dataIndexed).flat();
 };
 
-const compileCSS = async ({ stylesDir, buildDir, styles }, outFile) => {
+function minifyCSS(css: string) {
+    return css
+        .replace(/\s+/g, " ") // collapse whitespace
+        .replace(/\s*([{}:;,])\s*/g, "$1") // remove space around symbols
+        .replace(/;}/g, "}") // remove unnecessary ;
+        .replaceAll("*/", "*/\n")
+        .replaceAll("/*", "\n/*")
+        .trim();
+}
+
+const compileCSS = async (
+    { stylesDir, buildDir, styles }: { stylesDir: string; buildDir: string; styles: string },
+    outFile: string
+) => {
     let css = "";
-    const CSScompiler = new CleanCSS();
     const pathToCompiled = join(buildDir, outFile);
     for (const oneFile of styles) {
         const cssFile = (await readFile(join(stylesDir, oneFile))).toString();
-        css += CSScompiler.minify(cssFile).styles;
+        css += minifyCSS(cssFile);
     }
     await writeFile(pathToCompiled, css);
 };
 
-const copyDataFolder = async ({ srcDir, buildDir }) => {
+const copyDataFolder = async (srcDir: string, buildDir: string) => {
     const list = await readdir(srcDir);
     for (const oneFolder of list) {
         const pathFile = join(srcDir, oneFolder);
@@ -314,7 +362,7 @@ const copyDataFolder = async ({ srcDir, buildDir }) => {
     }
 };
 
-async function copyDir(src, dest) {
+async function copyDir(src: string, dest: string) {
     await mkdir(dest, { recursive: true });
     let entries = await readdir(src, { withFileTypes: true });
 
@@ -326,8 +374,8 @@ async function copyDir(src, dest) {
     }
 }
 
-const downloadExternalFiles = async ({ buildDir, externalFiles }) => {
-    const downloadSingleFile = async ([oneUrl, outputPath]) => {
+const downloadExternalFiles = async (buildDir: string, externalFiles: Map<string, string>) => {
+    const downloadSingleFile = async ([oneUrl, outputPath]: [string, string]) => {
         const file = await fetch(oneUrl);
         const content = await file.arrayBuffer();
         const output = join(buildDir, outputPath);
@@ -345,20 +393,29 @@ const downloadExternalFiles = async ({ buildDir, externalFiles }) => {
 const main = async () => {
     const compact = process.argv.some((arg) => ["--prod"].includes(arg));
     const configFile = (await readFile("./config.json")).toString();
-    const config = JSON.parse(configFile);
+    const config = JSON.parse(configFile) as {
+        buildDir: string;
+        templateDir: string;
+        publicDir: string;
+        srcDir: string;
+        styles: string;
+        stylesDir: string;
+        externalFiles: Map<string, string>;
+    };
     const { buildDir, templateDir, publicDir, srcDir, styles, stylesDir, externalFiles } = config;
     await rm(buildDir, { recursive: true, force: true });
     if (!existsSync(buildDir)) {
         mkdirSync(buildDir);
     }
     copyDir(publicDir, join(buildDir));
-    copyDataFolder({ srcDir, buildDir });
-    downloadExternalFiles({ buildDir, externalFiles });
+    copyDataFolder(srcDir, buildDir);
+    downloadExternalFiles(buildDir, externalFiles);
     compileCSS({ stylesDir, styles, buildDir }, "style.css");
     const completeMenu = await makeMenu("", srcDir);
     writeFile("menu.json", JSON.stringify(completeMenu, null, 4));
-    await build(completeMenu, { buildDir, templateDir, compact });
-    await buildSearch({ buildDir });
+    const indexed = await build(completeMenu, { buildDir, templateDir, compact });
+    writeIndex(indexed, buildDir);
+    // await buildSearch(buildDir);
 };
 
 main();
