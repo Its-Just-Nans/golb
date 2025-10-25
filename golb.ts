@@ -58,25 +58,25 @@ const indexFile = async (entry: Entry) => {
     console.log(`Indexing ${entry.data.title}`);
     const out = [];
     const lines = entry.content.split("\n");
-    let sec: null | { title: string; content: Array<string> } = null;
+    let currSection: null | { title: string; content: Array<string> } = null;
     let code = false;
     for (const oneLine of lines.concat(["#"])) {
         const t = oneLine.trim();
         if (t.startsWith("```")) code = !code;
-        let h = null;
+        let currTitle = null;
         if (!code && oneLine.startsWith("#")) {
-            h = oneLine.slice(oneLine.indexOf("# ") + 2);
+            currTitle = oneLine.slice(oneLine.indexOf("# ") + 2);
         }
-        if (h !== null) {
-            if (sec)
+        if (currTitle !== null) {
+            if (currSection)
                 out.push({
-                    title: sec.title,
-                    content: sec.content.join("\n"),
+                    title: currSection.title,
+                    content: currSection.content.join("\n"),
                 });
-            sec = { title: h, content: [] };
+            currSection = { title: currTitle, content: [] };
         } else {
-            if (!sec) sec = { title: "", content: [] };
-            sec.content.push(oneLine);
+            if (!currSection) currSection = { title: "", content: [] };
+            currSection.content.push(oneLine);
         }
     }
     return out.map(({ title, content }) => ({
@@ -102,7 +102,12 @@ const writeIndex = async (indexed: Array<{ content: string; data: string }>, bui
     await writeFile(searchPath, JSON.stringify(idx));
 };
 
-const slugify = (str: string) => str.toLowerCase().replace(/[^a-zA-Z0-9]+/g, "-");
+const slugify = (str: string) =>
+    str
+        .toLowerCase()
+        .replace(/[^a-z0-9 ]+/gi, "") // remove anything that's not a letter, number, or space
+        .trim()
+        .replace(/\s+/g, "-"); // convert spaces to hyphens
 
 const makeMenu = async (parentSlug: string, pathToCheck: string): Promise<Entry[]> => {
     const navigation: Entry[] = [];
