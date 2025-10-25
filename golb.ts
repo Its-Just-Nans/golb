@@ -8,7 +8,7 @@ import lunr from "lunr";
 
 type GolbMatter = {
     sidebar_name?: string;
-    keywords?: string[];
+    keywords?: Array<string>;
     title: string;
     description?: string;
 };
@@ -22,7 +22,7 @@ type Entry = {
     path: string;
     content: string;
     data: GolbMatter;
-    files?: Entry[];
+    files?: Array<Entry>;
 };
 
 const parseFrontMatter = (inputFile: string, filename: string) => {
@@ -109,8 +109,8 @@ const slugify = (str: string) =>
         .trim()
         .replace(/\s+/g, "-"); // convert spaces to hyphens
 
-const makeMenu = async (parentSlug: string, pathToCheck: string): Promise<Entry[]> => {
-    const navigation: Entry[] = [];
+const makeMenu = async (parentSlug: string, pathToCheck: string): Promise<Array<Entry>> => {
+    const navigation: Array<Entry> = [];
     if (existsSync(pathToCheck)) {
         const list = await readdir(pathToCheck);
         for (const oneElement of list) {
@@ -180,7 +180,7 @@ const makeMenu = async (parentSlug: string, pathToCheck: string): Promise<Entry[
     });
 };
 
-const makeHTMLMenu = (menu: Entry[], { offset = 1, number = 0, compact = false }) => {
+const makeHTMLMenu = (menu: Array<Entry>, { offset = 1, number = 0, compact = false }) => {
     const defaultSpacing = compact ? "" : null;
     const addToHtml = (str: string, times: number, lineReturn = true) => {
         const numberOfSpace = 4;
@@ -276,7 +276,7 @@ const buildSingleFile = async (
 };
 
 const build = async (
-    menu: Entry[],
+    menu: Array<Entry>,
     { buildDir, templateDir, compact }: { buildDir: string; templateDir: string; compact: boolean }
 ) => {
     const template = (await readFile(join(templateDir, "template.html"))).toString();
@@ -386,7 +386,7 @@ const main = async () => {
     if (!existsSync(buildDir)) {
         mkdirSync(buildDir);
     }
-    copyDir(publicDir, join(buildDir));
+    copyDir(publicDir, buildDir);
     copyDataFolder(srcDir, buildDir);
     downloadExternalFiles(buildDir, externalFiles);
     compileCSS({ compact, stylesDir, styles, buildDir }, "style.css");
