@@ -3,6 +3,7 @@ import { rm, writeFile, readdir, readFile, lstat, mkdir, copyFile } from "node:f
 import { join, dirname } from "node:path";
 import showdown from "showdown";
 import showdownHighlight from "showdown-highlight";
+// @ts-ignore
 import lunr from "lunr";
 
 const numberOfSpace = 4;
@@ -16,6 +17,7 @@ type GolbMatter = {
 
 type Entry = {
     htmlName: string;
+    sidebarName: string;
     slug: string;
     parentSlug: string;
     isDir: boolean;
@@ -102,11 +104,15 @@ const indexFile = async (entry: Entry) => {
 
 const writeIndex = async (indexed: Array<{ content: string; data: string }>, buildDir: string) => {
     const idx = lunr(function () {
+        // @ts-ignore
         this.ref("data");
+        // @ts-ignore
         this.field("content");
 
         indexed.forEach(function (post) {
+            // @ts-ignore
             this.add(post);
+            // @ts-ignore
         }, this);
     });
 
@@ -138,6 +144,7 @@ const makeMenu = async (parentSlug: string, pathToCheck: string): Promise<Entry[
                     htmlName: correctHTMLName(oneElement),
                     slug: slug,
                     parentSlug,
+                    sidebarName: title,
                     path: pathToElement,
                     isDir: true,
                     data: {
@@ -161,6 +168,7 @@ const makeMenu = async (parentSlug: string, pathToCheck: string): Promise<Entry[
                     slug: slugify(nameNoExt),
                     content,
                     data,
+                    sidebarName: data.sidebar_name || data.title,
                     parentSlug,
                     path: pathToElement,
                     isDir: false,
@@ -205,7 +213,7 @@ const makeHTMLMenu = (menu: Entry[], { offset = 1, number = 0, compact = false }
         if (oneEntry.isDir === false) {
             html += addToHtml(`<li id="menu-${oneEntry.slug}">`, offset + 2);
             html += addToHtml(
-                `<a href="./${oneEntry.htmlName.replace(".html", "")}">${oneEntry.data.title}</a>`,
+                `<a href="./${oneEntry.htmlName.replace(".html", "")}">${oneEntry.sidebarName}</a>`,
                 offset + 3
             );
             html += addToHtml(`<span></span>`, offset + 3);
@@ -224,7 +232,7 @@ const makeHTMLMenu = (menu: Entry[], { offset = 1, number = 0, compact = false }
             );
             html += addToHtml("<div>", offset + 2);
             html += addToHtml(`<label for="menu-control-${number++}">`, offset + 3);
-            html += addToHtml(`<span>${oneEntry.data.title}</span>`, offset + 4);
+            html += addToHtml(`<span>${oneEntry.sidebarName}</span>`, offset + 4);
             html += addToHtml("<button class='menu-button'></button>", offset + 4);
             html += addToHtml("</label>", offset + 3);
             html += addToHtml("</div>", offset + 2);
@@ -272,14 +280,11 @@ const buildSingleFile = async (
         const data = oneEntry.data;
         let finalStr = converter.makeHtml(fileContent);
         if (!finalStr.includes("h1")) {
-            const title = data.title || oneEntry.data.title;
-            finalStr = `<h1>${title}</h1>\n${finalStr}`;
+            finalStr = `<h1>${data.title}</h1>\n${finalStr}`;
         }
         const html = finalStr.endsWith("\n") ? finalStr.slice(0, -1) : finalStr;
         finalFile = template.replace("<!--FILE-->", html);
-        if (data.title) {
-            headData = `${headData}\n<meta name="title" content="${data.title}" />`;
-        }
+        headData = `${headData}\n<meta name="title" content="${data.title}" />`;
         if (data.description) {
             headData = `${headData}\n<meta name="description" content="${data.description}" />`;
         }
