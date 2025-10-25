@@ -6,8 +6,6 @@ import showdownHighlight from "showdown-highlight";
 // @ts-ignore
 import lunr from "lunr";
 
-const numberOfSpace = 4;
-
 type GolbMatter = {
     sidebar_name?: string;
     keywords?: string[];
@@ -57,9 +55,6 @@ const parseFrontMatter = (inputFile: string, filename: string) => {
 };
 
 const indexFile = async (entry: Entry) => {
-    const cleanupText = (t: string) => {
-        return t.trim().replaceAll("\n\n", "");
-    };
     if (!entry.content) {
         return [];
     }
@@ -72,7 +67,6 @@ const indexFile = async (entry: Entry) => {
     for (const l of lines) {
         const t = l.trim();
         if (t.startsWith("```")) code = !code;
-
         let h = null;
         if (!code && l.startsWith("#")) {
             h = l.slice(l.indexOf("# ") + 2);
@@ -115,16 +109,11 @@ const writeIndex = async (indexed: Array<{ content: string; data: string }>, bui
             // @ts-ignore
         }, this);
     });
-
     const searchPath = join(buildDir, "search.json");
     await writeFile(searchPath, JSON.stringify(idx));
 };
 
-const slugify = (str: string) => {
-    str = str.toLowerCase();
-    str = str.replace(/[^a-zA-Z0-9]+/g, "-");
-    return str;
-};
+const slugify = (str: string) => str.toLowerCase().replace(/[^a-zA-Z0-9]+/g, "-");
 
 const makeMenu = async (parentSlug: string, pathToCheck: string): Promise<Entry[]> => {
     const navigation: Entry[] = [];
@@ -141,7 +130,7 @@ const makeMenu = async (parentSlug: string, pathToCheck: string): Promise<Entry[
                 const res = await makeMenu(slug, pathToElement);
                 const title = oneElement.charAt(0).toUpperCase() + oneElement.slice(1);
                 navigation.push({
-                    htmlName: correctHTMLName(oneElement),
+                    htmlName: `${oneElement}.html`, // add extension
                     slug: slug,
                     parentSlug,
                     sidebarName: title,
@@ -164,7 +153,7 @@ const makeMenu = async (parentSlug: string, pathToCheck: string): Promise<Entry[
                 const { data, content } = parseFrontMatter(fileContent, pathToElement);
                 const nameNoExt = oneElement.slice(0, oneElement.lastIndexOf("."));
                 const entry = {
-                    htmlName: correctHTMLName(nameNoExt),
+                    htmlName: `${nameNoExt}.html`, // add extension
                     slug: slugify(nameNoExt),
                     content,
                     data,
@@ -196,14 +185,10 @@ const makeMenu = async (parentSlug: string, pathToCheck: string): Promise<Entry[
     });
 };
 
-const correctHTMLName = (name: string) => {
-    const fullBadNameWithHtml = `${name}.html`;
-    return fullBadNameWithHtml;
-};
-
 const makeHTMLMenu = (menu: Entry[], { offset = 1, number = 0, compact = false }) => {
     const defaultSpacing = compact ? "" : null;
     const addToHtml = (str: string, times: number, lineReturn = true) => {
+        const numberOfSpace = 4;
         const lineReturned = defaultSpacing == null ? lineReturn : false;
         const addedSpacing = defaultSpacing ?? " ".repeat(numberOfSpace * times);
         return `${addedSpacing}${str}${lineReturned ? "\n" : ""}`;
@@ -244,12 +229,6 @@ const makeHTMLMenu = (menu: Entry[], { offset = 1, number = 0, compact = false }
     return html;
 };
 
-const makeStyleMenu = (menuHtml: string, oneEntry: Entry) => {
-    menuHtml = menuHtml.replace(`id="menu-${oneEntry.slug}"`, `id="menu-${oneEntry.slug}" class="selected-menu"`);
-    menuHtml = menuHtml.replace(`input-menu-${oneEntry.parentSlug}"`, `input-menu-${oneEntry.parentSlug}" checked`);
-    return menuHtml;
-};
-
 const buildSingleFile = async (
     {
         menuHtml,
@@ -269,11 +248,12 @@ const buildSingleFile = async (
     if (!oneEntry.content) {
         throw "Missing content";
     }
-    const htmlMenu = `<nav>\n${makeStyleMenu(menuHtml, oneEntry)}\n</nav>`.replace("<ul>", `<ul class="open-nav">`);
-    let headData = `<link rel="canonical" href="https://golb.n4n5.dev/${oneEntry.htmlName.replace(
-        ".html",
-        ""
-    )}" />\n<title>golb | ${oneEntry.data.title}</title>`;
+    const correctMenu = menuHtml
+        .replace(`id="menu-${oneEntry.slug}"`, `id="menu-${oneEntry.slug}" class="selected-menu"`)
+        .replace(`input-menu-${oneEntry.parentSlug}"`, `input-menu-${oneEntry.parentSlug}" checked`);
+    const htmlMenu = `<nav>\n${correctMenu}\n</nav>`.replace("<ul>", `<ul class="open-nav">`);
+    const htmlNoExt = oneEntry.htmlName.replace(".html", "");
+    let headData = `<link rel="canonical" href="https://golb.n4n5.dev/${htmlNoExt}" />\n<title>golb | ${oneEntry.data.title}</title>`;
     let fileContent = oneEntry.content;
     let finalFile = "";
     if (oneEntry.path.endsWith(".md")) {
@@ -294,7 +274,7 @@ const buildSingleFile = async (
     } else if (oneEntry.path.endsWith(".html")) {
         finalFile = template.replace("<!--FILE-->", fileContent);
     }
-    finalFile = finalFile.replace("<!--HEAD-->", headData.split("\n").join("\n        "));
+    finalFile = finalFile.replace("<!--HEAD-->", headData.split("\n").join(`\n${" ".repeat(4 * 2)}`));
     finalFile = finalFile.replace("<!--MENU-->", htmlMenu);
     const outFile = join(buildDir, oneEntry.htmlName);
     const res = await Promise.all([
@@ -323,16 +303,6 @@ const build = async (
     return results.map((r) => r.dataIndexed).flat();
 };
 
-function minifyCSS(css: string) {
-    return css
-        .replace(/\s+/g, " ") // collapse whitespace
-        .replace(/\s*([{}:;,])\s*/g, "$1") // remove space around symbols
-        .replace(/;}/g, "}") // remove unnecessary ;
-        .replaceAll("*/", "*/\n")
-        .replaceAll("/*", "\n/*")
-        .trim();
-}
-
 const compileCSS = async (
     { stylesDir, buildDir, styles }: { stylesDir: string; buildDir: string; styles: string },
     outFile: string
@@ -341,7 +311,13 @@ const compileCSS = async (
     const pathToCompiled = join(buildDir, outFile);
     for (const oneFile of styles) {
         const cssFile = (await readFile(join(stylesDir, oneFile))).toString();
-        css += minifyCSS(cssFile);
+        css += cssFile
+            .replace(/\s+/g, " ") // collapse whitespace
+            .replace(/\s*([{}:;,])\s*/g, "$1") // remove space around symbols
+            .replace(/;}/g, "}") // remove unnecessary ;
+            .replaceAll("*/", "*/\n")
+            .replaceAll("/*", "\n/*")
+            .trim();
     }
     await writeFile(pathToCompiled, css);
 };
@@ -370,11 +346,9 @@ const copyDataFolder = async (srcDir: string, buildDir: string) => {
 async function copyDir(src: string, dest: string) {
     await mkdir(dest, { recursive: true });
     let entries = await readdir(src, { withFileTypes: true });
-
     for (let entry of entries) {
         let srcPath = join(src, entry.name);
         let destPath = join(dest, entry.name);
-
         entry.isDirectory() ? await copyDir(srcPath, destPath) : await copyFile(srcPath, destPath);
     }
 }
@@ -420,7 +394,6 @@ const main = async () => {
     writeFile("menu.json", JSON.stringify(completeMenu, null, 4));
     const indexed = await build(completeMenu, { buildDir, templateDir, compact });
     writeIndex(indexed, buildDir);
-    // await buildSearch(buildDir);
 };
 
 main();
