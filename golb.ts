@@ -29,7 +29,7 @@ const parseFrontMatter = (inputFile: string, filename: string) => {
     const matterKeySplit = ["keywords"];
     const lines = inputFile.toString().split("\n");
     if (!lines[0] || !lines[0].startsWith(separator)) {
-        throw `Head (matter) must be present for ${filename}`;
+        throw `Frontmatter must be present for ${filename}`;
     }
     let idxMatter = 0;
     for (const oneLine of lines) {
@@ -47,7 +47,7 @@ const parseFrontMatter = (inputFile: string, filename: string) => {
         };
     }, {} as GolbMatter);
     if (!data.title) {
-        throw `Title must be in head (matter) for ${filename}`;
+        throw `'title: ' must be in head frontmatter for ${filename}`;
     }
     const content = lines.slice(idxMatter + 1).join("\n");
     return { content, data };
