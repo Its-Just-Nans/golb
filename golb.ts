@@ -146,7 +146,7 @@ const makeMenu = async (parentSlug: string, pathToCheck: string, buildDir: strin
                 const sidebarName = data.sidebar_name || data.title;
                 const entry = {
                     htmlName: `${nameNoExt}.html`, // add extension
-                    slug: slugify(sidebarName),
+                    slug: slugify(nameNoExt),
                     content,
                     data,
                     sidebarName,
