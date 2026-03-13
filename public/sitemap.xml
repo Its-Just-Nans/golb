@@ -91,7 +91,17 @@
         <priority>0.5</priority>
     </url>
     <url>
+        <loc>https://golb.n4n5.dev/network</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    <url>
         <loc>https://golb.n4n5.dev/nix</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    <url>
+        <loc>https://golb.n4n5.dev/perl</loc>
         <changefreq>weekly</changefreq>
         <priority>0.5</priority>
     </url>
@@ -137,6 +147,11 @@
     </url>
     <url>
         <loc>https://golb.n4n5.dev/virtualization</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    <url>
+        <loc>https://golb.n4n5.dev/zig</loc>
         <changefreq>weekly</changefreq>
         <priority>0.5</priority>
     </url>
