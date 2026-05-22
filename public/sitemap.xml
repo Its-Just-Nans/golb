@@ -46,6 +46,11 @@
         <priority>0.5</priority>
     </url>
     <url>
+        <loc>https://golb.n4n5.dev/gdb</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    <url>
         <loc>https://golb.n4n5.dev/git</loc>
         <changefreq>weekly</changefreq>
         <priority>0.5</priority>
@@ -57,6 +62,11 @@
     </url>
     <url>
         <loc>https://golb.n4n5.dev/gpg</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    <url>
+        <loc>https://golb.n4n5.dev/i3</loc>
         <changefreq>weekly</changefreq>
         <priority>0.5</priority>
     </url>
@@ -87,6 +97,11 @@
     </url>
     <url>
         <loc>https://golb.n4n5.dev/make</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    <url>
+        <loc>https://golb.n4n5.dev/microcontrollers</loc>
         <changefreq>weekly</changefreq>
         <priority>0.5</priority>
     </url>
