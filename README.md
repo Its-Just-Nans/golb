@@ -10,7 +10,10 @@ Links:
 ## Clone
 
 ```sh
-# clone data repo
+# clone the repo
+git clone https://github.com/Its-Just-Nans/golb.git
+
+# clone git submodule
 git submodule update --recursive --init
 ```
 
