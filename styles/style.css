@@ -120,6 +120,7 @@ pre::-webkit-scrollbar-track {
     overflow: auto;
     padding-bottom: 70px;
     font-family: "Segoe UI", Ubuntu, sans-serif;
+    overflow-wrap: break-word;
 }
 
 #globalReadMe {
