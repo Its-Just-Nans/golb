@@ -186,17 +186,17 @@ const makeHTMLMenu = (menu: Array<MenuEntry>, { offset = 1, number = 0, compact 
         const addedSpacing = defaultSpacing ?? " ".repeat(numberOfSpace * times);
         return `${addedSpacing}${str}${lineReturned ? "\n" : ""}`;
     };
-    let html = addToHtml(`<ul>`, offset + 1, true);
+    let html = [addToHtml(`<ul>`, offset + 1, true)];
     for (const oneEntry of menu) {
         if (oneEntry.files === null) {
-            html += addToHtml(`<li id="menu-${oneEntry.slug}">`, offset + 2);
+            html.push(addToHtml(`<li id="menu-${oneEntry.slug}">`, offset + 2));
             const htmlLink = linkHtml ? oneEntry.htmlName : oneEntry.htmlName.replace(".html", "");
-            html += addToHtml(
+            html.push(addToHtml(
                 `<a href="./${htmlLink}">${oneEntry.sidebarName}</a>`,
                 offset + 3
-            );
-            html += addToHtml(`<span></span>`, offset + 3);
-            html += addToHtml(`</li>`, offset + 2);
+            ));
+            html.push(addToHtml(`<span></span>`, offset + 3));
+            html.push(addToHtml(`</li>`, offset + 2));
         } else if (oneEntry.files) {
             const menuList = makeHTMLMenu(oneEntry.files, {
                 offset: offset + 1,
@@ -204,24 +204,24 @@ const makeHTMLMenu = (menu: Array<MenuEntry>, { offset = 1, number = 0, compact 
                 compact,
                 linkHtml,
             });
-            html += compact ? "\n" : "";
-            html += addToHtml("<div>", offset + 1);
-            html += addToHtml(
+            html.push(compact ? "\n" : "");
+            html.push(addToHtml("<div>", offset + 1));
+            html.push(addToHtml(
                 `<input type="checkbox" class="hidden toggle input-menu-${oneEntry.slug}" id="menu-control-${number}" />`,
                 offset + 2
-            );
-            html += addToHtml("<div>", offset + 2);
-            html += addToHtml(`<label for="menu-control-${number++}">`, offset + 3);
-            html += addToHtml(`<span>${oneEntry.sidebarName}</span>`, offset + 4);
-            html += addToHtml("<button class='menu-button'></button>", offset + 4);
-            html += addToHtml("</label>", offset + 3);
-            html += addToHtml("</div>", offset + 2);
-            html += addToHtml(menuList, offset + 2);
-            html += addToHtml(`</div>`, offset + 1);
+            ));
+            html.push(addToHtml("<div>", offset + 2));
+            html.push(addToHtml(`<label for="menu-control-${number++}">`, offset + 3));
+            html.push(addToHtml(`<span>${oneEntry.sidebarName}</span>`, offset + 4));
+            html.push(addToHtml("<button class='menu-button'></button>", offset + 4));
+            html.push(addToHtml("</label>", offset + 3));
+            html.push(addToHtml("</div>", offset + 2));
+            html.push(addToHtml(menuList, offset + 2));
+            html.push(addToHtml(`</div>`, offset + 1));
         }
     }
-    html += addToHtml("</ul>", offset + 1, false);
-    return html;
+    html.push(addToHtml("</ul>", offset + 1, false));
+    return html.join("");
 };
 
 const buildSingleFile = async (
@@ -382,8 +382,8 @@ const downloadExternalFiles = async (buildDir: string, externalFiles: Map<string
 };
 
 const main = async () => {
-    const compact = process.argv.some((arg) => ["--prod"].includes(arg));
-    const linkHtml = process.argv.some((arg) => ["--link-html"].includes(arg));
+    const compact = process.argv.includes("--prod");
+    const linkHtml = process.argv.includes("--link-html");
     const configFile = (await readFile("./config.json")).toString();
     const config = JSON.parse(configFile) as {
         buildDir: string;
