@@ -1,12 +1,10 @@
 import { existsSync, mkdirSync } from "node:fs";
 import { rm, writeFile, readdir, readFile, mkdir, copyFile } from "node:fs/promises";
 import { join, dirname } from "node:path";
-import showdown from "showdown";
-import showdownHighlight from "showdown-highlight";
-// @ts-ignore
-import lunr from "lunr";
 import markdownit from 'markdown-it'
 import hljs from 'highlight.js' // https://highlightjs.org
+// @ts-ignore
+import lunr from "lunr";
 
 type GolbMatter = {
     sidebar_name?: string;
