@@ -24,6 +24,16 @@ type MenuEntry = {
     files: Array<MenuEntry> | null;
 };
 
+interface GolbConfig {
+    buildDir: string;
+    templateDir: string;
+    publicDir: string;
+    srcDir: string;
+    styles: Array<string>;
+    stylesDir: string;
+    externalFiles: Map<string, string>;
+}
+
 const parseFrontMatter = (inputFile: string, filename: string) => {
     const separator = "---";
     const lines = inputFile.toString().split("\n");
@@ -385,16 +395,7 @@ const main = async () => {
     const compact = process.argv.includes("--prod");
     const linkHtml = process.argv.includes("--link-html");
     const configFile = (await readFile("./config.json")).toString();
-    const config = JSON.parse(configFile) as {
-        buildDir: string;
-        templateDir: string;
-        publicDir: string;
-        srcDir: string;
-        styles: Array<string>;
-        stylesDir: string;
-        externalFiles: Map<string, string>;
-    };
-    const { buildDir, templateDir, publicDir, srcDir, styles, stylesDir, externalFiles } = config;
+    const { buildDir, templateDir, publicDir, srcDir, styles, stylesDir, externalFiles } = JSON.parse(configFile) as GolbConfig;
     await rm(buildDir, { recursive: true, force: true });
     if (!existsSync(buildDir)) {
         mkdirSync(buildDir);
