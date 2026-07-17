@@ -5,6 +5,8 @@ import showdown from "showdown";
 import showdownHighlight from "showdown-highlight";
 // @ts-ignore
 import lunr from "lunr";
+import markdownit from 'markdown-it'
+import hljs from 'highlight.js' // https://highlightjs.org
 
 type GolbMatter = {
     sidebar_name?: string;
@@ -179,7 +181,7 @@ const makeMenu = async (parentSlug: string, pathToCheck: string, buildDir: strin
     });
 };
 
-const makeHTMLMenu = (menu: Array<MenuEntry>, { offset = 1, number = 0, compact = false }) => {
+const makeHTMLMenu = (menu: Array<MenuEntry>, { offset = 1, number = 0, compact = false, linkHtml = false }) => {
     const defaultSpacing = compact ? "" : null;
     const addToHtml = (str: string, times: number, lineReturn = true) => {
         const numberOfSpace = 4;
@@ -191,8 +193,9 @@ const makeHTMLMenu = (menu: Array<MenuEntry>, { offset = 1, number = 0, compact 
     for (const oneEntry of menu) {
         if (oneEntry.files === null) {
             html += addToHtml(`<li id="menu-${oneEntry.slug}">`, offset + 2);
+            const htmlLink = linkHtml ? oneEntry.htmlName : oneEntry.htmlName.replace(".html", "");
             html += addToHtml(
-                `<a href="./${oneEntry.htmlName.replace(".html", "")}">${oneEntry.sidebarName}</a>`,
+                `<a href="./${htmlLink}">${oneEntry.sidebarName}</a>`,
                 offset + 3
             );
             html += addToHtml(`<span></span>`, offset + 3);
@@ -202,6 +205,7 @@ const makeHTMLMenu = (menu: Array<MenuEntry>, { offset = 1, number = 0, compact 
                 offset: offset + 1,
                 number: number + 1,
                 compact,
+                linkHtml,
             });
             html += compact ? "\n" : "";
             html += addToHtml("<div>", offset + 1);
@@ -248,7 +252,7 @@ const buildSingleFile = async (
     let finalFile = "";
     if (oneEntry.filePath.endsWith(".md")) {
         const data = oneEntry.data;
-        let finalStr = converter.makeHtml(oneEntry.content);
+        let finalStr = converter.render(oneEntry.content);
         if (!finalStr.includes("h1")) {
             finalStr = `<h1>${data.title}</h1>\n${finalStr}`;
         }
@@ -276,18 +280,50 @@ const buildSingleFile = async (
 
 const build = async (
     menu: Array<MenuEntry>,
-    { buildDir, templateDir, compact }: { buildDir: string; templateDir: string; compact: boolean }
+    { buildDir, templateDir, compact, linkHtml }: { buildDir: string; templateDir: string; compact: boolean, linkHtml: boolean }
 ) => {
     const template = (await readFile(join(templateDir, "template.html"))).toString();
-    const menuHtml = makeHTMLMenu(menu, { compact });
-    const converter = new showdown.Converter({
-        openLinksInNewWindow: true,
-        extensions: [showdownHighlight({})],
+    const menuHtml = makeHTMLMenu(menu, { compact, linkHtml });
+    const md = markdownit({
+        highlight: function (str, lang) {
+            if (lang && hljs.getLanguage(lang)) {
+                try {
+                    return `<pre><code class="hljs language-${lang}">${
+hljs.highlight(str, { language: lang }).value
+}</code></pre>`;
+                } catch (__) {}
+            }
+            return ''; // use external default escaping
+        }
     });
-    converter.setFlavor("github");
+    const defaultRenderLink =
+        md.renderer.rules.link_open ||
+            ((tokens, idx, options, env, self) => self.renderToken(tokens, idx, options));
+    md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
+        const token = tokens[idx];
+        const href = token.attrGet("href");
+
+        if (href && /^https?:\/\//.test(href)) {
+            token.attrSet("rel", "noopener noreferrer");
+            token.attrSet("target", "_blank");
+        }
+
+        return defaultRenderLink(tokens, idx, options, env, self);
+    };
+    const defaultRenderHeading =
+        md.renderer.rules.heading_open ||
+            ((tokens, idx, options, env, self) =>
+                self.renderToken(tokens, idx, options));
+    md.renderer.rules.heading_open = (tokens, idx, options, env, self) => {
+        const title = tokens[idx + 1].content;
+
+        tokens[idx].attrSet("id", slugify(title));
+
+        return defaultRenderHeading(tokens, idx, options, env, self);
+    };
     const results = (
         await Promise.all(
-            menu.map((oneEntry) => buildSingleFile({ menuHtml, template, buildDir, converter }, oneEntry))
+            menu.map((oneEntry) => buildSingleFile({ menuHtml, template, buildDir, converter: md }, oneEntry))
         )
     ).flat();
     return results.map((r) => r.dataIndexed).flat();
@@ -340,7 +376,7 @@ const downloadExternalFiles = async (buildDir: string, externalFiles: Map<string
             mkdirSync(dirname(output), { recursive: true });
         }
         await writeFile(output, Buffer.from(content));
-        console.log(`Downloaded ${oneUrl} to ${outputPath}`);
+        console.log(`Downloaded ${oneUrl} to ${output}`);
     };
     const promises = Object.entries(externalFiles).map(downloadSingleFile);
     await Promise.all(promises);
@@ -349,6 +385,7 @@ const downloadExternalFiles = async (buildDir: string, externalFiles: Map<string
 
 const main = async () => {
     const compact = process.argv.some((arg) => ["--prod"].includes(arg));
+    const linkHtml = process.argv.some((arg) => ["--link-html"].includes(arg));
     const configFile = (await readFile("./config.json")).toString();
     const config = JSON.parse(configFile) as {
         buildDir: string;
@@ -369,8 +406,9 @@ const main = async () => {
     compileCSS({ compact, stylesDir, styles, buildDir }, "style.css");
     const completeMenu = await makeMenu("", srcDir, buildDir);
     writeFile("menu.json", JSON.stringify(completeMenu, null, 4));
-    const indexed = await build(completeMenu, { buildDir, templateDir, compact });
+    const indexed = await build(completeMenu, { buildDir, templateDir, compact, linkHtml });
     writeIndex(indexed, buildDir);
 };
 
 main();
+// vim: ts=4 sts=4 sw=4 et

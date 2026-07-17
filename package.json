@@ -17,10 +17,9 @@
   },
   "devDependencies": {
     "@types/node": "^24.9.1",
-    "@types/showdown": "^2.0.6",
+    "highlight.js": "^11.11.1",
     "lunr": "^2.3.9",
-    "showdown": "^1.9.1",
-    "showdown-highlight": "^2.1.8"
+    "markdown-it": "^14.3.0"
   },
   "bugs": {
     "url": "https://github.com/Its-Just-Nans/golb/issues"
