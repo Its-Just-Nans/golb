@@ -282,6 +282,7 @@ const build = async (
     const template = (await readFile(join(templateDir, "template.html"))).toString();
     const menuHtml = makeHTMLMenu(menu, { compact, linkHtml });
     const md = markdownit({
+        html: true,
         highlight: function (str, lang) {
             if (lang && hljs.getLanguage(lang)) {
                 try {
