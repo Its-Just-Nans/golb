@@ -26,7 +26,6 @@ type MenuEntry = {
 
 const parseFrontMatter = (inputFile: string, filename: string) => {
     const separator = "---";
-    const matterKeySplit = ["keywords"];
     const lines = inputFile.toString().split("\n");
     if (!lines[0] || !lines[0].startsWith(separator)) {
         throw `Frontmatter must be present for ${filename}`;
@@ -40,7 +39,7 @@ const parseFrontMatter = (inputFile: string, filename: string) => {
     }
     const data = lines.slice(1, idxMatter).reduce((acc, oneLineTag) => {
         const [key, value] = oneLineTag.split(": ");
-        const cleanValue = matterKeySplit.includes(key) ? value.split(", ") : value;
+        const cleanValue = ["keywords"].includes(key) ? value.split(", ") : value;
         return {
             [key]: cleanValue,
             ...acc,
