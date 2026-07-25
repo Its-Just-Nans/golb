@@ -26,7 +26,6 @@ type MenuEntry = {
 
 interface GolbConfig {
     buildDir: string;
-    templateDir: string;
     publicDir: string;
     srcDir: string;
     styles: Array<string>;
@@ -287,9 +286,9 @@ const buildSingleFile = async (
 
 const build = async (
     menu: Array<MenuEntry>,
-    { buildDir, templateDir, compact, linkHtml }: { buildDir: string; templateDir: string; compact: boolean, linkHtml: boolean }
+    { buildDir, publicDir, compact, linkHtml }: { buildDir: string; publicDir: string; compact: boolean, linkHtml: boolean }
 ) => {
-    const template = (await readFile(join(templateDir, "template.html"))).toString();
+    const template = (await readFile(join(publicDir, "template.html"))).toString();
     const menuHtml = makeHTMLMenu(menu, { compact, linkHtml });
     const md = markdownit({
         html: true,
@@ -395,7 +394,7 @@ const main = async () => {
     const compact = process.argv.includes("--prod");
     const linkHtml = process.argv.includes("--link-html");
     const configFile = (await readFile("./config.json")).toString();
-    const { buildDir, templateDir, publicDir, srcDir, styles, stylesDir, externalFiles } = JSON.parse(configFile) as GolbConfig;
+    const { buildDir, publicDir, srcDir, styles, stylesDir, externalFiles } = JSON.parse(configFile) as GolbConfig;
     await rm(buildDir, { recursive: true, force: true });
     if (!existsSync(buildDir)) {
         mkdirSync(buildDir);
@@ -405,7 +404,7 @@ const main = async () => {
     compileCSS({ compact, stylesDir, styles, buildDir }, "style.css");
     const completeMenu = await makeMenu("", srcDir, buildDir);
     writeFile("menu.json", JSON.stringify(completeMenu, null, 4));
-    const indexed = await build(completeMenu, { buildDir, templateDir, compact, linkHtml });
+    const indexed = await build(completeMenu, { buildDir, publicDir, compact, linkHtml });
     writeIndex(indexed, buildDir);
 };
 
