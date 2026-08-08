@@ -1,6 +1,6 @@
 {
-    "name": "golb PWA",
-    "short_name": "golb-pwa",
+    "name": "golb",
+    "short_name": "golb",
     "icons": [
         {
             "src": "./icon-256.png",
